@@ -10,9 +10,10 @@ add_executable(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-    ${LIBNOISE_INCLUDE_DIR}
+    ${LIBNOISE_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME}
     noise
+    noiseutils-static
 )
