@@ -21,10 +21,11 @@ find_package(imgui REQUIRED)
 add_subdirectory(src/external)
 
 add_executable(${PROJECT_NAME}
-    src/main.cpp
+    src/mapgen_application.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
+    include/
     ${LIBNOISE_INCLUDE_DIRS}
     ${MAGNUM_IMGUI_INCLUDE_DIR}
 )
