@@ -18,12 +18,13 @@ add_executable(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${LIBNOISE_INCLUDE_DIRS}
+    ${MAGNUM_IMGUI_INCLUDE_DIR}
 )
 
-# libnoise
 target_link_libraries(${PROJECT_NAME}
     noise
     noiseutils-static
+    MagnumImGui
 )
 
 # magnum
