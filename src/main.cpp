@@ -19,7 +19,7 @@ MyApplication::MyApplication(const Arguments &arguments) : Platform::Application
 {
     using namespace Math::Literals;
     /* Set clear color to dark blue */
-    GL::Renderer::setClearColor(0x000066_rgbf);
+    GL::Renderer::setClearColor(0xFFFFFF_rgbf);
 }
 
 void MyApplication::drawEvent()
