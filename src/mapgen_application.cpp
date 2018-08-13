@@ -7,19 +7,20 @@
 
 using namespace Magnum;
 
-MapGenApplication::MapGenApplication(const Arguments &arguments) : Platform::Application{ arguments }
+MapGenApplication::MapGenApplication(const Arguments &arguments) : Platform::Application{ arguments }, frame_timer_{16}
 {
     using namespace Math::Literals;
-    /* Set clear color to dark blue */
     GL::Renderer::setClearColor(0xFFFFFF_rgbf);
 }
 
 void MapGenApplication::drawEvent()
 {
+    frame_timer_.start();
+
     // Clear the window
     GL::defaultFramebuffer.clear(GL::FramebufferClear::Color);
     // new imgui frame
-    imgui.newFrame(windowSize(), GL::defaultFramebuffer.viewport().size());
+    imgui_.newFrame(windowSize(), GL::defaultFramebuffer.viewport().size());
 
     if (ImGui::Begin("Hello"))
     {
@@ -28,10 +29,12 @@ void MapGenApplication::drawEvent()
     }
 
     // draw imgui
-    imgui.drawFrame();
+    imgui_.drawFrame();
 
     swapBuffers();
     redraw();
+    
+    frame_timer_.end();
 }
 
 void MapGenApplication::viewportEvent(const Vector2i &size)
@@ -42,49 +45,49 @@ void MapGenApplication::viewportEvent(const Vector2i &size)
 void MapGenApplication::keyPressEvent(KeyEvent &event)
 {
     // exit if interacing with GUI
-    if (imgui.keyPressEvent(event))
+    if (imgui_.keyPressEvent(event))
         return;
 }
 
 void MapGenApplication::keyReleaseEvent(KeyEvent &event)
 {
     // exit if interacing with GUI
-    if (imgui.keyReleaseEvent(event))
+    if (imgui_.keyReleaseEvent(event))
         return;
 }
 
 void MapGenApplication::mousePressEvent(MouseEvent &event)
 {
     // exit if interacing with GUI
-    if (imgui.mousePressEvent(event))
+    if (imgui_.mousePressEvent(event))
         return;
 }
 
 void MapGenApplication::mouseReleaseEvent(MouseEvent &event)
 {
     // exit if interacing with GUI
-    if (imgui.mouseReleaseEvent(event))
+    if (imgui_.mouseReleaseEvent(event))
         return;
 }
 
 void MapGenApplication::mouseMoveEvent(MouseMoveEvent &event)
 {
     // exit if interacing with GUI
-    if (imgui.mouseMoveEvent(event))
+    if (imgui_.mouseMoveEvent(event))
         return;
 }
 
 void MapGenApplication::mouseScrollEvent(MouseScrollEvent &event)
 {
     // exit if interacing with GUI
-    if (imgui.mouseScrollEvent(event))
+    if (imgui_.mouseScrollEvent(event))
         return;
 }
 
 void MapGenApplication::textInputEvent(TextInputEvent &event)
 {
     // exit if interacing with GUI
-    if (imgui.textInputEvent(event))
+    if (imgui_.textInputEvent(event))
         return;
 }
 

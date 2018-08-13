@@ -20,8 +20,20 @@ find_package(imgui REQUIRED)
 # Add external dependencies
 add_subdirectory(src/external)
 
-add_executable(${PROJECT_NAME}
+# Source/Header files
+set(MAPGEN_HEADERS
+    include/mapgen_application.h
+    include/frame_timer.h
+)
+
+set(MAPGEN_SOURCES
     src/mapgen_application.cpp
+    src/frame_timer.cpp
+)
+
+add_executable(${PROJECT_NAME}
+    ${MAPGEN_HEADERS}
+    ${MAPGEN_SOURCES}
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
