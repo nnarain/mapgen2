@@ -7,6 +7,7 @@ set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/libnoise")
 
 set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
 set(BUILD_LIBNOISE_UTILS ON CACHE BOOL "Build noise utils")
+set(BUILD_LIBNOISE_EXAMPLES OFF CACHE BOOL "Build libnoise examples")
 add_subdirectory(libnoise)
 
 set(PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR_MAPGEN}")

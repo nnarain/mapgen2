@@ -17,6 +17,12 @@ set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 
 find_package(imgui REQUIRED)
 
+
+set(Boost_USE_STATIC_LIB ON)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost REQUIRED COMPONENTS system)
+
 # Add external dependencies
 add_subdirectory(src/external)
 
@@ -24,11 +30,16 @@ add_subdirectory(src/external)
 set(MAPGEN_HEADERS
     include/mapgen_application.h
     include/frame_timer.h
+
+    include/noise_gen/noise_module.h
+    include/noise_gen/parameter.h
 )
 
 set(MAPGEN_SOURCES
     src/mapgen_application.cpp
     src/frame_timer.cpp
+
+    src/noise_gen/noise_module.cpp
 )
 
 add_executable(${PROJECT_NAME}
@@ -40,6 +51,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     include/
     ${LIBNOISE_INCLUDE_DIRS}
     ${MAGNUM_IMGUI_INCLUDE_DIR}
+    ${Boost_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -55,4 +67,7 @@ target_link_libraries(${PROJECT_NAME}
     # ImGui
     MagnumImGui
     imgui::imgui
+
+    # Boost
+    ${Boost_LIBRARIES}
 )
