@@ -16,33 +16,4 @@ struct Ranged
 using RangedInt = Ranged<int>;
 using RangedFloat = Ranged<float>;
 
-struct Parameter
-{
-    enum class Type
-    {
-        Int,
-        Float
-    };
-
-    union
-    {
-        int i;
-        float f;
-    } value;
-
-    Type type;
-
-    explicit Parameter(int i)
-    {
-        type = Type::Int;
-        value.i = i;
-    }
-
-    explicit Parameter(float f)
-    {
-        type = Type::Float;
-        value.f = f;
-    }
-};
-
 #endif // NOISE_GEN_PARAMETER_H

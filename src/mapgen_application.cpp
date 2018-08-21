@@ -7,10 +7,16 @@
 
 using namespace Magnum;
 
-MapGenApplication::MapGenApplication(const Arguments &arguments) : Platform::Application{ arguments }, frame_timer_{16}
+MapGenApplication::MapGenApplication(const Arguments &arguments) : 
+    Platform::Application{ arguments, Configuration{}.setTitle("MapGen").setSize({1280, 960}) }
+    , frame_timer_{16}
 {
     using namespace Math::Literals;
     GL::Renderer::setClearColor(0xFFFFFF_rgbf);
+
+    // TODO: remove
+    module_manager_.create("perlin", NoiseModule::Type::Perlin);
+    module_manager_.create("select", NoiseModule::Type::Select);
 }
 
 void MapGenApplication::drawEvent()
@@ -22,11 +28,9 @@ void MapGenApplication::drawEvent()
     // new imgui frame
     imgui_.newFrame(windowSize(), GL::defaultFramebuffer.viewport().size());
 
-    if (ImGui::Begin("Hello"))
-    {
-        ImGui::Text("Hello World!!!");
-        ImGui::End();
-    }
+    ui_.render(module_manager_);
+
+    ImGui::ShowDemoWindow(nullptr);
 
     // draw imgui
     imgui_.drawFrame();

@@ -33,6 +33,9 @@ set(MAPGEN_HEADERS
 
     include/noise_gen/noise_module.h
     include/noise_gen/parameter.h
+    include/noise_gen/module_manager.h
+
+    include/ui/user_interface.h
 )
 
 set(MAPGEN_SOURCES
@@ -40,6 +43,9 @@ set(MAPGEN_SOURCES
     src/frame_timer.cpp
 
     src/noise_gen/noise_module.cpp
+    src/noise_gen/module_manager.cpp
+
+    src/ui/user_interface.cpp
 )
 
 add_executable(${PROJECT_NAME}
