@@ -12,8 +12,11 @@ static constexpr const char* MODULE_TYPES[] = {
 struct ParameterViewVistor : public boost::static_visitor<>
 {
     std::string name;
+    ModuleManagerController& manager;
 
-    ParameterViewVistor(const std::string& name) : name{name}
+    ParameterViewVistor(const std::string& name, ModuleManagerController& manager) 
+        : name{name}
+        , manager{manager}
     {
     }
 
@@ -41,14 +44,28 @@ struct ParameterViewVistor : public boost::static_visitor<>
         ImGui::SliderFloat(name.c_str(), &rf.value, rf.min, rf.max);
     }
 
-    void operator()(noise::module::Module*& module)
+    void operator()(NoiseModule*& module)
     {
-        // TODO: Hm
-        ImGui::Text("TBD");
+        const auto& module_names = manager.getModuleNames();
+        const char* current_item = (module) ? module->getName().c_str() : nullptr;
+
+        if (ImGui::BeginCombo(name.c_str(), current_item))
+        {
+            for (const auto& module_name : module_names)
+            {
+                if (ImGui::Selectable(module_name.c_str(), false))
+                {
+                    module = manager.get(module_name).get();
+                }
+            }
+
+            ImGui::EndCombo();
+        }
     }
 };
 
-UserInterface::UserInterface()
+UserInterface::UserInterface(ModuleManager& manager)
+    : manager_{manager}
 {
 
 }
@@ -57,8 +74,10 @@ UserInterface::~UserInterface()
 {
 }
 
-void UserInterface::render(ModuleManager& manager)
+void UserInterface::render()
 {
+    const auto& names = manager_.getModuleNames();
+
     ImGui::SetNextWindowSize(ImVec2(500, 440), ImGuiCond_FirstUseEver);
     if (ImGui::Begin("Editor"))
     {
@@ -66,13 +85,13 @@ void UserInterface::render(ModuleManager& manager)
         static constexpr const char* module_select_id = "module_select";
         ImGui::BeginChild(module_select_id, ImVec2(150, 0), true);
         {
-            manager.forEach([this](const std::string& name, NoiseModule& module)
+            for (const auto& name : names)
             {
                 if (ImGui::Selectable(name.c_str(), selected_module_ == name))
                 {
                     selected_module_ = name;
                 }
-            });
+            }
         }
         ImGui::EndChild();
 
@@ -93,9 +112,9 @@ void UserInterface::render(ModuleManager& manager)
                 NoiseModule::Type type = static_cast<NoiseModule::Type>(type_select);
                 std::string name(buf);
 
-                if (!manager.has(name))
+                if (!manager_.has(name))
                 {
-                    manager.create(name, type);
+                    manager_.createModule(name, type);
                     std::strncpy(buf, "module1", IM_ARRAYSIZE(buf));
                 }
                 else
@@ -113,14 +132,14 @@ void UserInterface::render(ModuleManager& manager)
 
         ImGui::BeginChild("parameter pane");
         {
-            if (manager.has(selected_module_))
+            if (manager_.has(selected_module_))
             {
-                auto& module = manager.get(selected_module_);
+                auto& module = manager_.get(selected_module_);
                 auto params = module->getParams();
 
                 for (auto& param_iter : *params)
                 {
-                    ParameterViewVistor parameter_view{ param_iter.first };
+                    ParameterViewVistor parameter_view{ param_iter.first, manager_ };
                     boost::apply_visitor(parameter_view, param_iter.second);
                 }
             }

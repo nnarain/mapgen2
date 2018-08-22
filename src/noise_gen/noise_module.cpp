@@ -83,7 +83,7 @@ void NoiseModule::update()
     case NoiseModule::Type::Select:
         ((Select*)ptr)->SetBounds(boost::get<float>(params["lower_bound"]), boost::get<float>(params["upper_bound"]));
         ((Select*)ptr)->SetEdgeFalloff(boost::get<float>(params["fall_off"]));
-        ((Select*)ptr)->SetControlModule(*boost::get<Module*>(params["control"]));
+        ((Select*)ptr)->SetControlModule(*boost::get<NoiseModule*>(params["control"])->getModule().get());
         break;
     default:
         break;
@@ -93,4 +93,14 @@ void NoiseModule::update()
 NoiseModule::ParameterMapPtr NoiseModule::getParams()
 {
     return parameter_map_;
+}
+
+NoiseModule::ModulePtr& NoiseModule::getModule()
+{
+    return module_;
+}
+
+const std::string& NoiseModule::getName() const
+{
+    return name_;
 }

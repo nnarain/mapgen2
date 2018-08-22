@@ -23,8 +23,8 @@ private:
     void mouseScrollEvent(MouseScrollEvent& event) override;
     void textInputEvent(TextInputEvent& event) override;
 
-    UserInterface ui_;
     ModuleManager module_manager_;
+    UserInterface ui_;
 
     MagnumImGui imgui_;
 

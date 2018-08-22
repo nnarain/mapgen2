@@ -2,6 +2,7 @@
 #define UI_USER_INTERFACE_H
 
 #include "noise_gen/module_manager.h"
+#include "ui/view_controller/module_manager_controller.h"
 
 #include <Magnum/Platform/Sdl2Application.h>
 #include <Magnum/Math/Vector2.h>
@@ -10,12 +11,13 @@
 class UserInterface
 {
 public:
-    UserInterface();
+    UserInterface(ModuleManager& manager);
     ~UserInterface();
 
-    void render(ModuleManager& manager);
+    void render();
 
 private:
+    ModuleManagerController manager_;
     std::string selected_module_;
 };
 

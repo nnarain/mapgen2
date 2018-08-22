@@ -70,6 +70,11 @@ add_executable(${PROJECT_NAME}
     ${MAPGEN_SOURCES}
 )
 
+if (MSVC)
+    # TODO: Warning as errors. Block by libnoise modulebase header file
+    target_compile_options(${PROJECT_NAME} PUBLIC /W4)
+endif(MSVC)
+
 target_include_directories(${PROJECT_NAME} PRIVATE
     include/
     ${LIBNOISE_INCLUDE_DIRS}

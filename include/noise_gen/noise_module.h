@@ -16,7 +16,7 @@ public:
     using Ptr = std::unique_ptr<NoiseModule>;
     using ModulePtr = std::unique_ptr<noise::module::Module>;
 
-    using ParameterVariant = boost::variant<int, float, RangedInt, RangedFloat, noise::module::Module*>;
+    using ParameterVariant = boost::variant<int, float, RangedInt, RangedFloat, NoiseModule*>;
     using ParameterMap = std::map<std::string, ParameterVariant>;
     using ParameterMapPtr = std::shared_ptr<ParameterMap>;
 
@@ -30,6 +30,8 @@ public:
 
     void update();
     ParameterMapPtr getParams();
+    ModulePtr& getModule();
+    const std::string& getName() const;
 
 private:
     ModulePtr module_;
