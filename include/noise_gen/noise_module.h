@@ -29,6 +29,7 @@ public:
     NoiseModule(const std::string& name, Type type);
 
     void update();
+    ParameterMapPtr getParams();
 
 private:
     ModulePtr module_;

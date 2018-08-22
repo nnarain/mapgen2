@@ -32,9 +32,9 @@ public:
             return {
                 {"seed", 1337},
                 {"frequency", 0.1f},
-                {"octaves", 1},
-                {"persistence", 0.5f},
-                {"lacunarity", 2.0f},
+                {"octaves", RangedInt(1, 25, 1)},
+                {"persistence", RangedFloat(0.f, 1.f, 0.5f)},
+                {"lacunarity", RangedFloat(1.f, 2.f, 2.f)},
             };
         case NoiseModule::Type::Select:
             return {
@@ -88,4 +88,9 @@ void NoiseModule::update()
     default:
         break;
     }
+}
+
+NoiseModule::ParameterMapPtr NoiseModule::getParams()
+{
+    return parameter_map_;
 }

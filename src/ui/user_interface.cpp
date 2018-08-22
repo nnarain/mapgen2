@@ -9,6 +9,45 @@ static constexpr const char* MODULE_TYPES[] = {
     "select"
 };
 
+struct ParameterViewVistor : public boost::static_visitor<>
+{
+    std::string name;
+
+    ParameterViewVistor(const std::string& name) : name{name}
+    {
+    }
+
+    ~ParameterViewVistor()
+    {
+    }
+
+    void operator()(int& i)
+    {
+        ImGui::DragInt(name.c_str(), &i, 1);
+    }
+
+    void operator()(float& f)
+    {
+        ImGui::DragFloat(name.c_str(), &f, 0.01f);
+    }
+
+    void operator()(RangedInt& ri)
+    {
+        ImGui::SliderInt(name.c_str(), &ri.value, ri.min, ri.max);
+    }
+
+    void operator()(RangedFloat& rf)
+    {
+        ImGui::SliderFloat(name.c_str(), &rf.value, rf.min, rf.max);
+    }
+
+    void operator()(noise::module::Module*& module)
+    {
+        // TODO: Hm
+        ImGui::Text("TBD");
+    }
+};
+
 UserInterface::UserInterface()
 {
 
@@ -29,7 +68,6 @@ void UserInterface::render(ModuleManager& manager)
         {
             manager.forEach([this](const std::string& name, NoiseModule& module)
             {
-                //std::cout << "Listing " << name << std::endl;
                 if (ImGui::Selectable(name.c_str(), selected_module_ == name))
                 {
                     selected_module_ = name;
@@ -70,6 +108,24 @@ void UserInterface::render(ModuleManager& manager)
 
             ImGui::EndPopup();
         }
+
+        ImGui::SameLine();
+
+        ImGui::BeginChild("parameter pane");
+        {
+            if (manager.has(selected_module_))
+            {
+                auto& module = manager.get(selected_module_);
+                auto params = module->getParams();
+
+                for (auto& param_iter : *params)
+                {
+                    ParameterViewVistor parameter_view{ param_iter.first };
+                    boost::apply_visitor(parameter_view, param_iter.second);
+                }
+            }
+        }
+        ImGui::EndChild();
 
         ImGui::End();
     }

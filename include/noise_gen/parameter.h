@@ -5,7 +5,7 @@ template<class T>
 struct Ranged
 {
     T min;
-    T man;
+    T max;
     T value;
 
     explicit Ranged(T min, T max, T value) : min{ min }, max{ max }, value{ value }
