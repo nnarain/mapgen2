@@ -27,25 +27,42 @@ find_package(Boost REQUIRED COMPONENTS system)
 add_subdirectory(src/external)
 
 # Source/Header files
+set(NOISE_GEN_HEADERS
+    include/noise_gen/noise_module.h
+    include/noise_gen/parameter.h
+    include/noise_gen/module_manager.h
+)
+
+set(NOISE_GEN_SOURCES
+    src/noise_gen/noise_module.cpp
+    src/noise_gen/module_manager.cpp
+)
+
+set(UI_HEADERS
+    include/ui/user_interface.h
+    include/ui/view_controller/module_manager_controller.h
+    include/ui/view_controller/parameter_view.h
+)
+
+set(UI_SOURCES
+    src/ui/user_interface.cpp
+    src/ui/view_controller/module_manager_controller.cpp
+)
+
 set(MAPGEN_HEADERS
     include/mapgen_application.h
     include/frame_timer.h
 
-    include/noise_gen/noise_module.h
-    include/noise_gen/parameter.h
-    include/noise_gen/module_manager.h
-
-    include/ui/user_interface.h
+    ${NOISE_GEN_HEADERS}
+    ${UI_HEADERS}
 )
 
 set(MAPGEN_SOURCES
     src/mapgen_application.cpp
     src/frame_timer.cpp
 
-    src/noise_gen/noise_module.cpp
-    src/noise_gen/module_manager.cpp
-
-    src/ui/user_interface.cpp
+    ${NOISE_GEN_SOURCES}
+    ${UI_SOURCES}
 )
 
 add_executable(${PROJECT_NAME}
@@ -77,3 +94,10 @@ target_link_libraries(${PROJECT_NAME}
     # Boost
     ${Boost_LIBRARIES}
 )
+
+
+# source groups
+source_group("Header Files/Noise Gen" FILES ${NOISE_GEN_HEADERS})
+source_group("Source Files/Noise Gen" FILES ${NOISE_GEN_SOURCES})
+source_group("Header Files/UI"        FILES ${UI_HEADERS})
+source_group("Source Files/UI"        FILES ${UI_SOURCES})
