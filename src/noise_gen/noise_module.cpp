@@ -104,3 +104,8 @@ const std::string& NoiseModule::getName() const
 {
     return name_;
 }
+
+NoiseModule::Type NoiseModule::getType() const
+{
+    return type_;
+}

@@ -53,6 +53,8 @@ struct ParameterViewVistor : public boost::static_visitor<>
         {
             for (const auto& module_name : module_names)
             {
+                // TODO: do not allow adding self as parameter
+
                 if (ImGui::Selectable(module_name.c_str(), false))
                 {
                     module = manager.get(module_name).get();
@@ -135,6 +137,10 @@ void UserInterface::render()
             if (manager_.has(selected_module_))
             {
                 auto& module = manager_.get(selected_module_);
+
+                ImGui::Text("Type: %s", MODULE_TYPES[static_cast<int>(module->getType())]);
+                ImGui::Separator();
+
                 auto params = module->getParams();
 
                 for (auto& param_iter : *params)

@@ -32,6 +32,7 @@ public:
     ParameterMapPtr getParams();
     ModulePtr& getModule();
     const std::string& getName() const;
+    Type getType() const;
 
 private:
     ModulePtr module_;
