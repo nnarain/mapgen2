@@ -11,12 +11,10 @@ static constexpr const char* MODULE_TYPES[] = {
 
 struct ParameterViewVistor : public boost::static_visitor<>
 {
-
-
     ParameterViewVistor(const std::string& module_name, const std::string& param_name, ModuleManagerController& manager)
         : module_name_{module_name}
         , param_name_{ param_name }
-        , manager{ manager }
+        , manager_{ manager }
     {
     }
 
@@ -46,19 +44,18 @@ struct ParameterViewVistor : public boost::static_visitor<>
 
     void operator()(NoiseModule*& module)
     {
-        const auto& module_names = manager.getModuleNames();
+        const auto& module_names = manager_.getModuleNames();
         const char* current_item = (module) ? module->getName().c_str() : nullptr;
 
         if (ImGui::BeginCombo(param_name_.c_str(), current_item))
         {
             for (const auto& module_name : module_names)
             {
-                // TODO: do not allow adding self as parameter
                 if (module_name == module_name_) continue;
 
                 if (ImGui::Selectable(module_name.c_str(), false))
                 {
-                    module = manager.get(module_name).get();
+                    module = manager_.get(module_name).get();
                 }
             }
 
@@ -69,7 +66,7 @@ struct ParameterViewVistor : public boost::static_visitor<>
 private:
     std::string module_name_;
     std::string param_name_;
-    ModuleManagerController& manager;
+    ModuleManagerController& manager_;
 };
 
 EditorView::EditorView(ModuleManagerController& manager)
