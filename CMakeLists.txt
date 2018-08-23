@@ -40,13 +40,16 @@ set(NOISE_GEN_SOURCES
 
 set(UI_HEADERS
     include/ui/user_interface.h
+    include/ui/view_controller/view.h
     include/ui/view_controller/module_manager_controller.h
+    include/ui/view_controller/editor_view.h
     include/ui/view_controller/parameter_view.h
 )
 
 set(UI_SOURCES
     src/ui/user_interface.cpp
     src/ui/view_controller/module_manager_controller.cpp
+    src/ui/view_controller/editor_view.cpp
 )
 
 set(MAPGEN_HEADERS
