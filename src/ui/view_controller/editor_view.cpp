@@ -9,13 +9,13 @@ static constexpr const char* MODULE_TYPES[] = {
     "select"
 };
 
-static struct ParameterViewVistor : public boost::static_visitor<>
+struct ParameterViewVistor : public boost::static_visitor<>
 {
-    std::string name;
-    ModuleManagerController& manager;
 
-    ParameterViewVistor(const std::string& name, ModuleManagerController& manager)
-        : name{ name }
+
+    ParameterViewVistor(const std::string& module_name, const std::string& param_name, ModuleManagerController& manager)
+        : module_name_{module_name}
+        , param_name_{ param_name }
         , manager{ manager }
     {
     }
@@ -26,22 +26,22 @@ static struct ParameterViewVistor : public boost::static_visitor<>
 
     void operator()(int& i)
     {
-        ImGui::DragInt(name.c_str(), &i, 1);
+        ImGui::DragInt(param_name_.c_str(), &i, 1);
     }
 
     void operator()(float& f)
     {
-        ImGui::DragFloat(name.c_str(), &f, 0.01f);
+        ImGui::DragFloat(param_name_.c_str(), &f, 0.01f);
     }
 
     void operator()(RangedInt& ri)
     {
-        ImGui::SliderInt(name.c_str(), &ri.value, ri.min, ri.max);
+        ImGui::SliderInt(param_name_.c_str(), &ri.value, ri.min, ri.max);
     }
 
     void operator()(RangedFloat& rf)
     {
-        ImGui::SliderFloat(name.c_str(), &rf.value, rf.min, rf.max);
+        ImGui::SliderFloat(param_name_.c_str(), &rf.value, rf.min, rf.max);
     }
 
     void operator()(NoiseModule*& module)
@@ -49,11 +49,12 @@ static struct ParameterViewVistor : public boost::static_visitor<>
         const auto& module_names = manager.getModuleNames();
         const char* current_item = (module) ? module->getName().c_str() : nullptr;
 
-        if (ImGui::BeginCombo(name.c_str(), current_item))
+        if (ImGui::BeginCombo(param_name_.c_str(), current_item))
         {
             for (const auto& module_name : module_names)
             {
                 // TODO: do not allow adding self as parameter
+                if (module_name == module_name_) continue;
 
                 if (ImGui::Selectable(module_name.c_str(), false))
                 {
@@ -64,6 +65,11 @@ static struct ParameterViewVistor : public boost::static_visitor<>
             ImGui::EndCombo();
         }
     }
+
+private:
+    std::string module_name_;
+    std::string param_name_;
+    ModuleManagerController& manager;
 };
 
 EditorView::EditorView(ModuleManagerController& manager)
@@ -141,7 +147,7 @@ void EditorView::render()
 
                 for (auto& param_iter : *params)
                 {
-                    ParameterViewVistor parameter_view{ param_iter.first, manager_ };
+                    ParameterViewVistor parameter_view{ module->getName(), param_iter.first, manager_ };
                     boost::apply_visitor(parameter_view, param_iter.second);
                 }
             }

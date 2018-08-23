@@ -19,6 +19,7 @@ public:
 
 private:
     ModuleManagerController manager_;
+    // TODO: Remove direct implementation
     EditorView editor_;
 };
 
