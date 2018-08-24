@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 /**
     Interface to ModuleManager
@@ -21,11 +22,13 @@ public:
     void removeModule(const std::string& name);
 
     const std::vector<std::string>& getModuleNames();
+    const std::string& lookupName(const noise::module::Module&);
 
 private:
     ModuleManager& manager_;
 
     std::vector<std::string> names_;
+    std::map<const noise::module::Module*, std::string> module_to_name_;
     bool is_names_cached_;
 };
 

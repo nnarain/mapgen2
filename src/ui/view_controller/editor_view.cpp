@@ -69,6 +69,29 @@ private:
     ModuleManagerController& manager_;
 };
 
+struct ModuleCounterVistor : public boost::static_visitor<>
+{
+public:
+    ModuleCounterVistor() : count_{ 0 } {}
+    void operator()(int&){}
+    void operator()(float&){}
+    void operator()(RangedInt&){}
+    void operator()(RangedFloat&){}
+
+    void operator()(NoiseModule*& module)
+    {
+        count_++;
+    }
+
+    int getCount() const
+    {
+        return count_;
+    }
+
+private:
+    int count_;
+};
+
 EditorView::EditorView(ModuleManagerController& manager)
     : manager_{manager}
 {
@@ -113,6 +136,7 @@ void EditorView::render()
                 NoiseModule::Type type = static_cast<NoiseModule::Type>(type_select);
                 std::string name(buf);
 
+                // given the selected type, create a new module
                 if (!manager_.has(name))
                 {
                     manager_.createModule(name, type);
@@ -131,26 +155,71 @@ void EditorView::render()
 
         ImGui::SameLine();
 
+        // Draw parameters in the right pane
         ImGui::BeginChild("parameter pane");
         {
             if (manager_.has(selected_module_))
             {
                 auto& module = manager_.get(selected_module_);
 
+                // draw noise tyoe
                 ImGui::Text("Type: %s", MODULE_TYPES[static_cast<int>(module->getType())]);
-                ImGui::Separator();
 
+                // draw parameters
                 auto params = module->getParams();
+
+                // count number of source modules are accounted for in parameters
+                ModuleCounterVistor count;
 
                 for (auto& param_iter : *params)
                 {
                     ParameterViewVistor parameter_view{ module->getName(), param_iter.first, manager_ };
                     boost::apply_visitor(parameter_view, param_iter.second);
+                    boost::apply_visitor(count, param_iter.second);
+                }
+
+                ImGui::Separator();
+
+                // draw source module selection
+                auto& module_base = module->getModule();
+
+                // get the number of source modules
+                auto source_count = module_base->GetSourceModuleCount();
+                auto actual_source_count = source_count - count.getCount();
+
+                if (actual_source_count > 0)
+                    ImGui::Text("Sources");
+
+                for (int i = 0; i < actual_source_count; ++i)
+                {
+                    // souce module name
+                    std::string source_name = "source " + std::to_string(i + 1);
+                    // current source module
+                    const auto& module_ptr = module_base->GetSourceModule(i);
+                    // get the name of the module
+                    const auto& current_item_name = manager_.lookupName(module_ptr);
+
+                    // create a combo box to select source modules
+                    if (ImGui::BeginCombo(source_name.c_str(), current_item_name.c_str()))
+                    {
+                        for (const auto& name : names)
+                        {
+                            // do not allow module to add itself as a source
+                            if (name == selected_module_) continue;
+
+                            if (ImGui::Selectable(name.c_str(), name == current_item_name))
+                            {
+                                module_base->SetSourceModule(i, *manager_.get(name)->getModule().get());
+                            }
+                        }
+
+                        ImGui::EndCombo();
+                    }
                 }
             }
         }
         ImGui::EndChild();
 
-        ImGui::End();
     }
+    ImGui::End();
 }

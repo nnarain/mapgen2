@@ -5,6 +5,36 @@
 #include <stdexcept>
 
 /**
+    Dummy noise type used for initialization
+*/
+class DummyNoise : public noise::module::Module
+{
+public:
+    DummyNoise() : Module(0)
+    {
+
+    }
+
+    static DummyNoise instance()
+    {
+        static DummyNoise d;
+        return d;
+    }
+    
+    virtual int GetSourceModuleCount() const override
+    {
+        return 0;
+    }
+
+    virtual double GetValue(double x, double y, double z) const override
+    {
+        return 0.0;
+    }
+};
+
+static DummyNoise dummy;
+
+/**
     Create libnoise modules and allocation parameters
 */
 class ModuleFactory
@@ -22,6 +52,20 @@ public:
             throw std::runtime_error("Invalid noise type");
             break;
         }
+    }
+
+    static NoiseModule::ModulePtr initModule(NoiseModule::Type type)
+    {
+        auto module = createModule(type);
+
+        const auto count = module->GetSourceModuleCount();
+
+        for (int i = 0; i < count; ++i)
+        {
+            module->SetSourceModule(i, dummy);
+        }
+
+        return module;
     }
 
     static NoiseModule::ParameterMap createParams(NoiseModule::Type type)
@@ -57,7 +101,7 @@ public:
 };
 
 NoiseModule::NoiseModule(const std::string& name, NoiseModule::Type type) :
-    module_{ ModuleFactory::createModule(type) },
+    module_{ ModuleFactory::initModule(type) },
     name_{ name },
     type_{ type },
     parameter_map_{ModuleFactory::initParams(type)}

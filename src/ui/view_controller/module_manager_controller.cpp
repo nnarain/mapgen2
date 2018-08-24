@@ -1,5 +1,6 @@
 #include "ui/view_controller/module_manager_controller.h"
 
+static const std::string empty("");
 
 ModuleManagerController::ModuleManagerController(ModuleManager& manager)
     : manager_{manager}
@@ -41,14 +42,28 @@ const std::vector<std::string>& ModuleManagerController::getModuleNames()
     else
     {
         names_.clear();
+        module_to_name_.clear();
 
-        manager_.forEach([this](const std::string& name, NoiseModule&)
+        manager_.forEach([this](const std::string& name, NoiseModule& module)
         {
             names_.push_back(name);
+            module_to_name_[module.getModule().get()] = name;
         });
 
         is_names_cached_ = true;
 
         return names_;
+    }
+}
+
+const std::string& ModuleManagerController::lookupName(const noise::module::Module& module)
+{
+    if (module_to_name_.find(&module) != module_to_name_.end())
+    {
+        return module_to_name_[&module];
+    }
+    else
+    {
+        return empty;
     }
 }
