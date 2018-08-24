@@ -35,6 +35,8 @@ public:
     Type getType() const;
 
 private:
+    bool isValid() const;
+
     ModulePtr module_;
     std::string name_;
     Type type_;

@@ -15,6 +15,7 @@ struct ParameterViewVistor : public boost::static_visitor<>
         : module_name_{module_name}
         , param_name_{ param_name }
         , manager_{ manager }
+        , updated_{false}
     {
     }
 
@@ -24,22 +25,22 @@ struct ParameterViewVistor : public boost::static_visitor<>
 
     void operator()(int& i)
     {
-        ImGui::DragInt(param_name_.c_str(), &i, 1);
+        updated_ = ImGui::DragInt(param_name_.c_str(), &i, 1);
     }
 
     void operator()(float& f)
     {
-        ImGui::DragFloat(param_name_.c_str(), &f, 0.01f);
+        updated_ = ImGui::DragFloat(param_name_.c_str(), &f, 0.01f);
     }
 
     void operator()(RangedInt& ri)
     {
-        ImGui::SliderInt(param_name_.c_str(), &ri.value, ri.min, ri.max);
+        updated_ = ImGui::SliderInt(param_name_.c_str(), &ri.value, ri.min, ri.max);
     }
 
     void operator()(RangedFloat& rf)
     {
-        ImGui::SliderFloat(param_name_.c_str(), &rf.value, rf.min, rf.max);
+        updated_ = ImGui::SliderFloat(param_name_.c_str(), &rf.value, rf.min, rf.max);
     }
 
     void operator()(NoiseModule*& module)
@@ -56,6 +57,7 @@ struct ParameterViewVistor : public boost::static_visitor<>
                 if (ImGui::Selectable(module_name.c_str(), false))
                 {
                     module = manager_.get(module_name).get();
+                    updated_ = true;
                 }
             }
 
@@ -63,10 +65,16 @@ struct ParameterViewVistor : public boost::static_visitor<>
         }
     }
 
+    bool updated() const
+    {
+        return updated_;
+    }
+
 private:
     std::string module_name_;
     std::string param_name_;
     ModuleManagerController& manager_;
+    bool updated_;
 };
 
 struct ModuleCounterVistor : public boost::static_visitor<>
@@ -95,7 +103,6 @@ private:
 EditorView::EditorView(ModuleManagerController& manager)
     : manager_{manager}
 {
-
 }
 
 void EditorView::render()
@@ -176,6 +183,12 @@ void EditorView::render()
                     ParameterViewVistor parameter_view{ module->getName(), param_iter.first, manager_ };
                     boost::apply_visitor(parameter_view, param_iter.second);
                     boost::apply_visitor(count, param_iter.second);
+
+                    // check if the parameter was updated
+                    if (parameter_view.updated())
+                    {
+                        module->update();
+                    }
                 }
 
                 ImGui::Separator();
@@ -210,6 +223,7 @@ void EditorView::render()
                             if (ImGui::Selectable(name.c_str(), name == current_item_name))
                             {
                                 module_base->SetSourceModule(i, *manager_.get(name)->getModule().get());
+                                module->update();
                             }
                         }
 

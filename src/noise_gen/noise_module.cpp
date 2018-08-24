@@ -83,7 +83,7 @@ public:
         case NoiseModule::Type::Select:
             return {
                 {"lower_bound", 0.0f},
-                {"upper_bound", 0.0f},
+                {"upper_bound", 0.1f},
                 {"control", nullptr},
                 {"fall_off", 0.0f}
             };
@@ -107,22 +107,29 @@ NoiseModule::NoiseModule(const std::string& name, NoiseModule::Type type) :
     parameter_map_{ModuleFactory::initParams(type)}
 {
 }
-
+#include <iostream>
 void NoiseModule::update()
 {
     using namespace noise::module;
+
+    if (!isValid())
+    {
+        return;
+    }
     
     Module* ptr = module_.get();
     ParameterMap& params = *parameter_map_.get();
+
+    std::cout << name_ << " updating" << std::endl;
 
     switch (type_)
     {
     case NoiseModule::Type::Perlin:
         ((Perlin*)ptr)->SetSeed(boost::get<int>(params["seed"]));
         ((Perlin*)ptr)->SetFrequency(boost::get<float>(params["frequency"]));
-        ((Perlin*)ptr)->SetOctaveCount(boost::get<int>(params["octaves"]));
-        ((Perlin*)ptr)->SetPersistence(boost::get<float>(params["persistence"]));
-        ((Perlin*)ptr)->SetLacunarity(boost::get<float>(params["lacunarity"]));
+        ((Perlin*)ptr)->SetOctaveCount(boost::get<RangedInt>(params["octaves"]).value);
+        ((Perlin*)ptr)->SetPersistence(boost::get<RangedFloat>(params["persistence"]).value);
+        ((Perlin*)ptr)->SetLacunarity(boost::get<RangedFloat>(params["lacunarity"]).value);
         break;
     case NoiseModule::Type::Select:
         ((Select*)ptr)->SetBounds(boost::get<float>(params["lower_bound"]), boost::get<float>(params["upper_bound"]));
@@ -132,6 +139,39 @@ void NoiseModule::update()
     default:
         break;
     }
+}
+
+bool NoiseModule::isValid() const
+{
+    ParameterMap& params = *parameter_map_.get();
+
+    if (type_ == NoiseModule::Type::Select)
+    {
+        const auto lower = boost::get<float>(params["lower_bound"]);
+        const auto upper = boost::get<float>(params["upper_bound"]);
+
+        if (lower >= upper)
+        {
+            std::cout << "Invalid parameters, lower >= upper" << std::endl;
+            return false;
+        }
+        
+        auto* control_source = boost::get<NoiseModule*>(params["control"]);
+
+        if (control_source == nullptr)
+        {
+            std::cout << "Invalid parameters, control source is null" << std::endl;
+            return false;
+        }
+
+        if (control_source == this)
+        {
+            std::cout << "Invalid parameters, module cannot have itself as a source" << std::endl;
+            return false;
+        }
+    }
+
+    return true;
 }
 
 NoiseModule::ParameterMapPtr NoiseModule::getParams()
