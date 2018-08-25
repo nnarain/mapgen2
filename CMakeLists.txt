@@ -38,18 +38,28 @@ set(NOISE_GEN_SOURCES
     src/noise_gen/module_manager.cpp
 )
 
+set(OUTPUT_GEN_HEADERS
+    include/output_gen/texture_generator.h
+)
+
+set(OUTPUT_GEN_SOURCES
+    src/output_gen/texture_generator.cpp
+)
+
 set(UI_HEADERS
     include/ui/user_interface.h
     include/ui/view_controller/view.h
     include/ui/view_controller/module_manager_controller.h
     include/ui/view_controller/editor_view.h
     include/ui/view_controller/parameter_view.h
+    include/ui/view_controller/module_preview.h
 )
 
 set(UI_SOURCES
     src/ui/user_interface.cpp
     src/ui/view_controller/module_manager_controller.cpp
     src/ui/view_controller/editor_view.cpp
+    src/ui/view_controller/module_preview.cpp
 )
 
 set(MAPGEN_HEADERS
@@ -57,6 +67,7 @@ set(MAPGEN_HEADERS
     include/frame_timer.h
 
     ${NOISE_GEN_HEADERS}
+    ${OUTPUT_GEN_HEADERS}
     ${UI_HEADERS}
 )
 
@@ -65,6 +76,7 @@ set(MAPGEN_SOURCES
     src/frame_timer.cpp
 
     ${NOISE_GEN_SOURCES}
+    ${OUTPUT_GEN_SOURCES}
     ${UI_SOURCES}
 )
 
@@ -105,7 +117,9 @@ target_link_libraries(${PROJECT_NAME}
 
 
 # source groups
-source_group("Header Files/Noise Gen" FILES ${NOISE_GEN_HEADERS})
-source_group("Source Files/Noise Gen" FILES ${NOISE_GEN_SOURCES})
-source_group("Header Files/UI"        FILES ${UI_HEADERS})
-source_group("Source Files/UI"        FILES ${UI_SOURCES})
+source_group("Header Files/Noise Gen"  FILES ${NOISE_GEN_HEADERS})
+source_group("Source Files/Noise Gen"  FILES ${NOISE_GEN_SOURCES})
+source_group("Header Files/Output Gen" FILES ${OUTPUT_GEN_HEADERS})
+source_group("Source Files/Output Gen" FILES ${OUTPUT_GEN_SOURCES})
+source_group("Header Files/UI"         FILES ${UI_HEADERS})
+source_group("Source Files/UI"         FILES ${UI_SOURCES})
