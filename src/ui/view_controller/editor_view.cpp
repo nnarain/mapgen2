@@ -121,6 +121,9 @@ void EditorView::render()
                 if (ImGui::Selectable(name.c_str(), selected_module_ == name))
                 {
                     selected_module_ = name;
+                    auto& module = manager_.get(selected_module_);
+                    module->update();
+                    preview_.update(*module);
                 }
             }
         }
