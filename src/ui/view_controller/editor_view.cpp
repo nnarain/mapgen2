@@ -86,7 +86,7 @@ public:
     void operator()(RangedInt&){}
     void operator()(RangedFloat&){}
 
-    void operator()(NoiseModule*& module)
+    void operator()(NoiseModule*&)
     {
         count_++;
     }
@@ -188,6 +188,7 @@ void EditorView::render()
                     if (parameter_view.updated())
                     {
                         module->update();
+                        preview_.update(*module);
                     }
                 }
 
@@ -224,12 +225,16 @@ void EditorView::render()
                             {
                                 module_base->SetSourceModule(i, *manager_.get(name)->getModule().get());
                                 module->update();
+                                preview_.update(*module);
                             }
                         }
 
                         ImGui::EndCombo();
                     }
                 }
+                
+                ImGui::Separator();
+                preview_.render();
             }
         }
         ImGui::EndChild();

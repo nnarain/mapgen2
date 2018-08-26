@@ -5,15 +5,16 @@
 
 #include <Magnum/GL/Texture.h>
 #include <Magnum/ImageView.h>
+#include <noiseutils/noiseutils.h>
 
 class TextureGenerator
 {
 public:
 
-    void generate(Magnum::GL::Texture2D& out_texture, NoiseModule& noise);
+    void generate(Magnum::GL::Texture2D& out_texture, int w, int h, NoiseModule& noise);
 
 private:
-
+    
 };
 
 #endif

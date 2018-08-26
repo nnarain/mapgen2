@@ -3,6 +3,7 @@
 
 #include "ui/view_controller/view.h"
 #include "ui/view_controller/module_manager_controller.h"
+#include "ui/view_controller/module_preview.h"
 
 #include <string>
 
@@ -15,6 +16,7 @@ public:
 
 private:
     ModuleManagerController& manager_;
+    ModulePreview preview_;
     std::string selected_module_;
 };
 

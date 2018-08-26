@@ -1,16 +1,15 @@
 #include "output_gen/texture_generator.h"
 
+#include <Magnum/GL/TextureFormat.h>
+#include <Corrade/Containers/Array.h>
+#include <Corrade/Containers/ArrayView.h>
 #include <noiseutils/noiseutils.h>
 
 using namespace Magnum;
 
-void TextureGenerator::generate(GL::Texture2D& output_texture, NoiseModule& noise)
+void TextureGenerator::generate(GL::Texture2D& output_texture, int w, int h, NoiseModule& noise)
 {
     auto& module = *noise.getModule();
-
-    auto size = output_texture.imageSize(0);
-    auto w = size.x();
-    auto h = size.y();
 
     // generate the noise map
     utils::NoiseMap height_map;
@@ -26,16 +25,43 @@ void TextureGenerator::generate(GL::Texture2D& output_texture, NoiseModule& nois
     utils::Image rendered_image;
     renderer.SetSourceNoiseMap(height_map);
     renderer.SetDestImage(rendered_image);
+    renderer.Render();
 
     // underlying color buffer for image
     auto* data = rendered_image.GetSlabPtr();
-    auto data_size = static_cast<std::size_t>(rendered_image.GetWidth() * rendered_image.GetHeight());
+    auto data_size = static_cast<std::size_t>(w * h) * 4;
+    Corrade::Containers::ArrayView<char> data_view{ (char*)data, data_size };
 
+    
+    for (int x = 0; x < w; ++x)
+    {
+        for (int y = 0; y < h; ++y)
+        {
+            auto idx = ((y * w) + x) * 4;
+            
+            auto r = data_view[idx + 3];
+            auto g = data_view[idx + 2];
+            auto b = data_view[idx + 1];
+            auto a = data_view[idx + 0];
+
+            data_view[idx + 0] = r;
+            data_view[idx + 1] = g;
+            data_view[idx + 2] = b;
+            data_view[idx + 3] = a;
+        }
+    }
+    
     // wrap image buffer in a corrade container
-    Corrade::Containers::ArrayView<utils::Color> data_view{ data, data_size };
+    //Corrade::Containers::ArrayView<char> data_view{ buffer, buffer.size() };
+    
 
     // create a magnum RGBA8 uint image with the rendered image data and bind it to the texture
-    ImageView2D image{ PixelFormat::RGBA8UI, {w, h}, data_view };
-    output_texture.setSubImage(0, {}, image);
+    ImageView2D image{ PixelFormat::RGBA8Unorm, {w, h}, data_view };
+    output_texture
+        .setWrapping(GL::SamplerWrapping::ClampToEdge)
+        .setMagnificationFilter(GL::SamplerFilter::Linear)
+        .setMinificationFilter(GL::SamplerFilter::Linear)
+        .setStorage(1, GL::TextureFormat::RGBA8, image.size())
+        .setSubImage(0, {}, image);
 }
 

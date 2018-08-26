@@ -15,6 +15,8 @@ MapGenApplication::MapGenApplication(const Arguments &arguments)
 {
     using namespace Math::Literals;
     GL::Renderer::setClearColor(0xFFFFFF_rgbf);
+
+    module_manager_.create("module1", NoiseModule::Type::Perlin);
 }
 
 void MapGenApplication::drawEvent()
@@ -29,6 +31,7 @@ void MapGenApplication::drawEvent()
     ui_.render();
 
     ImGui::ShowDemoWindow(nullptr);
+    ImGui::ShowMetricsWindow(nullptr);
 
     // draw imgui
     imgui_.drawFrame();
