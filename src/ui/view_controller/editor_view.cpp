@@ -121,6 +121,8 @@ void EditorView::render()
                 if (ImGui::Selectable(name.c_str(), selected_module_ == name))
                 {
                     selected_module_ = name;
+
+                    // update the preview image
                     auto& module = manager_.get(selected_module_);
                     module->update();
                     preview_.update(*module);
@@ -165,12 +167,18 @@ void EditorView::render()
 
         ImGui::SameLine();
 
+        bool removing_module = false;
+
         // Draw parameters in the right pane
         ImGui::BeginChild("parameter pane");
         {
             if (manager_.has(selected_module_))
             {
                 auto& module = manager_.get(selected_module_);
+
+                ImGui::Text("Name: %s", selected_module_.c_str());
+                ImGui::SameLine();
+                removing_module = ImGui::Button("x");
 
                 // draw noise tyoe
                 ImGui::Text("Type: %s", MODULE_TYPES[static_cast<int>(module->getType())]);
@@ -241,6 +249,11 @@ void EditorView::render()
             }
         }
         ImGui::EndChild();
+
+        if (removing_module)
+        {
+            manager_.removeModule(selected_module_);
+        }
 
     }
     ImGui::End();
