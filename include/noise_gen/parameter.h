@@ -11,6 +11,10 @@ struct Ranged
     explicit Ranged(T min, T max, T value) : min{ min }, max{ max }, value{ value }
     {
     }
+
+    explicit Ranged() : Ranged(T{}, T{}, T{})
+    {
+    }
 };
 
 using RangedInt = Ranged<int>;

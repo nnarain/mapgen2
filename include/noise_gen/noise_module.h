@@ -29,6 +29,8 @@ public:
     NoiseModule(const std::string& name, Type type);
 
     void update();
+    void invalidateSources();
+
     ParameterMapPtr getParams();
     ModulePtr& getModule();
     const std::string& getName() const;
@@ -41,6 +43,7 @@ private:
     std::string name_;
     Type type_;
     ParameterMapPtr parameter_map_;
+    bool is_valid_;
 };
 
 #endif // NOISE_GEN_NOISE_MODULE_H

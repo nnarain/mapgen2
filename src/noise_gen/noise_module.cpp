@@ -2,6 +2,7 @@
 
 #include <noise/module/module.h>
 
+#include <iostream>
 #include <stdexcept>
 
 /**
@@ -33,6 +34,19 @@ public:
 };
 
 static DummyNoise dummy;
+
+struct InvalidVistor : public boost::static_visitor<>
+{
+public:
+    template<typename T>
+    void operator()(T& operand) const
+    {
+        if (std::is_same<T, NoiseModule*>::value)
+        {
+            operand = T{};
+        }
+    }
+};
 
 /**
     Create libnoise modules and allocation parameters
@@ -100,19 +114,22 @@ public:
     }
 };
 
-NoiseModule::NoiseModule(const std::string& name, NoiseModule::Type type) :
-    module_{ ModuleFactory::initModule(type) },
-    name_{ name },
-    type_{ type },
-    parameter_map_{ModuleFactory::initParams(type)}
+NoiseModule::NoiseModule(const std::string& name, NoiseModule::Type type) 
+    : module_{ ModuleFactory::initModule(type) }
+    , name_{ name }
+    , type_{ type }
+    , parameter_map_{ModuleFactory::initParams(type)}
+    , is_valid_{false}
 {
 }
-#include <iostream>
+
 void NoiseModule::update()
 {
     using namespace noise::module;
 
-    if (!isValid())
+    is_valid_ = isValid();
+
+    if (!is_valid_)
     {
         return;
     }
@@ -139,6 +156,25 @@ void NoiseModule::update()
     default:
         break;
     }
+}
+
+void NoiseModule::invalidateSources()
+{
+    std::cout << "Invalidating " << name_ << std::endl;
+
+    int source_count = module_->GetSourceModuleCount();
+
+    for (int i = 0; i < source_count; ++i)
+    {
+        module_->SetSourceModule(i, dummy);
+    }
+
+    for (auto& pair : *parameter_map_)
+    {
+        boost::apply_visitor(InvalidVistor{}, pair.second);
+    }
+
+    update();
 }
 
 bool NoiseModule::isValid() const
