@@ -1,6 +1,6 @@
 [submodule "src/external/libnoise"]
 	path = src/external/libnoise
-	url = https://github.com/qknight/libnoise
+	url = https://github.com/nnarain/libnoise
 [submodule "src/external/magnum-imgui"]
 	path = src/external/magnum-imgui
 	url = https://github.com/nnarain/magnum-imgui.git
