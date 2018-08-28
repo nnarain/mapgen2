@@ -1,4 +1,6 @@
 
+#include "ui/user_interface.h"
+#include "noise_gen/module_manager.h"
 #include "frame_timer.h"
 
 #include <Magnum/Platform/Sdl2Application.h>
@@ -20,6 +22,9 @@ private:
     void mouseMoveEvent(MouseMoveEvent& event) override;
     void mouseScrollEvent(MouseScrollEvent& event) override;
     void textInputEvent(TextInputEvent& event) override;
+
+    ModuleManager module_manager_;
+    UserInterface ui_;
 
     MagnumImGui imgui_;
 
