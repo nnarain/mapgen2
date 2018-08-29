@@ -86,8 +86,7 @@ add_executable(${PROJECT_NAME}
 )
 
 if (MSVC)
-    # TODO: Warning as errors. Block by libnoise modulebase header file
-    target_compile_options(${PROJECT_NAME} PUBLIC /W4)
+    target_compile_options(${PROJECT_NAME} PUBLIC /WX /wd4100)
 endif(MSVC)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
