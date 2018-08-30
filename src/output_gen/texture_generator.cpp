@@ -9,7 +9,7 @@ using namespace Magnum;
 
 void TextureGenerator::generate(GL::Texture2D& output_texture, int w, int h, NoiseModule& noise)
 {
-    auto& module = *noise.getModule();
+    auto& module = noise.getModule();
 
     // generate the noise map
     utils::NoiseMap height_map;

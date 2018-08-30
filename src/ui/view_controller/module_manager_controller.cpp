@@ -47,7 +47,7 @@ const std::vector<std::string>& ModuleManagerController::getModuleNames()
         manager_.forEach([this](const std::string& name, NoiseModule& module)
         {
             names_.push_back(name);
-            module_to_name_[module.getModule().get()] = name;
+            module_to_name_[&module.getModule()] = name;
         });
 
         is_names_cached_ = true;

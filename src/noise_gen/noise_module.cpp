@@ -35,7 +35,16 @@ public:
 
 static DummyNoise dummy;
 
-struct InvalidVistor : public boost::static_visitor<>
+struct ModuleRefVistor : public boost::static_visitor<noise::module::Module&>
+{
+    template<typename T>
+    noise::module::Module& operator()(T& module) const
+    {
+        return static_cast<noise::module::Module&>(module);
+    }
+};
+
+struct InvalidateVistor : public boost::static_visitor<>
 {
 public:
     template<typename T>
@@ -54,32 +63,33 @@ public:
 class ModuleFactory
 {
 public:
-    static NoiseModule::ModulePtr createModule(NoiseModule::Type type)
+    static NoiseModule::ModuleVariant createModule(NoiseModule::Type type)
     {
         switch (type)
         {
         case NoiseModule::Type::Perlin:
-            return std::make_unique<noise::module::Perlin>();
+            return { noise::module::Perlin() };
         case NoiseModule::Type::Select:
-            return std::make_unique<noise::module::Select>();
+            return { noise::module::Select() };
         default:
             throw std::runtime_error("Invalid noise type");
             break;
         }
     }
 
-    static NoiseModule::ModulePtr initModule(NoiseModule::Type type)
+    static NoiseModule::ModuleVariant initModule(NoiseModule::Type type)
     {
-        auto module = createModule(type);
+        auto module_variant = createModule(type);
+        auto& module = boost::apply_visitor(ModuleRefVistor{}, module_variant);
 
-        const auto count = module->GetSourceModuleCount();
+        const auto count = module.GetSourceModuleCount();
 
         for (int i = 0; i < count; ++i)
         {
-            module->SetSourceModule(i, dummy);
+            module.SetSourceModule(i, dummy);
         }
 
-        return module;
+        return module_variant;
     }
 
     static NoiseModule::ParameterMap createParams(NoiseModule::Type type)
@@ -115,7 +125,8 @@ public:
 };
 
 NoiseModule::NoiseModule(const std::string& name, NoiseModule::Type type) 
-    : module_{ ModuleFactory::initModule(type) }
+    : module_base_{ ModuleFactory::initModule(type) }
+    , module_{ boost::apply_visitor(ModuleRefVistor{}, module_base_) }
     , name_{ name }
     , type_{ type }
     , parameter_map_{ModuleFactory::initParams(type)}
@@ -134,7 +145,7 @@ void NoiseModule::update()
         return;
     }
     
-    Module* ptr = module_.get();
+    Module* ptr = &module_;
     ParameterMap& params = *parameter_map_.get();
 
     std::cout << name_ << " updating" << std::endl;
@@ -151,7 +162,7 @@ void NoiseModule::update()
     case NoiseModule::Type::Select:
         ((Select*)ptr)->SetBounds(boost::get<float>(params["lower_bound"]), boost::get<float>(params["upper_bound"]));
         ((Select*)ptr)->SetEdgeFalloff(boost::get<float>(params["fall_off"]));
-        ((Select*)ptr)->SetControlModule(*boost::get<NoiseModule*>(params["control"])->getModule().get());
+        ((Select*)ptr)->SetControlModule(boost::get<NoiseModule*>(params["control"])->getModule());
         break;
     default:
         break;
@@ -162,16 +173,16 @@ void NoiseModule::invalidateSources()
 {
     std::cout << "Invalidating " << name_ << std::endl;
 
-    int source_count = module_->GetSourceModuleCount();
+    int source_count = module_.GetSourceModuleCount();
 
     for (int i = 0; i < source_count; ++i)
     {
-        module_->SetSourceModule(i, dummy);
+        module_.SetSourceModule(i, dummy);
     }
 
     for (auto& pair : *parameter_map_)
     {
-        boost::apply_visitor(InvalidVistor{}, pair.second);
+        boost::apply_visitor(InvalidateVistor{}, pair.second);
     }
 
     update();
@@ -215,7 +226,7 @@ NoiseModule::ParameterMapPtr NoiseModule::getParams()
     return parameter_map_;
 }
 
-NoiseModule::ModulePtr& NoiseModule::getModule()
+noise::module::Module& NoiseModule::getModule()
 {
     return module_;
 }

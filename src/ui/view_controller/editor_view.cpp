@@ -209,7 +209,7 @@ void EditorView::render()
                 auto& module_base = module->getModule();
 
                 // get the number of source modules
-                auto source_count = module_base->GetSourceModuleCount();
+                auto source_count = module_base.GetSourceModuleCount();
                 auto actual_source_count = source_count - count.getCount();
 
                 if (actual_source_count > 0)
@@ -220,7 +220,7 @@ void EditorView::render()
                     // souce module name
                     std::string source_name = "source " + std::to_string(i + 1);
                     // current source module
-                    const auto& module_ptr = module_base->GetSourceModule(i);
+                    const auto& module_ptr = module_base.GetSourceModule(i);
                     // get the name of the module
                     const auto& current_item_name = manager_.lookupName(module_ptr);
 
@@ -234,7 +234,7 @@ void EditorView::render()
 
                             if (ImGui::Selectable(name.c_str(), name == current_item_name))
                             {
-                                module_base->SetSourceModule(i, *manager_.get(name)->getModule().get());
+                                module_base.SetSourceModule(i, manager_.get(name)->getModule());
                                 module->update();
                                 preview_.update(*module);
                             }
