@@ -14,6 +14,8 @@ void ModuleManager::create(const std::string& name, NoiseModule::Type type)
 
 void ModuleManager::remove(const std::string& name)
 {
+    if (!has(name)) return;
+
     // before removing the noise module, it must be removed as a parameter from the other noise modules
     auto module_to_remove = &modules_[name]->getModule();
     
@@ -39,11 +41,11 @@ void ModuleManager::remove(const std::string& name)
     modules_.erase(name);
 }
 
-NoiseModule::Ptr& ModuleManager::get(const std::string& name)
+NoiseModule& ModuleManager::get(const std::string& name)
 {
     if (modules_.find(name) != modules_.end())
     {
-        return modules_[name];
+        return *modules_[name];
     }
     else
     {
@@ -60,6 +62,6 @@ void ModuleManager::forEach(std::function<void(const std::string&, NoiseModule&)
 {
     for (auto& it : modules_)
     {
-        fn(it.first, *it.second.get());
+        fn(it.first, *it.second);
     }
 }

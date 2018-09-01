@@ -15,7 +15,7 @@ public:
 
     void create(const std::string&, NoiseModule::Type);
     void remove(const std::string&);
-    NoiseModule::Ptr& get(const std::string& name);
+    NoiseModule& get(const std::string& name);
     bool has(const std::string& name) const;
 
     void forEach(std::function<void(const std::string&, NoiseModule&)> fn);
