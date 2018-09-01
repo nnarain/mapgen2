@@ -37,11 +37,82 @@ static DummyNoise dummy;
 
 struct ModuleRefVistor : public boost::static_visitor<noise::module::Module&>
 {
+public:
     template<typename T>
     noise::module::Module& operator()(T& module) const
     {
         return static_cast<noise::module::Module&>(module);
     }
+};
+
+struct ValidationVistior : public boost::static_visitor<bool>
+{
+public:
+    ValidationVistior(NoiseModule::ParameterMap& params)
+        : params_{params}
+    {
+    }
+
+    bool operator()(noise::module::Perlin& module) const { return true; }
+
+    bool operator()(noise::module::Select& module) const
+    {
+        const auto lower = boost::get<float>(params_["lower_bound"]);
+        const auto upper = boost::get<float>(params_["upper_bound"]);
+
+        if (lower >= upper)
+        {
+            std::cout << "Invalid parameters, lower >= upper" << std::endl;
+            return false;
+        }
+
+        auto* control_source = boost::get<NoiseModule*>(params_["control"]);
+
+        if (control_source == nullptr)
+        {
+            std::cout << "Invalid parameters, control source is null" << std::endl;
+            return false;
+        }
+
+        if (&control_source->getModule() == &module)
+        {
+            std::cout << "Invalid parameters, module cannot have itself as a source" << std::endl;
+            return false;
+        }
+
+        return true;
+    }
+
+private:
+    NoiseModule::ParameterMap& params_;
+};
+
+struct SetParamsVistor : public boost::static_visitor<>
+{
+public:
+    SetParamsVistor(NoiseModule::ParameterMap& params)
+        : params_{params}
+    {
+
+    }
+
+    void operator()(noise::module::Perlin& module) const
+    {
+        module.SetSeed(boost::get<int>(params_["seed"]));
+        module.SetFrequency(boost::get<float>(params_["frequency"]));
+        module.SetOctaveCount(boost::get<RangedInt>(params_["octaves"]).value);
+        module.SetPersistence(boost::get<RangedFloat>(params_["persistence"]).value);
+        module.SetLacunarity(boost::get<RangedFloat>(params_["lacunarity"]).value);
+    }
+
+    void operator()(noise::module::Select& module) const
+    {
+        module.SetBounds(boost::get<float>(params_["lower_bound"]), boost::get<float>(params_["upper_bound"]));
+        module.SetEdgeFalloff(boost::get<float>(params_["fall_off"]));
+        module.SetControlModule(boost::get<NoiseModule*>(params_["control"])->getModule());
+    }
+private:
+    NoiseModule::ParameterMap& params_;
 };
 
 struct InvalidateVistor : public boost::static_visitor<>
@@ -77,21 +148,6 @@ public:
         }
     }
 
-    static NoiseModule::ModuleVariant initModule(NoiseModule::Type type)
-    {
-        auto module_variant = createModule(type);
-        auto& module = boost::apply_visitor(ModuleRefVistor{}, module_variant);
-
-        const auto count = module.GetSourceModuleCount();
-
-        for (int i = 0; i < count; ++i)
-        {
-            module.SetSourceModule(i, dummy);
-        }
-
-        return module_variant;
-    }
-
     static NoiseModule::ParameterMap createParams(NoiseModule::Type type)
     {
         switch (type)
@@ -125,48 +181,34 @@ public:
 };
 
 NoiseModule::NoiseModule(const std::string& name, NoiseModule::Type type) 
-    : module_base_{ ModuleFactory::initModule(type) }
+    : module_base_{ ModuleFactory::createModule(type) }
     , module_{ boost::apply_visitor(ModuleRefVistor{}, module_base_) }
     , name_{ name }
     , type_{ type }
     , parameter_map_{ModuleFactory::initParams(type)}
     , is_valid_{false}
 {
+    const auto count = module_.GetSourceModuleCount();
+
+    for (int i = 0; i < count; ++i)
+    {
+        module_.SetSourceModule(i, dummy);
+    }
 }
 
 void NoiseModule::update()
 {
     using namespace noise::module;
 
-    is_valid_ = isValid();
+    is_valid_ = boost::apply_visitor(ValidationVistior{ *parameter_map_ }, module_base_);
 
     if (!is_valid_)
     {
         return;
     }
     
-    Module* ptr = &module_;
-    ParameterMap& params = *parameter_map_.get();
-
     std::cout << name_ << " updating" << std::endl;
-
-    switch (type_)
-    {
-    case NoiseModule::Type::Perlin:
-        ((Perlin*)ptr)->SetSeed(boost::get<int>(params["seed"]));
-        ((Perlin*)ptr)->SetFrequency(boost::get<float>(params["frequency"]));
-        ((Perlin*)ptr)->SetOctaveCount(boost::get<RangedInt>(params["octaves"]).value);
-        ((Perlin*)ptr)->SetPersistence(boost::get<RangedFloat>(params["persistence"]).value);
-        ((Perlin*)ptr)->SetLacunarity(boost::get<RangedFloat>(params["lacunarity"]).value);
-        break;
-    case NoiseModule::Type::Select:
-        ((Select*)ptr)->SetBounds(boost::get<float>(params["lower_bound"]), boost::get<float>(params["upper_bound"]));
-        ((Select*)ptr)->SetEdgeFalloff(boost::get<float>(params["fall_off"]));
-        ((Select*)ptr)->SetControlModule(boost::get<NoiseModule*>(params["control"])->getModule());
-        break;
-    default:
-        break;
-    }
+    boost::apply_visitor(SetParamsVistor{ *parameter_map_ }, module_base_);
 }
 
 void NoiseModule::invalidateSources()
@@ -188,39 +230,6 @@ void NoiseModule::invalidateSources()
     update();
 }
 
-bool NoiseModule::isValid() const
-{
-    ParameterMap& params = *parameter_map_.get();
-
-    if (type_ == NoiseModule::Type::Select)
-    {
-        const auto lower = boost::get<float>(params["lower_bound"]);
-        const auto upper = boost::get<float>(params["upper_bound"]);
-
-        if (lower >= upper)
-        {
-            std::cout << "Invalid parameters, lower >= upper" << std::endl;
-            return false;
-        }
-        
-        auto* control_source = boost::get<NoiseModule*>(params["control"]);
-
-        if (control_source == nullptr)
-        {
-            std::cout << "Invalid parameters, control source is null" << std::endl;
-            return false;
-        }
-
-        if (control_source == this)
-        {
-            std::cout << "Invalid parameters, module cannot have itself as a source" << std::endl;
-            return false;
-        }
-    }
-
-    return true;
-}
-
 NoiseModule::ParameterMapPtr NoiseModule::getParams()
 {
     return parameter_map_;
@@ -239,4 +248,9 @@ const std::string& NoiseModule::getName() const
 NoiseModule::Type NoiseModule::getType() const
 {
     return type_;
+}
+
+bool NoiseModule::isValid() const
+{
+    return is_valid_;
 }

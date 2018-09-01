@@ -41,9 +41,9 @@ public:
     const std::string& getName() const;
     Type getType() const;
 
-private:
     bool isValid() const;
 
+private:
     ModuleVariant module_base_;
     noise::module::Module& module_;
     
