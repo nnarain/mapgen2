@@ -77,29 +77,6 @@ private:
     bool updated_;
 };
 
-struct ModuleCounterVistor : public boost::static_visitor<>
-{
-public:
-    ModuleCounterVistor() : count_{ 0 } {}
-    void operator()(int&){}
-    void operator()(float&){}
-    void operator()(RangedInt&){}
-    void operator()(RangedFloat&){}
-
-    void operator()(NoiseModule*&)
-    {
-        count_++;
-    }
-
-    int getCount() const
-    {
-        return count_;
-    }
-
-private:
-    int count_;
-};
-
 EditorView::EditorView(ModuleManagerController& manager)
     : manager_{manager}
 {
@@ -186,14 +163,10 @@ void EditorView::render()
                 // draw parameters
                 auto params = module->getParams();
 
-                // count number of source modules are accounted for in parameters
-                ModuleCounterVistor count;
-
                 for (auto& param_iter : *params)
                 {
                     ParameterViewVistor parameter_view{ module->getName(), param_iter.first, manager_ };
                     boost::apply_visitor(parameter_view, param_iter.second);
-                    boost::apply_visitor(count, param_iter.second);
 
                     // check if the parameter was updated
                     if (parameter_view.updated())
@@ -208,8 +181,7 @@ void EditorView::render()
                 // draw source module selection
 
                 // get the number of source modules
-                auto source_count = module->getSourceModuleCount();
-                auto actual_source_count = source_count - count.getCount();
+                auto actual_source_count = module->getSourceModuleCount();
 
                 if (actual_source_count > 0)
                     ImGui::Text("Sources");

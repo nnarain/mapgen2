@@ -1,7 +1,9 @@
 #include "noise_gen/noise_module.h"
+#include "detail/gen/source_counter_visitor.h"
 
 #include <noise/module/module.h>
 
+#include <algorithm>
 #include <iostream>
 #include <stdexcept>
 
@@ -45,10 +47,10 @@ public:
     }
 };
 
-struct ValidationVistior : public boost::static_visitor<bool>
+struct ValidationVisitor : public boost::static_visitor<bool>
 {
 public:
-    ValidationVistior(NoiseModule::ParameterMap& params)
+    ValidationVisitor(NoiseModule::ParameterMap& params)
         : params_{params}
     {
     }
@@ -188,7 +190,10 @@ NoiseModule::NoiseModule(const std::string& name, NoiseModule::Type type)
     , type_{ type }
     , parameter_map_{ModuleFactory::initParams(type)}
     , is_valid_{false}
+    , actual_source_count_{0}
 {
+    actual_source_count_ = getActualSourceCount();
+
     const auto count = module_.GetSourceModuleCount();
 
     for (int i = 0; i < count; ++i)
@@ -201,7 +206,7 @@ void NoiseModule::update()
 {
     using namespace noise::module;
 
-    is_valid_ = boost::apply_visitor(ValidationVistior{ *parameter_map_ }, module_base_);
+    is_valid_ = validate();
 
     if (!is_valid_)
     {
@@ -251,6 +256,22 @@ NoiseModule::Type NoiseModule::getType() const
     return type_;
 }
 
+bool NoiseModule::validate()
+{
+    auto valid_params = boost::apply_visitor(ValidationVisitor{ *parameter_map_ }, module_base_);
+
+    SourceParamCounterVistor source_param_counter;
+    for (auto& pair : *parameter_map_)
+    {
+        boost::apply_visitor(source_param_counter, pair.second);
+    }
+
+    auto count = getSourceModuleCount() - source_param_counter.getCount();
+    auto valid_sources = std::all_of(source_refs_.begin(), source_refs_.begin() + count, [](NoiseModule::Ref ref) {return !ref.expired(); });
+
+    return valid_params && valid_sources;
+}
+
 bool NoiseModule::isValid() const
 {
     return is_valid_;
@@ -264,10 +285,23 @@ void NoiseModule::setSourceModule(int index, NoiseModule::Ptr& ptr)
 
 int NoiseModule::getSourceModuleCount()
 {
-    return module_.GetSourceModuleCount();
+    return actual_source_count_;
 }
 
 NoiseModule::Ref NoiseModule::getSourceModule(int index)
 {
     return source_refs_[index];
+}
+
+int NoiseModule::getActualSourceCount()
+{
+    SourceParamCounterVistor source_param_counter;
+    for (auto& pair : *parameter_map_)
+    {
+        boost::apply_visitor(source_param_counter, pair.second);
+    }
+
+    auto count = module_.GetSourceModuleCount() - source_param_counter.getCount();
+
+    return count;
 }

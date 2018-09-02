@@ -64,6 +64,14 @@ set(UI_SOURCES
     src/ui/view_controller/module_preview.cpp
 )
 
+set(DETAIL_HEADERS
+    include/detail/gen/source_counter_visitor.h
+)
+
+set(DETAIL_SOURCES
+
+)
+
 set(MAPGEN_HEADERS
     include/mapgen_application.h
     include/frame_timer.h
@@ -71,6 +79,7 @@ set(MAPGEN_HEADERS
     ${NOISE_GEN_HEADERS}
     ${OUTPUT_GEN_HEADERS}
     ${UI_HEADERS}
+    ${DETAIL_HEADERS}
 )
 
 set(MAPGEN_SOURCES
@@ -80,6 +89,7 @@ set(MAPGEN_SOURCES
     ${NOISE_GEN_SOURCES}
     ${OUTPUT_GEN_SOURCES}
     ${UI_SOURCES}
+    ${DETAIL_SOURCES}
 )
 
 add_executable(${PROJECT_NAME}
@@ -124,3 +134,5 @@ source_group("Header Files/Output Gen" FILES ${OUTPUT_GEN_HEADERS})
 source_group("Source Files/Output Gen" FILES ${OUTPUT_GEN_SOURCES})
 source_group("Header Files/UI"         FILES ${UI_HEADERS})
 source_group("Source Files/UI"         FILES ${UI_SOURCES})
+source_group("Header Files/Detail"     FILES ${DETAIL_HEADERS})
+source_group("Source Files/Detail"     FILES ${DETAIL_SOURCES})

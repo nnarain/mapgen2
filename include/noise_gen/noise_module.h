@@ -50,6 +50,10 @@ public:
 
 
 private:
+
+    bool validate();
+    int getActualSourceCount();
+
     ModuleVariant module_base_;
     noise::module::Module& module_;
     std::vector<NoiseModule::Ref> source_refs_;
@@ -58,6 +62,7 @@ private:
     Type type_;
     ParameterMapPtr parameter_map_;
     bool is_valid_;
+    int actual_source_count_;
 };
 
 #endif // NOISE_GEN_NOISE_MODULE_H
