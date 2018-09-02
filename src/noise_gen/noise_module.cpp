@@ -1,5 +1,7 @@
 #include "noise_gen/noise_module.h"
 #include "detail/gen/source_counter_visitor.h"
+#include "detail/gen/validation_visitor.h"
+#include "detail/gen/set_param_visitor.h"
 
 #include <noise/module/module.h>
 
@@ -18,7 +20,7 @@ public:
 
     }
 
-    static DummyNoise instance()
+    static DummyNoise& instance()
     {
         static DummyNoise d;
         return d;
@@ -45,78 +47,6 @@ public:
     {
         return static_cast<noise::module::Module&>(module);
     }
-};
-
-struct ValidationVisitor : public boost::static_visitor<bool>
-{
-public:
-    ValidationVisitor(NoiseModule::ParameterMap& params)
-        : params_{params}
-    {
-    }
-
-    bool operator()(noise::module::Perlin& module) const { return true; }
-
-    bool operator()(noise::module::Select& module) const
-    {
-        const auto lower = boost::get<float>(params_["lower_bound"]);
-        const auto upper = boost::get<float>(params_["upper_bound"]);
-
-        if (lower >= upper)
-        {
-            std::cout << "Invalid parameters, lower >= upper" << std::endl;
-            return false;
-        }
-
-        auto control_source = boost::get<NoiseModule::Ref>(params_["control"]);
-
-        if (auto ptr = control_source.lock())
-        {
-            if (&ptr->getModule() == &module)
-            {
-                std::cout << "Invalid parameters, module cannot have itself as a source" << std::endl;
-                return false;
-            }
-        }
-        else
-        {
-            std::cout << "Invalid parameters, control source is null" << std::endl;
-            return false;
-        }
-
-        return true;
-    }
-
-private:
-    NoiseModule::ParameterMap& params_;
-};
-
-struct SetParamsVistor : public boost::static_visitor<>
-{
-public:
-    SetParamsVistor(NoiseModule::ParameterMap& params)
-        : params_{params}
-    {
-
-    }
-
-    void operator()(noise::module::Perlin& module) const
-    {
-        module.SetSeed(boost::get<int>(params_["seed"]));
-        module.SetFrequency(boost::get<float>(params_["frequency"]));
-        module.SetOctaveCount(boost::get<RangedInt>(params_["octaves"]).value);
-        module.SetPersistence(boost::get<RangedFloat>(params_["persistence"]).value);
-        module.SetLacunarity(boost::get<RangedFloat>(params_["lacunarity"]).value);
-    }
-
-    void operator()(noise::module::Select& module) const
-    {
-        module.SetBounds(boost::get<float>(params_["lower_bound"]), boost::get<float>(params_["upper_bound"]));
-        module.SetEdgeFalloff(boost::get<float>(params_["fall_off"]));
-        module.SetControlModule(boost::get<NoiseModule::Ref>(params_["control"]).lock()->getModule());
-    }
-private:
-    NoiseModule::ParameterMap& params_;
 };
 
 struct InvalidateVistor : public boost::static_visitor<>
@@ -216,26 +146,7 @@ void NoiseModule::update()
     }
     
     std::cout << name_ << " updating" << std::endl;
-    boost::apply_visitor(SetParamsVistor{ *parameter_map_ }, module_base_);
-}
-
-void NoiseModule::invalidateSources()
-{
-    std::cout << "Invalidating " << name_ << std::endl;
-
-    int source_count = module_.GetSourceModuleCount();
-
-    for (int i = 0; i < source_count; ++i)
-    {
-        module_.SetSourceModule(i, dummy);
-    }
-
-    for (auto& pair : *parameter_map_)
-    {
-        boost::apply_visitor(InvalidateVistor{}, pair.second);
-    }
-
-    update();
+    boost::apply_visitor(SetParamsVisitor{ *parameter_map_ }, module_base_);
 }
 
 NoiseModule::ParameterMapPtr NoiseModule::getParams()

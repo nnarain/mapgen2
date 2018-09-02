@@ -35,7 +35,6 @@ public:
     NoiseModule(const std::string& name, Type type);
 
     void update();
-    void invalidateSources();
 
     ParameterMapPtr getParams();
     noise::module::Module& getModule();

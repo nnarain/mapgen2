@@ -66,6 +66,8 @@ set(UI_SOURCES
 
 set(DETAIL_HEADERS
     include/detail/gen/source_counter_visitor.h
+    include/detail/gen/validation_visitor.h
+    include/detail/gen/set_param_visitor.h
 )
 
 set(DETAIL_SOURCES

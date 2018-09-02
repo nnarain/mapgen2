@@ -16,29 +16,12 @@ void ModuleManager::remove(const std::string& name)
 {
     if (!has(name)) return;
 
-    // before removing the noise module, it must be removed as a parameter from the other noise modules
-    auto module_to_remove = &modules_[name]->getModule();
-    
+    modules_.erase(name);
+
     for (auto& pair : modules_)
     {
-        auto& module = pair.second;
-        auto& base = module->getModule();
-        
-        int source_count = base.GetSourceModuleCount();
-
-        // determine if the source is the module to remove
-        for (int i = 0; i < source_count; ++i)
-        {
-            auto source = &base.GetSourceModule(i);
-
-            if (source == module_to_remove)
-            {
-                module->invalidateSources();
-            }
-        }
+        pair.second->update();
     }
-
-    modules_.erase(name);
 }
 
 NoiseModule::Ptr& ModuleManager::get(const std::string& name)
