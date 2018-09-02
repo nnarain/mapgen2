@@ -43,6 +43,10 @@ public:
 
     bool isValid() const;
 
+    void setSourceModule(int index, NoiseModule& module);
+    int getSourceModuleCount();
+
+
 private:
     ModuleVariant module_base_;
     noise::module::Module& module_;

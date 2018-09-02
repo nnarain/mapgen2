@@ -254,3 +254,13 @@ bool NoiseModule::isValid() const
 {
     return is_valid_;
 }
+
+void NoiseModule::setSourceModule(int index, NoiseModule& module)
+{
+    module_.SetSourceModule(index, module.getModule());
+}
+
+int NoiseModule::getSourceModuleCount()
+{
+    return module_.GetSourceModuleCount();
+}
