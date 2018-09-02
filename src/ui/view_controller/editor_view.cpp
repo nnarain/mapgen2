@@ -56,7 +56,7 @@ struct ParameterViewVistor : public boost::static_visitor<>
 
                 if (ImGui::Selectable(module_name.c_str(), false))
                 {
-                    module = &manager_.get(module_name);
+                    module = &(*manager_.get(module_name));
                     updated_ = true;
                 }
             }
@@ -124,8 +124,8 @@ void EditorView::render()
 
                     // update the preview image
                     auto& module = manager_.get(selected_module_);
-                    module.update();
-                    preview_.update(module);
+                    module->update();
+                    preview_.update(*module);
                 }
             }
         }
@@ -181,35 +181,34 @@ void EditorView::render()
                 removing_module = ImGui::Button("x");
 
                 // draw noise tyoe
-                ImGui::Text("Type: %s", MODULE_TYPES[static_cast<int>(module.getType())]);
+                ImGui::Text("Type: %s", MODULE_TYPES[static_cast<int>(module->getType())]);
 
                 // draw parameters
-                auto params = module.getParams();
+                auto params = module->getParams();
 
                 // count number of source modules are accounted for in parameters
                 ModuleCounterVistor count;
 
                 for (auto& param_iter : *params)
                 {
-                    ParameterViewVistor parameter_view{ module.getName(), param_iter.first, manager_ };
+                    ParameterViewVistor parameter_view{ module->getName(), param_iter.first, manager_ };
                     boost::apply_visitor(parameter_view, param_iter.second);
                     boost::apply_visitor(count, param_iter.second);
 
                     // check if the parameter was updated
                     if (parameter_view.updated())
                     {
-                        module.update();
-                        preview_.update(module);
+                        module->update();
+                        preview_.update(*module);
                     }
                 }
 
                 ImGui::Separator();
 
                 // draw source module selection
-                auto& module_base = module.getModule();
 
                 // get the number of source modules
-                auto source_count = module_base.GetSourceModuleCount();
+                auto source_count = module->getSourceModuleCount();
                 auto actual_source_count = source_count - count.getCount();
 
                 if (actual_source_count > 0)
@@ -220,9 +219,11 @@ void EditorView::render()
                     // souce module name
                     std::string source_name = "source " + std::to_string(i + 1);
                     // current source module
-                    const auto& module_ptr = module_base.GetSourceModule(i);
+                    NoiseModule::Ref current_module = module->getSourceModule(i);
                     // get the name of the module
-                    const auto& current_item_name = manager_.lookupName(module_ptr);
+                    std::string current_item_name("");
+                    if (auto ptr = current_module.lock())
+                        current_item_name = ptr->getName();
 
                     // create a combo box to select source modules
                     if (ImGui::BeginCombo(source_name.c_str(), current_item_name.c_str()))
@@ -234,9 +235,9 @@ void EditorView::render()
 
                             if (ImGui::Selectable(name.c_str(), name == current_item_name))
                             {
-                                module_base.SetSourceModule(i, manager_.get(name).getModule());
-                                module.update();
-                                preview_.update(module);
+                                module->setSourceModule(i, manager_.get(name));
+                                module->update();
+                                preview_.update(*module);
                             }
                         }
 

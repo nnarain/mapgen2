@@ -15,7 +15,7 @@ class ModuleManagerController
 public:
     ModuleManagerController(ModuleManager& manager);
 
-    NoiseModule& get(const std::string& name);
+    NoiseModule::Ptr& get(const std::string& name);
     bool has(const std::string& name);
 
     void createModule(const std::string& name, NoiseModule::Type type);

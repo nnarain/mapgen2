@@ -10,7 +10,7 @@ ModuleManagerController::ModuleManagerController(ModuleManager& manager)
 
 }
 
-NoiseModule& ModuleManagerController::get(const std::string& name)
+NoiseModule::Ptr& ModuleManagerController::get(const std::string& name)
 {
     return manager_.get(name);
 }

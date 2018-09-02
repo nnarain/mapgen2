@@ -9,7 +9,7 @@ ModuleManager::ModuleManager() :
 
 void ModuleManager::create(const std::string& name, NoiseModule::Type type)
 {
-    modules_[name] = std::make_unique<NoiseModule>(name, type);
+    modules_[name] = NoiseModule::Ptr{ new NoiseModule(name, type) };
 }
 
 void ModuleManager::remove(const std::string& name)
@@ -41,11 +41,11 @@ void ModuleManager::remove(const std::string& name)
     modules_.erase(name);
 }
 
-NoiseModule& ModuleManager::get(const std::string& name)
+NoiseModule::Ptr& ModuleManager::get(const std::string& name)
 {
     if (modules_.find(name) != modules_.end())
     {
-        return *modules_[name];
+        return modules_[name];
     }
     else
     {

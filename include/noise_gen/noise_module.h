@@ -9,13 +9,14 @@
 #include <memory>
 #include <map>
 #include <string>
+#include <vector>
 #include <boost/variant.hpp>
 
 class NoiseModule
 {
 public:
-    using Ptr = std::unique_ptr<NoiseModule>;
-    using ModulePtr = std::unique_ptr<noise::module::Module>;
+    using Ptr = std::shared_ptr<NoiseModule>;
+    using Ref = std::weak_ptr<NoiseModule>;
 
     using ModuleVariant = boost::variant<
         noise::module::Perlin,
@@ -43,13 +44,15 @@ public:
 
     bool isValid() const;
 
-    void setSourceModule(int index, NoiseModule& module);
+    void setSourceModule(int index, NoiseModule::Ptr& module);
+    NoiseModule::Ref getSourceModule(int index);
     int getSourceModuleCount();
 
 
 private:
     ModuleVariant module_base_;
     noise::module::Module& module_;
+    std::vector<NoiseModule::Ref> source_refs_;
     
     std::string name_;
     Type type_;

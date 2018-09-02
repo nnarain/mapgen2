@@ -183,6 +183,7 @@ public:
 NoiseModule::NoiseModule(const std::string& name, NoiseModule::Type type) 
     : module_base_{ ModuleFactory::createModule(type) }
     , module_{ boost::apply_visitor(ModuleRefVistor{}, module_base_) }
+    , source_refs_(module_.GetSourceModuleCount())
     , name_{ name }
     , type_{ type }
     , parameter_map_{ModuleFactory::initParams(type)}
@@ -255,12 +256,18 @@ bool NoiseModule::isValid() const
     return is_valid_;
 }
 
-void NoiseModule::setSourceModule(int index, NoiseModule& module)
+void NoiseModule::setSourceModule(int index, NoiseModule::Ptr& ptr)
 {
-    module_.SetSourceModule(index, module.getModule());
+    source_refs_[index] = NoiseModule::Ref{ ptr };
+    module_.SetSourceModule(index, ptr->getModule());
 }
 
 int NoiseModule::getSourceModuleCount()
 {
     return module_.GetSourceModuleCount();
+}
+
+NoiseModule::Ref NoiseModule::getSourceModule(int index)
+{
+    return source_refs_[index];
 }
