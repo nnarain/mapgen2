@@ -14,7 +14,7 @@ public:
     void operator()(RangedInt&){}
     void operator()(RangedFloat&){}
 
-    void operator()(NoiseModule*&)
+    void operator()(NoiseModule::Ref&)
     {
         count_++;
     }

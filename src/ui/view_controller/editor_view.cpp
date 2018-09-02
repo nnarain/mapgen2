@@ -43,12 +43,16 @@ struct ParameterViewVistor : public boost::static_visitor<>
         updated_ = ImGui::SliderFloat(param_name_.c_str(), &rf.value, rf.min, rf.max);
     }
 
-    void operator()(NoiseModule*& module)
+    void operator()(NoiseModule::Ref& module)
     {
         const auto& module_names = manager_.getModuleNames();
-        const char* current_item = (module) ? module->getName().c_str() : nullptr;
 
-        if (ImGui::BeginCombo(param_name_.c_str(), current_item))
+        std::string current_item("");
+        if (auto ptr = module.lock())
+            current_item = ptr->getName();
+//        const char* current_item = (module) ? module->getName().c_str() : nullptr;
+
+        if (ImGui::BeginCombo(param_name_.c_str(), current_item.c_str()))
         {
             for (const auto& module_name : module_names)
             {
@@ -56,7 +60,7 @@ struct ParameterViewVistor : public boost::static_visitor<>
 
                 if (ImGui::Selectable(module_name.c_str(), false))
                 {
-                    module = &(*manager_.get(module_name));
+                    module = manager_.get(module_name);
                     updated_ = true;
                 }
             }

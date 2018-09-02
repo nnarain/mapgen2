@@ -68,17 +68,19 @@ public:
             return false;
         }
 
-        auto* control_source = boost::get<NoiseModule*>(params_["control"]);
+        auto control_source = boost::get<NoiseModule::Ref>(params_["control"]);
 
-        if (control_source == nullptr)
+        if (auto ptr = control_source.lock())
+        {
+            if (&ptr->getModule() == &module)
+            {
+                std::cout << "Invalid parameters, module cannot have itself as a source" << std::endl;
+                return false;
+            }
+        }
+        else
         {
             std::cout << "Invalid parameters, control source is null" << std::endl;
-            return false;
-        }
-
-        if (&control_source->getModule() == &module)
-        {
-            std::cout << "Invalid parameters, module cannot have itself as a source" << std::endl;
             return false;
         }
 
@@ -111,7 +113,7 @@ public:
     {
         module.SetBounds(boost::get<float>(params_["lower_bound"]), boost::get<float>(params_["upper_bound"]));
         module.SetEdgeFalloff(boost::get<float>(params_["fall_off"]));
-        module.SetControlModule(boost::get<NoiseModule*>(params_["control"])->getModule());
+        module.SetControlModule(boost::get<NoiseModule::Ref>(params_["control"]).lock()->getModule());
     }
 private:
     NoiseModule::ParameterMap& params_;
@@ -166,7 +168,7 @@ public:
             return {
                 {"lower_bound", 0.0f},
                 {"upper_bound", 0.1f},
-                {"control", nullptr},
+                {"control", NoiseModule::Ref{}},
                 {"fall_off", 0.0f}
             };
         default:
@@ -259,15 +261,12 @@ NoiseModule::Type NoiseModule::getType() const
 bool NoiseModule::validate()
 {
     auto valid_params = boost::apply_visitor(ValidationVisitor{ *parameter_map_ }, module_base_);
-
-    SourceParamCounterVistor source_param_counter;
-    for (auto& pair : *parameter_map_)
-    {
-        boost::apply_visitor(source_param_counter, pair.second);
-    }
-
-    auto count = getSourceModuleCount() - source_param_counter.getCount();
-    auto valid_sources = std::all_of(source_refs_.begin(), source_refs_.begin() + count, [](NoiseModule::Ref ref) {return !ref.expired(); });
+    auto valid_sources = std::all_of(source_refs_.begin(), source_refs_.begin() + actual_source_count_,
+        [](NoiseModule::Ref ref) 
+        {
+            return !ref.expired();
+        }
+    );
 
     return valid_params && valid_sources;
 }

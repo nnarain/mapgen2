@@ -22,7 +22,7 @@ public:
         noise::module::Perlin,
         noise::module::Select
     >;
-    using ParameterVariant = boost::variant<int, float, RangedInt, RangedFloat, NoiseModule*>;
+    using ParameterVariant = boost::variant<int, float, RangedInt, RangedFloat, NoiseModule::Ref>;
     using ParameterMap = std::map<std::string, ParameterVariant>;
     using ParameterMapPtr = std::shared_ptr<ParameterMap>;
 
