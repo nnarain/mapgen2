@@ -43,12 +43,16 @@ struct ParameterViewVistor : public boost::static_visitor<>
         updated_ = ImGui::SliderFloat(param_name_.c_str(), &rf.value, rf.min, rf.max);
     }
 
-    void operator()(NoiseModule*& module)
+    void operator()(NoiseModule::Ref& module)
     {
         const auto& module_names = manager_.getModuleNames();
-        const char* current_item = (module) ? module->getName().c_str() : nullptr;
 
-        if (ImGui::BeginCombo(param_name_.c_str(), current_item))
+        std::string current_item("");
+        if (auto ptr = module.lock())
+            current_item = ptr->getName();
+//        const char* current_item = (module) ? module->getName().c_str() : nullptr;
+
+        if (ImGui::BeginCombo(param_name_.c_str(), current_item.c_str()))
         {
             for (const auto& module_name : module_names)
             {
@@ -56,7 +60,7 @@ struct ParameterViewVistor : public boost::static_visitor<>
 
                 if (ImGui::Selectable(module_name.c_str(), false))
                 {
-                    module = manager_.get(module_name).get();
+                    module = manager_.get(module_name);
                     updated_ = true;
                 }
             }
@@ -75,29 +79,6 @@ private:
     std::string param_name_;
     ModuleManagerController& manager_;
     bool updated_;
-};
-
-struct ModuleCounterVistor : public boost::static_visitor<>
-{
-public:
-    ModuleCounterVistor() : count_{ 0 } {}
-    void operator()(int&){}
-    void operator()(float&){}
-    void operator()(RangedInt&){}
-    void operator()(RangedFloat&){}
-
-    void operator()(NoiseModule*&)
-    {
-        count_++;
-    }
-
-    int getCount() const
-    {
-        return count_;
-    }
-
-private:
-    int count_;
 };
 
 EditorView::EditorView(ModuleManagerController& manager)
@@ -186,14 +167,10 @@ void EditorView::render()
                 // draw parameters
                 auto params = module->getParams();
 
-                // count number of source modules are accounted for in parameters
-                ModuleCounterVistor count;
-
                 for (auto& param_iter : *params)
                 {
                     ParameterViewVistor parameter_view{ module->getName(), param_iter.first, manager_ };
                     boost::apply_visitor(parameter_view, param_iter.second);
-                    boost::apply_visitor(count, param_iter.second);
 
                     // check if the parameter was updated
                     if (parameter_view.updated())
@@ -206,11 +183,9 @@ void EditorView::render()
                 ImGui::Separator();
 
                 // draw source module selection
-                auto& module_base = module->getModule();
 
                 // get the number of source modules
-                auto source_count = module_base->GetSourceModuleCount();
-                auto actual_source_count = source_count - count.getCount();
+                auto actual_source_count = module->getSourceModuleCount();
 
                 if (actual_source_count > 0)
                     ImGui::Text("Sources");
@@ -220,9 +195,11 @@ void EditorView::render()
                     // souce module name
                     std::string source_name = "source " + std::to_string(i + 1);
                     // current source module
-                    const auto& module_ptr = module_base->GetSourceModule(i);
+                    NoiseModule::Ref current_module = module->getSourceModule(i);
                     // get the name of the module
-                    const auto& current_item_name = manager_.lookupName(module_ptr);
+                    std::string current_item_name("");
+                    if (auto ptr = current_module.lock())
+                        current_item_name = ptr->getName();
 
                     // create a combo box to select source modules
                     if (ImGui::BeginCombo(source_name.c_str(), current_item_name.c_str()))
@@ -234,7 +211,7 @@ void EditorView::render()
 
                             if (ImGui::Selectable(name.c_str(), name == current_item_name))
                             {
-                                module_base->SetSourceModule(i, *manager_.get(name)->getModule().get());
+                                module->setSourceModule(i, manager_.get(name));
                                 module->update();
                                 preview_.update(*module);
                             }
