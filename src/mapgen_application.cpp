@@ -16,7 +16,7 @@ MapGenApplication::MapGenApplication(const Arguments &arguments)
     using namespace Math::Literals;
     GL::Renderer::setClearColor(0xFFFFFF_rgbf);
 
-    module_manager_.create("module1", NoiseModule::Type::Perlin);
+    module_manager_.create("noise1", NoiseModule::Type::Select);
 }
 
 void MapGenApplication::drawEvent()

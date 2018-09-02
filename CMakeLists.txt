@@ -6,6 +6,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
 
 project(mapgen2)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLIBNOISE_HAS_MODERN_CPP_CTORS")
+
 # Set output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
@@ -62,6 +64,16 @@ set(UI_SOURCES
     src/ui/view_controller/module_preview.cpp
 )
 
+set(DETAIL_HEADERS
+    include/detail/gen/source_counter_visitor.h
+    include/detail/gen/validation_visitor.h
+    include/detail/gen/set_param_visitor.h
+)
+
+set(DETAIL_SOURCES
+
+)
+
 set(MAPGEN_HEADERS
     include/mapgen_application.h
     include/frame_timer.h
@@ -69,6 +81,7 @@ set(MAPGEN_HEADERS
     ${NOISE_GEN_HEADERS}
     ${OUTPUT_GEN_HEADERS}
     ${UI_HEADERS}
+    ${DETAIL_HEADERS}
 )
 
 set(MAPGEN_SOURCES
@@ -78,6 +91,7 @@ set(MAPGEN_SOURCES
     ${NOISE_GEN_SOURCES}
     ${OUTPUT_GEN_SOURCES}
     ${UI_SOURCES}
+    ${DETAIL_SOURCES}
 )
 
 add_executable(${PROJECT_NAME}
@@ -122,3 +136,5 @@ source_group("Header Files/Output Gen" FILES ${OUTPUT_GEN_HEADERS})
 source_group("Source Files/Output Gen" FILES ${OUTPUT_GEN_SOURCES})
 source_group("Header Files/UI"         FILES ${UI_HEADERS})
 source_group("Source Files/UI"         FILES ${UI_SOURCES})
+source_group("Header Files/Detail"     FILES ${DETAIL_HEADERS})
+source_group("Source Files/Detail"     FILES ${DETAIL_SOURCES})

@@ -14,7 +14,10 @@ ModulePreview::ModulePreview()
 
 void ModulePreview::update(NoiseModule& module)
 {
-    generator_.generate(texture_, 128, 128, module);
+    if (module.isValid())
+    {
+        generator_.generate(texture_, 128, 128, module);
+    }
 }
 
 void ModulePreview::render()

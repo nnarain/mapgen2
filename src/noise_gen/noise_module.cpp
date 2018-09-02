@@ -1,7 +1,11 @@
 #include "noise_gen/noise_module.h"
+#include "detail/gen/source_counter_visitor.h"
+#include "detail/gen/validation_visitor.h"
+#include "detail/gen/set_param_visitor.h"
 
 #include <noise/module/module.h>
 
+#include <algorithm>
 #include <iostream>
 #include <stdexcept>
 
@@ -16,7 +20,7 @@ public:
 
     }
 
-    static DummyNoise instance()
+    static DummyNoise& instance()
     {
         static DummyNoise d;
         return d;
@@ -35,7 +39,17 @@ public:
 
 static DummyNoise dummy;
 
-struct InvalidVistor : public boost::static_visitor<>
+struct ModuleRefVistor : public boost::static_visitor<noise::module::Module&>
+{
+public:
+    template<typename T>
+    noise::module::Module& operator()(T& module) const
+    {
+        return static_cast<noise::module::Module&>(module);
+    }
+};
+
+struct InvalidateVistor : public boost::static_visitor<>
 {
 public:
     template<typename T>
@@ -54,32 +68,18 @@ public:
 class ModuleFactory
 {
 public:
-    static NoiseModule::ModulePtr createModule(NoiseModule::Type type)
+    static NoiseModule::ModuleVariant createModule(NoiseModule::Type type)
     {
         switch (type)
         {
         case NoiseModule::Type::Perlin:
-            return std::make_unique<noise::module::Perlin>();
+            return { noise::module::Perlin() };
         case NoiseModule::Type::Select:
-            return std::make_unique<noise::module::Select>();
+            return { noise::module::Select() };
         default:
             throw std::runtime_error("Invalid noise type");
             break;
         }
-    }
-
-    static NoiseModule::ModulePtr initModule(NoiseModule::Type type)
-    {
-        auto module = createModule(type);
-
-        const auto count = module->GetSourceModuleCount();
-
-        for (int i = 0; i < count; ++i)
-        {
-            module->SetSourceModule(i, dummy);
-        }
-
-        return module;
     }
 
     static NoiseModule::ParameterMap createParams(NoiseModule::Type type)
@@ -98,7 +98,7 @@ public:
             return {
                 {"lower_bound", 0.0f},
                 {"upper_bound", 0.1f},
-                {"control", nullptr},
+                {"control", NoiseModule::Ref{}},
                 {"fall_off", 0.0f}
             };
         default:
@@ -115,99 +115,38 @@ public:
 };
 
 NoiseModule::NoiseModule(const std::string& name, NoiseModule::Type type) 
-    : module_{ ModuleFactory::initModule(type) }
+    : module_base_{ ModuleFactory::createModule(type) }
+    , module_{ boost::apply_visitor(ModuleRefVistor{}, module_base_) }
+    , source_refs_(module_.GetSourceModuleCount())
     , name_{ name }
     , type_{ type }
     , parameter_map_{ModuleFactory::initParams(type)}
     , is_valid_{false}
+    , actual_source_count_{0}
 {
+    actual_source_count_ = getActualSourceCount();
+
+    const auto count = module_.GetSourceModuleCount();
+
+    for (int i = 0; i < count; ++i)
+    {
+        module_.SetSourceModule(i, dummy);
+    }
 }
 
 void NoiseModule::update()
 {
     using namespace noise::module;
 
-    is_valid_ = isValid();
+    is_valid_ = validate();
 
     if (!is_valid_)
     {
         return;
     }
     
-    Module* ptr = module_.get();
-    ParameterMap& params = *parameter_map_.get();
-
     std::cout << name_ << " updating" << std::endl;
-
-    switch (type_)
-    {
-    case NoiseModule::Type::Perlin:
-        ((Perlin*)ptr)->SetSeed(boost::get<int>(params["seed"]));
-        ((Perlin*)ptr)->SetFrequency(boost::get<float>(params["frequency"]));
-        ((Perlin*)ptr)->SetOctaveCount(boost::get<RangedInt>(params["octaves"]).value);
-        ((Perlin*)ptr)->SetPersistence(boost::get<RangedFloat>(params["persistence"]).value);
-        ((Perlin*)ptr)->SetLacunarity(boost::get<RangedFloat>(params["lacunarity"]).value);
-        break;
-    case NoiseModule::Type::Select:
-        ((Select*)ptr)->SetBounds(boost::get<float>(params["lower_bound"]), boost::get<float>(params["upper_bound"]));
-        ((Select*)ptr)->SetEdgeFalloff(boost::get<float>(params["fall_off"]));
-        ((Select*)ptr)->SetControlModule(*boost::get<NoiseModule*>(params["control"])->getModule().get());
-        break;
-    default:
-        break;
-    }
-}
-
-void NoiseModule::invalidateSources()
-{
-    std::cout << "Invalidating " << name_ << std::endl;
-
-    int source_count = module_->GetSourceModuleCount();
-
-    for (int i = 0; i < source_count; ++i)
-    {
-        module_->SetSourceModule(i, dummy);
-    }
-
-    for (auto& pair : *parameter_map_)
-    {
-        boost::apply_visitor(InvalidVistor{}, pair.second);
-    }
-
-    update();
-}
-
-bool NoiseModule::isValid() const
-{
-    ParameterMap& params = *parameter_map_.get();
-
-    if (type_ == NoiseModule::Type::Select)
-    {
-        const auto lower = boost::get<float>(params["lower_bound"]);
-        const auto upper = boost::get<float>(params["upper_bound"]);
-
-        if (lower >= upper)
-        {
-            std::cout << "Invalid parameters, lower >= upper" << std::endl;
-            return false;
-        }
-        
-        auto* control_source = boost::get<NoiseModule*>(params["control"]);
-
-        if (control_source == nullptr)
-        {
-            std::cout << "Invalid parameters, control source is null" << std::endl;
-            return false;
-        }
-
-        if (control_source == this)
-        {
-            std::cout << "Invalid parameters, module cannot have itself as a source" << std::endl;
-            return false;
-        }
-    }
-
-    return true;
+    boost::apply_visitor(SetParamsVisitor{ *parameter_map_ }, module_base_);
 }
 
 NoiseModule::ParameterMapPtr NoiseModule::getParams()
@@ -215,7 +154,7 @@ NoiseModule::ParameterMapPtr NoiseModule::getParams()
     return parameter_map_;
 }
 
-NoiseModule::ModulePtr& NoiseModule::getModule()
+noise::module::Module& NoiseModule::getModule()
 {
     return module_;
 }
@@ -228,4 +167,51 @@ const std::string& NoiseModule::getName() const
 NoiseModule::Type NoiseModule::getType() const
 {
     return type_;
+}
+
+bool NoiseModule::validate()
+{
+    auto valid_params = boost::apply_visitor(ValidationVisitor{ *parameter_map_ }, module_base_);
+    auto valid_sources = std::all_of(source_refs_.begin(), source_refs_.begin() + actual_source_count_,
+        [](NoiseModule::Ref ref) 
+        {
+            return !ref.expired();
+        }
+    );
+
+    return valid_params && valid_sources;
+}
+
+bool NoiseModule::isValid() const
+{
+    return is_valid_;
+}
+
+void NoiseModule::setSourceModule(int index, NoiseModule::Ptr& ptr)
+{
+    source_refs_[index] = NoiseModule::Ref{ ptr };
+    module_.SetSourceModule(index, ptr->getModule());
+}
+
+int NoiseModule::getSourceModuleCount()
+{
+    return actual_source_count_;
+}
+
+NoiseModule::Ref NoiseModule::getSourceModule(int index)
+{
+    return source_refs_[index];
+}
+
+int NoiseModule::getActualSourceCount()
+{
+    SourceParamCounterVistor source_param_counter;
+    for (auto& pair : *parameter_map_)
+    {
+        boost::apply_visitor(source_param_counter, pair.second);
+    }
+
+    auto count = module_.GetSourceModuleCount() - source_param_counter.getCount();
+
+    return count;
 }
