@@ -10,12 +10,12 @@
 class EditorView : public View
 {
 public:
-    EditorView(ModuleManagerController& manager);
+    EditorView(ModuleManager& manager);
 
     void render() override;
 
 private:
-    ModuleManagerController& manager_;
+    ModuleManagerController manager_;
     ModulePreview preview_;
     std::string selected_module_;
 };

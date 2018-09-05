@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
 
 project(mapgen2)
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLIBNOISE_HAS_MODERN_CPP_CTORS")
 
 # Set output directory
@@ -16,8 +17,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 # Find Dependencies
 find_package(Magnum REQUIRED GL Sdl2Application)
 set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
-
-find_package(imgui REQUIRED)
 
 
 set(Boost_USE_STATIC_LIB ON)
@@ -55,10 +54,14 @@ set(UI_HEADERS
     include/ui/view_controller/editor_view.h
     include/ui/view_controller/parameter_view.h
     include/ui/view_controller/module_preview.h
+    include/ui/view_controller/imgui_demo_view.h
+    include/ui/view_controller/imgui_metric_view.h
+    include/ui/view_controller/test_view.h
 )
 
 set(UI_SOURCES
     src/ui/user_interface.cpp
+    src/ui/view_controller/view.cpp
     src/ui/view_controller/module_manager_controller.cpp
     src/ui/view_controller/editor_view.cpp
     src/ui/view_controller/module_preview.cpp
@@ -100,7 +103,7 @@ add_executable(${PROJECT_NAME}
 )
 
 if (MSVC)
-    target_compile_options(${PROJECT_NAME} PUBLIC /WX /wd4100)
+    target_compile_options(${PROJECT_NAME} PUBLIC /WX /wd4100 /wd4458)
 endif(MSVC)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -112,7 +115,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME}
     # Noise libs
-    noise
+    noise-static
     noiseutils-static
 
     # Magnum Middleware

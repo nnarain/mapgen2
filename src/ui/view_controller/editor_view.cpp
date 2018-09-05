@@ -81,7 +81,7 @@ private:
     bool updated_;
 };
 
-EditorView::EditorView(ModuleManagerController& manager)
+EditorView::EditorView(ModuleManager& manager)
     : manager_{manager}
 {
 }

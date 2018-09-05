@@ -1,22 +1,32 @@
 #ifndef UI_USER_INTERFACE_H
 #define UI_USER_INTERFACE_H
 
-#include "noise_gen/module_manager.h"
-#include "ui/view_controller/module_manager_controller.h"
-#include "ui/view_controller/editor_view.h"
+#include "ui/view_controller/view.h"
+
+#include <vector>
+#include <string>
 
 class UserInterface
 {
 public:
-    UserInterface(ModuleManager& manager);
+    UserInterface();
     ~UserInterface();
 
     void render();
 
+    template<class T, typename... Args>
+    void addView(const std::string& name, bool visible, Args&... args)
+    {
+        View::Ptr view{ new T(args...) };
+        view->setVisible(visible);
+
+        views_.push_back({ name, std::move(view) });
+    }
+
 private:
-    ModuleManagerController manager_;
-    // TODO: Remove direct implementation
-    EditorView editor_;
+    void renderMenu();
+
+    std::vector<std::pair<std::string, View::Ptr>> views_;
 };
 
 #endif // UI_USER_INTERFACE_H

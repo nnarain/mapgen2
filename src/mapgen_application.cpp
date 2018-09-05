@@ -1,22 +1,32 @@
 #include "mapgen_application.h"
+#include "ui/view_controller/editor_view.h"
+#include "ui/view_controller/imgui_demo_view.h"
+#include "ui/view_controller/imgui_metric_view.h"
+#include "ui/view_controller/test_view.h"
+
+
 #include <Magnum/GL/Renderer.h>
 #include <Magnum/Math/Color.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/Platform/GLContext.h>
 #include <imgui.h>
 
+
 using namespace Magnum;
 
 MapGenApplication::MapGenApplication(const Arguments &arguments) 
     : Platform::Application{ arguments, Configuration{}.setTitle("MapGen").setSize({1280, 960}) }
     , module_manager_{}
-    , ui_{module_manager_}
+    , ui_{}
     , frame_timer_{16}
 {
     using namespace Math::Literals;
     GL::Renderer::setClearColor(0xFFFFFF_rgbf);
 
-    module_manager_.create("noise1", NoiseModule::Type::Select);
+    ui_.addView<EditorView>("Editor", true, module_manager_);
+    ui_.addView<ImGuiDemoView>("Demo", false);
+    ui_.addView<ImGuiMetricsView>("Metrics", false);
+    ui_.addView<TestView>("Test", false, module_manager_);
 }
 
 void MapGenApplication::drawEvent()
@@ -29,9 +39,6 @@ void MapGenApplication::drawEvent()
     imgui_.newFrame(windowSize(), GL::defaultFramebuffer.viewport().size());
 
     ui_.render();
-
-    ImGui::ShowDemoWindow(nullptr);
-    ImGui::ShowMetricsWindow(nullptr);
 
     // draw imgui
     imgui_.drawFrame();
