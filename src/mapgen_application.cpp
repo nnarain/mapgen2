@@ -2,6 +2,7 @@
 #include "ui/view_controller/editor_view.h"
 #include "ui/view_controller/imgui_demo_view.h"
 #include "ui/view_controller/imgui_metric_view.h"
+#include "ui/view_controller/node_graph_editor.h"
 #include "ui/view_controller/test_view.h"
 
 
@@ -23,10 +24,14 @@ MapGenApplication::MapGenApplication(const Arguments &arguments)
     using namespace Math::Literals;
     GL::Renderer::setClearColor(0xFFFFFF_rgbf);
 
-    ui_.addView<EditorView>("Editor", true, module_manager_);
+    ui_.initialize();
+
+    ui_.addTab<NodeGraphEditorTab>("Editor");
+
+    //ui_.addView<EditorView>("Editor", true, module_manager_);
     ui_.addView<ImGuiDemoView>("Demo", false);
     ui_.addView<ImGuiMetricsView>("Metrics", false);
-    ui_.addView<TestView>("Test", false, module_manager_);
+    //ui_.addView<TestView>("Test", false, module_manager_);
 }
 
 void MapGenApplication::drawEvent()
