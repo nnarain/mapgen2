@@ -27,7 +27,7 @@ protected:
         , name{ name }
         , inputs{ inputs }
         , ref{module}
-        , needs_preview_update{false}
+        , needs_preview_update{true}
         , preview{ { 25, 25 } }
     {
         this->init(this->name.c_str(), pos, this->inputs.c_str(), "out", static_cast<int>(module->getType()));
@@ -131,6 +131,7 @@ public:
         NoiseNode* node = (NoiseNode*)ImGui::MemAlloc(sizeof(NoiseNode));
         IM_PLACEMENT_NEW(node) NoiseNode(name, inputs, module, pos);
 
+//        node->setUpdateRequired();
         node->baseWidthOverride = 100.f;
 
         return node;
@@ -202,6 +203,7 @@ ImGui::Node* NodeGraphEditorTab::nodeFactory(int nt, const ImVec2& pos, const Im
     {
         auto& manager = *static_cast<ModuleManagerController*>(user_factory_ptr);
         auto& module = manager.createModuleWithUniqueName(static_cast<NoiseModule::Type>(nt));
+        module->update();
 
         return NoiseNode::Create(module, pos);
     }

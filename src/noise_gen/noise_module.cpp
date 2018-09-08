@@ -95,25 +95,25 @@ public:
         case NoiseModule::Type::Billow:
             return {
                 { "seed", 1337 },
-                { "frequency", 0.1f },
-                { "octaves", RangedInt(1, 25, 1) },
-                { "persistence", RangedFloat(0.f, 1.f, 0.5f) },
-                { "lacunarity", RangedFloat(1.f, 2.f, 2.f) },
+                { "frequency", (float)noise::module::DEFAULT_BILLOW_FREQUENCY },
+                { "octaves", RangedInt(1, 25, noise::module::DEFAULT_BILLOW_OCTAVE_COUNT) },
+                { "persistence", RangedFloat(0.f, 1.f, noise::module::DEFAULT_BILLOW_PERSISTENCE) },
+                { "lacunarity", RangedFloat(1.f, 2.f, noise::module::DEFAULT_BILLOW_LACUNARITY) },
             };
         case NoiseModule::Type::Perlin:
             return {
                 {"seed", 1337},
-                {"frequency", 0.1f},
-                {"octaves", RangedInt(1, 25, 1)},
-                {"persistence", RangedFloat(0.f, 1.f, 0.5f)},
-                {"lacunarity", RangedFloat(1.f, 2.f, 2.f)},
+                {"frequency", (float)noise::module::DEFAULT_PERLIN_FREQUENCY},
+                {"octaves", RangedInt(1, 25, noise::module::DEFAULT_PERLIN_OCTAVE_COUNT)},
+                {"persistence", RangedFloat(0.f, 1.f, noise::module::DEFAULT_PERLIN_PERSISTENCE)},
+                {"lacunarity", RangedFloat(1.f, 4.f, noise::module::DEFAULT_PERLIN_LACUNARITY)},
             };
         case NoiseModule::Type::RidgedMulti:
             return {
                 { "seed", 1337 },
-                { "frequency", 0.1f },
-                { "octaves", RangedInt(1, 25, 1) },
-                { "lacunarity", RangedFloat(1.f, 2.f, 2.f) },
+                { "frequency", (float)noise::module::DEFAULT_RIDGED_FREQUENCY },
+                { "octaves", RangedInt(1, 25, noise::module::DEFAULT_RIDGED_OCTAVE_COUNT) },
+                { "lacunarity", RangedFloat(1.f, 4.f, noise::module::DEFAULT_RIDGED_LACUNARITY) },
             };
         case NoiseModule::Type::ScaleBias:
             return {
@@ -122,9 +122,9 @@ public:
             };
         case NoiseModule::Type::Select:
             return {
-                {"lower_bound", 0.0f},
-                {"upper_bound", 0.1f},
-                {"fall_off", 0.0f}
+                {"lower_bound", (float)noise::module::DEFAULT_SELECT_LOWER_BOUND},
+                {"upper_bound", (float)noise::module::DEFAULT_SELECT_UPPER_BOUND},
+                {"fall_off", (float)noise::module::DEFAULT_SELECT_EDGE_FALLOFF}
             };
         default:
             throw std::runtime_error("Invalid noise type");
