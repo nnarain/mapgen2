@@ -28,7 +28,7 @@ protected:
         , inputs{ inputs }
         , ref{module}
         , needs_preview_update{false}
-        , preview_{ { 25, 25 } }
+        , preview{ { 25, 25 } }
     {
         this->init(this->name.c_str(), pos, this->inputs.c_str(), "out", static_cast<int>(module->getType()));
     }
@@ -61,17 +61,17 @@ public:
         {
             if (auto ptr = ref.lock())
             {
-                preview_.update(*ptr);
+                preview.update(*ptr);
                 needs_preview_update = false;
             }
         }
 
-        auto& size = preview_.getSize();
+        auto& size = preview.getSize();
         auto aspect = node_width / size.x();
         auto height = aspect * size.y();
-        preview_.setSize({ node_width, height });
+        preview.setSize({ node_width, height });
 
-        preview_.render();
+        preview.render();
         return false;
     }
 
@@ -139,8 +139,10 @@ public:
     std::string name;
     std::string inputs;
     NoiseModule::Ref ref;
+    ModulePreview preview;
+
+private:
     bool needs_preview_update;
-    ModulePreview preview_;
 };
 
 class OutputNode : public ImGui::Node
