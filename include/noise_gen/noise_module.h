@@ -19,6 +19,7 @@ public:
     using Ref = std::weak_ptr<NoiseModule>;
 
     using ModuleVariant = boost::variant<
+        noise::module::Billow,
         noise::module::Perlin,
         noise::module::Select
     >;
@@ -28,6 +29,7 @@ public:
 
     enum class Type
     {
+        Billow,
         Perlin,
         Select
     };

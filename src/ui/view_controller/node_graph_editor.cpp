@@ -11,6 +11,7 @@
 #include <sstream>
 
 static const char* NODE_TYPE_NAMES[] = {
+    "billow",
     "perlin",
     "select",
     "output"
@@ -28,7 +29,6 @@ protected:
         , preview_{ { 25, 25 } }
     {
         this->init(this->name.c_str(), pos, this->inputs.c_str(), "out", static_cast<int>(module->getType()));
-        //this->user_ptr = &module;
     }
 
     virtual const char* getTooltip() const { return "Noise node"; }
@@ -89,8 +89,6 @@ public:
 
             if (updated)
             {
-            //    module->update();
-            //    preview_.update(*module);
                 setUpdateRequired();
             }
         }
@@ -230,7 +228,6 @@ void NodeGraphEditorTab::linkCallback(const ImGui::NodeLink& link, ImGui::NodeGr
                 {
                     auto out_slot = link.OutputSlot;
                     out_noise->setSourceModule(out_slot, in_noise);
-                    //out_noise->update();
                     out_node->setUpdateRequired();
                 }
             }

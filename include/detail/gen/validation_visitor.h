@@ -12,6 +12,7 @@ public:
     {
     }
 
+    bool operator()(noise::module::Billow& module) const { return true; }
     bool operator()(noise::module::Perlin& module) const { return true; }
 
     bool operator()(noise::module::Select& module) const
