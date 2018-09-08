@@ -48,3 +48,8 @@ void ModuleManager::forEach(std::function<void(const std::string&, NoiseModule&)
         fn(it.first, *it.second);
     }
 }
+
+std::size_t ModuleManager::size() const noexcept
+{
+    return modules_.size();
+}

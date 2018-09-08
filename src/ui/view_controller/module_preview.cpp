@@ -7,7 +7,8 @@
 
 using namespace Magnum;
 
-ModulePreview::ModulePreview()
+ModulePreview::ModulePreview(const Vector2& size)
+    : size_{size}
 {
 
 }
@@ -22,7 +23,15 @@ void ModulePreview::update(NoiseModule& module)
 
 void ModulePreview::render()
 {
-    auto parent_width = ImGui::GetWindowWidth();
-    auto parent_height = ImGui::GetWindowHeight() - ImGui::GetCursorPosY();
-    ImGui::Image(texture_, { parent_width, parent_height });
+    ImGui::Image(texture_, { size_.x(), size_.y() });
+}
+
+void ModulePreview::setSize(const Vector2& size)
+{
+    size_ = size;
+}
+
+Vector2& ModulePreview::getSize() noexcept
+{
+    return size_;
 }

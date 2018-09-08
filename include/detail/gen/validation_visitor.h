@@ -25,6 +25,7 @@ public:
             return false;
         }
 
+        /*
         auto control_source = boost::get<NoiseModule::Ref>(params_["control"]);
 
         if (auto ptr = control_source.lock())
@@ -40,6 +41,7 @@ public:
             std::cout << "Invalid parameters, control source is null" << std::endl;
             return false;
         }
+        */
 
         return true;
     }

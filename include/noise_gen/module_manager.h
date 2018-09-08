@@ -19,6 +19,8 @@ public:
     bool has(const std::string& name) const;
 
     void forEach(std::function<void(const std::string&, NoiseModule&)> fn);
+    
+    std::size_t size() const noexcept;
 
 private:
     std::map<std::string, NoiseModule::Ptr> modules_;

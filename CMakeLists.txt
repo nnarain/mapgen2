@@ -74,6 +74,7 @@ set(DETAIL_HEADERS
     include/detail/gen/source_counter_visitor.h
     include/detail/gen/validation_visitor.h
     include/detail/gen/set_param_visitor.h
+    include/detail/view/parameter_view_visitor.h
 )
 
 set(DETAIL_SOURCES

@@ -11,12 +11,16 @@
 class ModulePreview : public View
 {
 public:
-    ModulePreview();
+    ModulePreview(const Magnum::Vector2&);
 
     virtual void update(NoiseModule& module);
     virtual void render() override;
 
+    void setSize(const Magnum::Vector2&);
+    Magnum::Vector2& getSize() noexcept;
+
 private:
+    Magnum::Vector2 size_;
     Magnum::GL::Texture2D texture_;
     TextureGenerator generator_;
 };

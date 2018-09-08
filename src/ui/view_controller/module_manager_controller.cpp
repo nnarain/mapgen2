@@ -32,6 +32,23 @@ void ModuleManagerController::removeModule(const std::string& name)
     is_names_cached_ = false;
 }
 
+NoiseModule::Ptr& ModuleManagerController::createModuleWithUniqueName(NoiseModule::Type type)
+{
+    std::size_t i = 0;
+    std::string name;
+
+    do
+    {
+        name = std::string("noise") + std::to_string(i);
+        i++;
+    }
+    while (has(name));
+
+    createModule(name, type);
+
+    return get(name);
+}
+
 const std::vector<std::string>& ModuleManagerController::getModuleNames()
 {
     if (is_names_cached_)
@@ -66,4 +83,9 @@ const std::string& ModuleManagerController::lookupName(const noise::module::Modu
     {
         return empty;
     }
+}
+
+const std::size_t ModuleManagerController::size() const noexcept
+{
+    return manager_.size();
 }

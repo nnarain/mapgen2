@@ -98,7 +98,7 @@ public:
             return {
                 {"lower_bound", 0.0f},
                 {"upper_bound", 0.1f},
-                {"control", NoiseModule::Ref{}},
+                //{"control", NoiseModule::Ref{}},
                 {"fall_off", 0.0f}
             };
         default:
@@ -124,7 +124,7 @@ NoiseModule::NoiseModule(const std::string& name, NoiseModule::Type type)
     , is_valid_{false}
     , actual_source_count_{0}
 {
-    actual_source_count_ = getActualSourceCount();
+    actual_source_count_ = module_.GetSourceModuleCount();
 
     const auto count = module_.GetSourceModuleCount();
 

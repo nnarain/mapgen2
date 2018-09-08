@@ -25,7 +25,7 @@ public:
     {
         module.SetBounds(boost::get<float>(params_["lower_bound"]), boost::get<float>(params_["upper_bound"]));
         module.SetEdgeFalloff(boost::get<float>(params_["fall_off"]));
-        module.SetControlModule(boost::get<NoiseModule::Ref>(params_["control"]).lock()->getModule());
+    //    module.SetControlModule(boost::get<NoiseModule::Ref>(params_["control"]).lock()->getModule());
     }
 private:
     NoiseModule::ParameterMap& params_;

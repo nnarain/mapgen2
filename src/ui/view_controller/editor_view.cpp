@@ -1,10 +1,11 @@
+/*
 #include "ui/view_controller/editor_view.h"
 
 #include <imgui.h>
 
 #include <iostream>
 
-static constexpr const char* MODULE_TYPES[] = {
+static constexpr const char* NODE_TYPE_NAMES[] = {
     "perlin",
     "select"
 };
@@ -122,7 +123,7 @@ void EditorView::render()
 
             ImGui::Text("Module Type:");
             static int type_select = 0;
-            ImGui::Combo("", &type_select, MODULE_TYPES, IM_ARRAYSIZE(MODULE_TYPES));
+            ImGui::Combo("", &type_select, NODE_TYPE_NAMES, IM_ARRAYSIZE(NODE_TYPE_NAMES));
 
             if (ImGui::Button("add"))
             {
@@ -162,7 +163,7 @@ void EditorView::render()
                 removing_module = ImGui::Button("x");
 
                 // draw noise tyoe
-                ImGui::Text("Type: %s", MODULE_TYPES[static_cast<int>(module->getType())]);
+                ImGui::Text("Type: %s", NODE_TYPE_NAMES[static_cast<int>(module->getType())]);
 
                 // draw parameters
                 auto params = module->getParams();
@@ -235,3 +236,4 @@ void EditorView::render()
     }
     ImGui::End();
 }
+*/

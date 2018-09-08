@@ -1,5 +1,5 @@
 #include "mapgen_application.h"
-#include "ui/view_controller/editor_view.h"
+//#include "ui/view_controller/editor_view.h"
 #include "ui/view_controller/imgui_demo_view.h"
 #include "ui/view_controller/imgui_metric_view.h"
 #include "ui/view_controller/node_graph_editor.h"
@@ -26,7 +26,7 @@ MapGenApplication::MapGenApplication(const Arguments &arguments)
 
     ui_.initialize();
 
-    ui_.addTab<NodeGraphEditorTab>("Editor");
+    ui_.addTab<NodeGraphEditorTab>("Editor", module_manager_);
 
     //ui_.addView<EditorView>("Editor", true, module_manager_);
     ui_.addView<ImGuiDemoView>("Demo", false);
