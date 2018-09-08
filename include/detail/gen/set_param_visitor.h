@@ -30,6 +30,14 @@ public:
         module.SetLacunarity(boost::get<RangedFloat>(params_["lacunarity"]).value);
     }
 
+    void operator()(noise::module::RidgedMulti& module) const
+    {
+        module.SetSeed(boost::get<int>(params_["seed"]));
+        module.SetFrequency(boost::get<float>(params_["frequency"]));
+        module.SetOctaveCount(boost::get<RangedInt>(params_["octaves"]).value);
+        module.SetLacunarity(boost::get<RangedFloat>(params_["lacunarity"]).value);
+    }
+
     void operator()(noise::module::ScaleBias& module) const
     {
         module.SetBias(boost::get<float>(params_["bias"]));

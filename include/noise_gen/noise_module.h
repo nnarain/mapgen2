@@ -21,6 +21,7 @@ public:
     using ModuleVariant = boost::variant<
         noise::module::Billow,
         noise::module::Perlin,
+        noise::module::RidgedMulti,
         noise::module::ScaleBias,
         noise::module::Select
     >;
@@ -32,6 +33,7 @@ public:
     {
         Billow,
         Perlin,
+        RidgedMulti,
         ScaleBias,
         Select
     };
