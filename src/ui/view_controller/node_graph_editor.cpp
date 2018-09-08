@@ -13,6 +13,7 @@
 static const char* NODE_TYPE_NAMES[] = {
     "billow",
     "perlin",
+    "scalebias",
     "select",
     "output"
 };

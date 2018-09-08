@@ -30,6 +30,12 @@ public:
         module.SetLacunarity(boost::get<RangedFloat>(params_["lacunarity"]).value);
     }
 
+    void operator()(noise::module::ScaleBias& module) const
+    {
+        module.SetBias(boost::get<float>(params_["bias"]));
+        module.SetBias(boost::get<float>(params_["scale"]));
+    }
+
     void operator()(noise::module::Select& module) const
     {
         module.SetBounds(boost::get<float>(params_["lower_bound"]), boost::get<float>(params_["upper_bound"]));

@@ -76,6 +76,8 @@ public:
             return { noise::module::Billow() };
         case NoiseModule::Type::Perlin:
             return { noise::module::Perlin() };
+        case NoiseModule::Type::ScaleBias:
+            return { noise::module::ScaleBias() };
         case NoiseModule::Type::Select:
             return { noise::module::Select() };
         default:
@@ -103,6 +105,11 @@ public:
                 {"octaves", RangedInt(1, 25, 1)},
                 {"persistence", RangedFloat(0.f, 1.f, 0.5f)},
                 {"lacunarity", RangedFloat(1.f, 2.f, 2.f)},
+            };
+        case NoiseModule::Type::ScaleBias:
+            return {
+                {"bias", 0.0f},
+                {"scale", 1.0f}
             };
         case NoiseModule::Type::Select:
             return {

@@ -21,6 +21,7 @@ public:
     using ModuleVariant = boost::variant<
         noise::module::Billow,
         noise::module::Perlin,
+        noise::module::ScaleBias,
         noise::module::Select
     >;
     using ParameterVariant = boost::variant<int, float, RangedInt, RangedFloat, NoiseModule::Ref>;
@@ -31,6 +32,7 @@ public:
     {
         Billow,
         Perlin,
+        ScaleBias,
         Select
     };
 
