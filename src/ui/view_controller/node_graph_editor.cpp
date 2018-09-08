@@ -89,14 +89,23 @@ public:
 
             if (updated)
             {
-                module->update();
-                preview_.update(*module);
-                updateLinks();
+            //    module->update();
+            //    preview_.update(*module);
+                setUpdateRequired();
             }
         }
     }
 
-    void updateLinks()
+    void setUpdateRequired()
+    {
+        if (auto ptr = ref.lock())
+            ptr->update();
+
+        this->needs_preview_update = true;
+        updateOutputLinks();
+    }
+
+    void updateOutputLinks()
     {
         auto& nge = getNodeGraphEditor();
         
@@ -109,7 +118,7 @@ public:
             if (out_node->getType() != NodeGraphEditorTab::NodeTypes::OUTPUT)
             {
                 auto out_noise_node = static_cast<NoiseNode*>(out_node);
-                out_noise_node->needs_preview_update = true;
+                out_noise_node->setUpdateRequired();
             }
         }
     }
@@ -221,8 +230,8 @@ void NodeGraphEditorTab::linkCallback(const ImGui::NodeLink& link, ImGui::NodeGr
                 {
                     auto out_slot = link.OutputSlot;
                     out_noise->setSourceModule(out_slot, in_noise);
-                    out_noise->update();
-                    out_node->needs_preview_update = true;
+                    //out_noise->update();
+                    out_node->setUpdateRequired();
                 }
             }
         }
