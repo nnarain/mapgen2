@@ -26,7 +26,7 @@ public:
 
 private:
 
-    static ImGui::Node* nodeFactory(int nt, const ImVec2& pos, const ImGui::NodeGraphEditor& nge, void* user_factory_ptr);
+    static ImGui::Node* nodeFactory(int nt, const ImVec2& pos, const ImGui::NodeGraphEditor& nge);
     static void linkCallback(const ImGui::NodeLink& link, ImGui::NodeGraphEditor::LinkState state, ImGui::NodeGraphEditor& nge);
 
     ModuleManagerController manager_;

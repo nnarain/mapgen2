@@ -180,7 +180,9 @@ void NodeGraphEditorTab::renderTab()
 {
     if (!nge.isInited())
     {
-        nge.registerNodeTypes(NODE_TYPE_NAMES, NodeTypes::NODE_TYPE_COUNT, &NodeGraphEditorTab::nodeFactory, &manager_);
+        nge.registerNodeTypes(NODE_TYPE_NAMES, NodeTypes::NODE_TYPE_COUNT, &NodeGraphEditorTab::nodeFactory);
+        nge.user_ptr = &manager_;
+
         nge.setLinkCallback(&NodeGraphEditorTab::linkCallback);
 
         nge.registerNodeTypeMaxAllowedInstances(NodeTypes::OUTPUT, 1);
@@ -197,11 +199,11 @@ void NodeGraphEditorTab::renderTab()
     nge.render();
 }
 
-ImGui::Node* NodeGraphEditorTab::nodeFactory(int nt, const ImVec2& pos, const ImGui::NodeGraphEditor& nge, void* user_factory_ptr)
+ImGui::Node* NodeGraphEditorTab::nodeFactory(int nt, const ImVec2& pos, const ImGui::NodeGraphEditor& nge)
 {
     if (nt != NodeTypes::OUTPUT)
     {
-        auto& manager = *static_cast<ModuleManagerController*>(user_factory_ptr);
+        auto& manager = *static_cast<ModuleManagerController*>(nge.user_ptr);
         auto& module = manager.createModuleWithUniqueName(static_cast<NoiseModule::Type>(nt));
         module->update();
 
