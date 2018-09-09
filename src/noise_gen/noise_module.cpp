@@ -189,6 +189,11 @@ const std::string& NoiseModule::getName() const
     return name_;
 }
 
+void NoiseModule::setName(const std::string& name)
+{
+    this->name_ = name;
+}
+
 NoiseModule::Type NoiseModule::getType() const
 {
     return type_;

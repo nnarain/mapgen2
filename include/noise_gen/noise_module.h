@@ -42,9 +42,13 @@ public:
 
     void update();
 
-    ParameterMapPtr getParams();
     noise::module::Module& getModule();
+
+    ParameterMapPtr getParams();
+
     const std::string& getName() const;
+    void setName(const std::string& name);
+
     Type getType() const;
 
     bool isValid() const;

@@ -49,6 +49,11 @@ NoiseModule::Ptr& ModuleManagerController::createModuleWithUniqueName(NoiseModul
     return get(name);
 }
 
+void ModuleManagerController::renameModule(const std::string current_name, const std::string new_name)
+{
+    manager_.rename(current_name, new_name);
+}
+
 const std::vector<std::string>& ModuleManagerController::getModuleNames()
 {
     if (is_names_cached_)
@@ -59,29 +64,15 @@ const std::vector<std::string>& ModuleManagerController::getModuleNames()
     else
     {
         names_.clear();
-        module_to_name_.clear();
 
         manager_.forEach([this](const std::string& name, NoiseModule& module)
         {
             names_.push_back(name);
-            module_to_name_[&module.getModule()] = name;
         });
 
         is_names_cached_ = true;
 
         return names_;
-    }
-}
-
-const std::string& ModuleManagerController::lookupName(const noise::module::Module& module)
-{
-    if (module_to_name_.find(&module) != module_to_name_.end())
-    {
-        return module_to_name_[&module];
-    }
-    else
-    {
-        return empty;
     }
 }
 

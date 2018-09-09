@@ -24,13 +24,12 @@ class NoiseNode : public ImGui::Node
 protected:
     NoiseNode(const std::string& name, const std::string& inputs, NoiseModule::Ptr& module, const ImVec2& pos)
         : ImGui::Node()
-        , name{ name }
         , inputs{ inputs }
         , ref{module}
         , needs_preview_update{true}
         , preview{ { 25, 25 } }
     {
-        this->init(this->name.c_str(), pos, this->inputs.c_str(), "out", static_cast<int>(module->getType()));
+        this->init(module->getName().c_str(), pos, this->inputs.c_str(), "out", static_cast<int>(module->getType()));
     }
 
     virtual ~NoiseNode()
@@ -135,12 +134,11 @@ public:
         NoiseNode* node = (NoiseNode*)ImGui::MemAlloc(sizeof(NoiseNode));
         IM_PLACEMENT_NEW(node) NoiseNode(name, inputs, module, pos);
 
-        node->baseWidthOverride = 100.f;
+        node->baseWidthOverride = 125.f;
 
         return node;
     }
 
-    std::string name;
     std::string inputs;
     NoiseModule::Ref ref;
     ModulePreview preview;
@@ -257,6 +255,8 @@ void NodeGraphEditorTab::linkCallback(const ImGui::NodeLink& link, ImGui::NodeGr
 
 void NodeGraphEditorTab::nodeCallback(ImGui::Node*& node, ImGui::NodeGraphEditor::NodeState state, ImGui::NodeGraphEditor& nge)
 {
+    auto& manager = *static_cast<ModuleManagerController*>(nge.user_ptr);
+
     if (state == ImGui::NodeGraphEditor::NodeState::NS_DELETED)
     {
         if (node->getType() != NodeGraphEditorTab::NodeTypes::OUTPUT)
@@ -266,8 +266,28 @@ void NodeGraphEditorTab::nodeCallback(ImGui::Node*& node, ImGui::NodeGraphEditor
             if (auto module = noise_node->ref.lock())
             {
                 // delete the module in manager
-                auto& manager = *static_cast<ModuleManagerController*>(nge.user_ptr);
                 manager.removeModule(module->getName());
+            }
+        }
+    }
+    else if (state == ImGui::NodeGraphEditor::NodeState::NS_EDITED)
+    {
+        if (node->getType() != NodeGraphEditorTab::NodeTypes::OUTPUT)
+        {
+            auto* noise_node = static_cast<NoiseNode*>(node);
+
+            // compare the name as displayed in the editor the the underlying noise module name
+            const std::string editor_name(node->getName());
+            
+            if (auto module = noise_node->ref.lock())
+            {
+                auto noise_name = module->getName();
+
+                if (editor_name != noise_name)
+                {
+                    // The name has changed. Rename the node.
+                    manager.renameModule(noise_name, editor_name);
+                }
             }
         }
     }

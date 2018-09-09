@@ -15,6 +15,7 @@ public:
 
     void create(const std::string&, NoiseModule::Type);
     void remove(const std::string&);
+    void rename(const std::string& current_name, const std::string& new_name);
     NoiseModule::Ptr& get(const std::string& name);
     bool has(const std::string& name) const;
 

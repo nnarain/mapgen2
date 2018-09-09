@@ -24,6 +24,15 @@ void ModuleManager::remove(const std::string& name)
     }
 }
 
+void ModuleManager::rename(const std::string& current_name, const std::string& new_name)
+{
+    auto module = modules_[current_name];
+    module->setName(new_name);
+
+    modules_.erase(current_name);
+    modules_.insert({ new_name, module });
+}
+
 NoiseModule::Ptr& ModuleManager::get(const std::string& name)
 {
     if (modules_.find(name) != modules_.end())
