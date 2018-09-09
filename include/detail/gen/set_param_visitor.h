@@ -41,7 +41,7 @@ public:
     void operator()(noise::module::ScaleBias& module) const
     {
         module.SetBias(boost::get<float>(params_["bias"]));
-        module.SetBias(boost::get<float>(params_["scale"]));
+        module.SetScale(boost::get<float>(params_["scale"]));
     }
 
     void operator()(noise::module::Select& module) const
