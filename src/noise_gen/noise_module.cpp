@@ -98,7 +98,7 @@ public:
                 { "frequency", (float)noise::module::DEFAULT_BILLOW_FREQUENCY },
                 { "octaves", RangedInt(1, 25, noise::module::DEFAULT_BILLOW_OCTAVE_COUNT) },
                 { "persistence", RangedFloat(0.f, 1.f, noise::module::DEFAULT_BILLOW_PERSISTENCE) },
-                { "lacunarity", RangedFloat(1.f, 2.f, noise::module::DEFAULT_BILLOW_LACUNARITY) },
+                { "lacunarity", RangedFloat(1.f, 4.f, noise::module::DEFAULT_BILLOW_LACUNARITY) },
             };
         case NoiseModule::Type::Perlin:
             return {
