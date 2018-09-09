@@ -37,7 +37,7 @@ protected:
     {
     }
 
-    virtual const char* getTooltip() const { return "Noise node"; }
+    virtual const char* getTooltip() const { return NODE_TYPE_NAMES[getType()]; }
     virtual const char* getInfo() const { return "Node representing a noise function or modifier"; }
 
 private:
