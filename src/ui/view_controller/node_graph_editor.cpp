@@ -33,6 +33,10 @@ protected:
         this->init(this->name.c_str(), pos, this->inputs.c_str(), "out", static_cast<int>(module->getType()));
     }
 
+    virtual ~NoiseNode()
+    {
+    }
+
     virtual const char* getTooltip() const { return "Noise node"; }
     virtual const char* getInfo() const { return "Node representing a noise function or modifier"; }
 
@@ -131,7 +135,6 @@ public:
         NoiseNode* node = (NoiseNode*)ImGui::MemAlloc(sizeof(NoiseNode));
         IM_PLACEMENT_NEW(node) NoiseNode(name, inputs, module, pos);
 
-//        node->setUpdateRequired();
         node->baseWidthOverride = 100.f;
 
         return node;
@@ -184,6 +187,7 @@ void NodeGraphEditorTab::renderTab()
         nge.user_ptr = &manager_;
 
         nge.setLinkCallback(&NodeGraphEditorTab::linkCallback);
+        nge.setNodeCallback(&NodeGraphEditorTab::nodeCallback);
 
         nge.registerNodeTypeMaxAllowedInstances(NodeTypes::OUTPUT, 1);
 
@@ -248,5 +252,23 @@ void NodeGraphEditorTab::linkCallback(const ImGui::NodeLink& link, ImGui::NodeGr
     else
     {
         // deleted...
+    }
+}
+
+void NodeGraphEditorTab::nodeCallback(ImGui::Node*& node, ImGui::NodeGraphEditor::NodeState state, ImGui::NodeGraphEditor& nge)
+{
+    if (state == ImGui::NodeGraphEditor::NodeState::NS_DELETED)
+    {
+        if (node->getType() != NodeGraphEditorTab::NodeTypes::OUTPUT)
+        {
+            // get the noise module for this node
+            auto* noise_node = static_cast<NoiseNode*>(node);
+            if (auto module = noise_node->ref.lock())
+            {
+                // delete the module in manager
+                auto& manager = *static_cast<ModuleManagerController*>(nge.user_ptr);
+                manager.removeModule(module->getName());
+            }
+        }
     }
 }
