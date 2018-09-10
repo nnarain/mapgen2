@@ -20,6 +20,7 @@ public:
 
     using ModuleVariant = boost::variant<
         noise::module::Billow,
+        noise::module::Blend,
         noise::module::Perlin,
         noise::module::RidgedMulti,
         noise::module::ScaleBias,
@@ -32,6 +33,7 @@ public:
     enum class Type
     {
         Billow,
+        Blend,
         Perlin,
         RidgedMulti,
         ScaleBias,

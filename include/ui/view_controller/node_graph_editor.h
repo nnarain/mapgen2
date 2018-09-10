@@ -13,6 +13,7 @@ public:
     enum NodeTypes
     {
         BILLOW = NoiseModule::Type::Billow,
+        BLEND  = NoiseModule::Type::Blend,
         PERLIN = NoiseModule::Type::Perlin,
         SELECT = NoiseModule::Type::Select,
         OUTPUT,

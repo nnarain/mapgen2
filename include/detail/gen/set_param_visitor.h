@@ -21,6 +21,8 @@ public:
         module.SetLacunarity(boost::get<RangedFloat>(params_["lacunarity"]).value);
     }
 
+    void operator()(noise::module::Blend& module) const {}
+
     void operator()(noise::module::Perlin& module) const
     {
         module.SetSeed(boost::get<int>(params_["seed"]));

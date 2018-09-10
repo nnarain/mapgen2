@@ -12,6 +12,7 @@
 
 static const char* NODE_TYPE_NAMES[] = {
     "billow",
+    "blend",
     "perlin",
     "ridgedmulti",
     "scalebias",
@@ -23,13 +24,18 @@ static const char* NODE_DESCRIPTIONS[] = {
     // Billow
     "This noise generates 'billow' noise suitable for clouds and rocks.\n"
     "It is nearly identical to Perlin noise except each octave is modified with an absolute value function.",
+    // Blend
+    "* Source module 0: Outputs one of the values to blend\n"
+    "* Source module 1: Ouputs one of the values to blend\n"
+    "* Source module 2: Control module. Determines the weight of the blending operation. Negative values weight towards Source 0, Positives values weight"
+    "towards source 1.",
     // Perlin
     "Perlin noise is the sum of several coherent noise functions of ever increasing frequencies and decreasing amplitudes.\n"
     "A small change in the input value will produce a small change in the output value, while a large change in the input value with produce a random "
     "change in the output value.",
     // Ridged Multi
-    "This noise module, heavily based on the Perlin module, generates ridged-multifractal noise. Ridged-multifractal noise is generated in much of the same"
-    "was as Perlin noise, except the output of each octave is modified by an absoluate-value function.\n"
+    "This noise module, heavily based on the Perlin module, generates ridged-multifractal noise. Ridged-multifractal noise is generated in much of the same "
+    "way as Perlin noise, except the output of each octave is modified by an absoluate-value function.\n"
     "Ridged-multifractal",
     // Scale Bias
     "Retrieves the output value from the source module, multiples it with a scaling factor, adds a bias to it, then outputs the value.",
