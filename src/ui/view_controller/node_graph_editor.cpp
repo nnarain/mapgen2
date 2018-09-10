@@ -19,6 +19,26 @@ static const char* NODE_TYPE_NAMES[] = {
     "output"
 };
 
+static const char* NODE_DESCRIPTIONS[] = {
+    // Billow
+    "This noise generates 'billow' noise suitable for clouds and rocks.\n"
+    "It is nearly identical to Perlin noise except each octave is modified with an absolute value function.",
+    // Perlin
+    "Perlin noise is the sum of several coherent noise functions of ever increasing frequencies and decreasing amplitudes.\n"
+    "A small change in the input value will produce a small change in the output value, while a large change in the input value with produce a random "
+    "change in the output value.",
+    // Ridged Multi
+    "This noise module, heavily based on the Perlin module, generates ridged-multifractal noise. Ridged-multifractal noise is generated in much of the same"
+    "was as Perlin noise, except the output of each octave is modified by an absoluate-value function.\n"
+    "Ridged-multifractal",
+    // Scale Bias
+    "Retrieves the output value from the source module, multiples it with a scaling factor, adds a bias to it, then outputs the value.",
+    // Select
+    "Noise module that outputs the value selected from the one of two source modules chosen by the output value from a control module.",
+    // Output
+    NULL
+};
+
 class NoiseNode : public ImGui::Node
 {
 protected:
@@ -37,7 +57,7 @@ protected:
     }
 
     virtual const char* getTooltip() const { return NODE_TYPE_NAMES[getType()]; }
-    virtual const char* getInfo() const { return "Node representing a noise function or modifier"; }
+    virtual const char* getInfo() const { return NODE_DESCRIPTIONS[getType()]; }
 
 private:
     static std::string getInputsString(NoiseModule& module)
@@ -97,6 +117,8 @@ public:
                 setUpdateRequired();
             }
         }
+
+        ImGui::Node::renderActive();
     }
 
     void setUpdateRequired()
