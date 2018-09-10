@@ -84,6 +84,8 @@ public:
             return { noise::module::ScaleBias() };
         case NoiseModule::Type::Select:
             return { noise::module::Select() };
+        case NoiseModule::Type::Voronoi:
+            return { noise::module::Voronoi() };
         default:
             throw std::runtime_error("Invalid noise type");
             break;
@@ -130,6 +132,13 @@ public:
                 {"lower_bound", (float)noise::module::DEFAULT_SELECT_LOWER_BOUND},
                 {"upper_bound", (float)noise::module::DEFAULT_SELECT_UPPER_BOUND},
                 {"fall_off", (float)noise::module::DEFAULT_SELECT_EDGE_FALLOFF}
+            };
+        case NoiseModule::Type::Voronoi:
+            return {
+                {"seed", 1337},
+                {"displacement", (float)noise::module::DEFAULT_VORONOI_DISPLACEMENT},
+                {"frequency", (float)noise::module::DEFAULT_VORONOI_FREQUENCY},
+                {"enable_distance", false}
             };
         default:
             throw std::runtime_error("Invalid noise type");
@@ -240,13 +249,5 @@ NoiseModule::Ref NoiseModule::getSourceModule(int index)
 
 int NoiseModule::getActualSourceCount()
 {
-    SourceParamCounterVistor source_param_counter;
-    for (auto& pair : *parameter_map_)
-    {
-        boost::apply_visitor(source_param_counter, pair.second);
-    }
-
-    auto count = module_.GetSourceModuleCount() - source_param_counter.getCount();
-
-    return count;
+    return 0;
 }

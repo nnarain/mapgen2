@@ -24,9 +24,16 @@ public:
         noise::module::Perlin,
         noise::module::RidgedMulti,
         noise::module::ScaleBias,
-        noise::module::Select
+        noise::module::Select,
+        noise::module::Voronoi
     >;
-    using ParameterVariant = boost::variant<int, float, RangedInt, RangedFloat, NoiseModule::Ref>;
+    using ParameterVariant = boost::variant<
+        int,
+        float,
+        bool,
+        RangedInt,
+        RangedFloat
+    >;
     using ParameterMap = std::map<std::string, ParameterVariant>;
     using ParameterMapPtr = std::shared_ptr<ParameterMap>;
 
@@ -37,7 +44,8 @@ public:
         Perlin,
         RidgedMulti,
         ScaleBias,
-        Select
+        Select,
+        Voronoi
     };
 
     NoiseModule(const std::string& name, Type type);

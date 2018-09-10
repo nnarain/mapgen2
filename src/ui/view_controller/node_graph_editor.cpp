@@ -17,6 +17,7 @@ static const char* NODE_TYPE_NAMES[] = {
     "ridgedmulti",
     "scalebias",
     "select",
+    "voronoi",
     "output"
 };
 
@@ -41,6 +42,12 @@ static const char* NODE_DESCRIPTIONS[] = {
     "Retrieves the output value from the source module, multiples it with a scaling factor, adds a bias to it, then outputs the value.",
     // Select
     "Noise module that outputs the value selected from the one of two source modules chosen by the output value from a control module.",
+    // Voronoi
+    "Voronoi cell is a region containing all the points that are closest to a specific seed point.\n"
+    "This module randomly places seed points within each unit cube.\n"
+    "* Frequency controls the distance between seed points\n"
+    "* Displacement control the range of random values assigned to each cell"
+    "* Enable Distance causes points in the cells to increase in value the further away that point if from the nearest seed point",
     // Output
     NULL
 };

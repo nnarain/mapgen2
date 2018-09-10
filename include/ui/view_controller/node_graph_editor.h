@@ -12,10 +12,11 @@ public:
     // TODO: scoped
     enum NodeTypes
     {
-        BILLOW = NoiseModule::Type::Billow,
-        BLEND  = NoiseModule::Type::Blend,
-        PERLIN = NoiseModule::Type::Perlin,
-        SELECT = NoiseModule::Type::Select,
+        BILLOW  = NoiseModule::Type::Billow,
+        BLEND   = NoiseModule::Type::Blend,
+        PERLIN  = NoiseModule::Type::Perlin,
+        SELECT  = NoiseModule::Type::Select,
+        VORONOI = NoiseModule::Type::Voronoi,
         OUTPUT,
         NODE_TYPE_COUNT
     };

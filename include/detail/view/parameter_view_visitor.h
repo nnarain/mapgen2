@@ -36,9 +36,9 @@ namespace detail
                 return ImGui::SliderFloat(param_name_.c_str(), &rf.value, rf.min, rf.max);
             }
 
-            bool operator()(NoiseModule::Ref& module) const
+            bool operator()(bool& b) const
             {
-                return false;
+                return ImGui::Checkbox(param_name_.c_str(), &b);
             }
 
         private:

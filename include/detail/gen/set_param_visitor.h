@@ -51,6 +51,15 @@ public:
         module.SetBounds(boost::get<float>(params_["lower_bound"]), boost::get<float>(params_["upper_bound"]));
         module.SetEdgeFalloff(boost::get<float>(params_["fall_off"]));
     }
+
+    void operator()(noise::module::Voronoi& module) const
+    {
+        module.SetSeed(boost::get<int>(params_["seed"]));
+        module.SetFrequency(boost::get<float>(params_["frequency"]));
+        module.SetDisplacement(boost::get<float>(params_["displacement"]));
+        module.EnableDistance(boost::get<bool>(params_["enable_distance"]));
+    }
+
 private:
     NoiseModule::ParameterMap& params_;
 };
