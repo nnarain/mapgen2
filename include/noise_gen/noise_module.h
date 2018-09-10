@@ -25,6 +25,7 @@ public:
         noise::module::RidgedMulti,
         noise::module::ScaleBias,
         noise::module::Select,
+        noise::module::Spheres,
         noise::module::Turbulence,
         noise::module::Voronoi
     >;
@@ -46,6 +47,7 @@ public:
         RidgedMulti,
         ScaleBias,
         Select,
+        Spheres,
         Turbulence,
         Voronoi
     };

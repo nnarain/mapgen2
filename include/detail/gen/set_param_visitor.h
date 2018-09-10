@@ -52,6 +52,11 @@ public:
         module.SetEdgeFalloff(get<float>("fall_off"));
     }
 
+    void operator()(noise::module::Spheres& module) const
+    {
+        module.SetFrequency(get<float>("frequency"));
+    }
+
     void operator()(noise::module::Turbulence& module) const
     {
         module.SetSeed(get<int>("seed"));

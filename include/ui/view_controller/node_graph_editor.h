@@ -16,6 +16,7 @@ public:
         BLEND      = NoiseModule::Type::Blend,
         PERLIN     = NoiseModule::Type::Perlin,
         SELECT     = NoiseModule::Type::Select,
+        SPHERES    = NoiseModule::Type::Spheres,
         TURBULENCE = NoiseModule::Type::Turbulence,
         VORONOI    = NoiseModule::Type::Voronoi,
         OUTPUT,

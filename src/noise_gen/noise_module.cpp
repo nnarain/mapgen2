@@ -84,6 +84,8 @@ public:
             return { noise::module::ScaleBias() };
         case NoiseModule::Type::Select:
             return { noise::module::Select() };
+        case NoiseModule::Type::Spheres:
+            return { noise::module::Spheres() };
         case NoiseModule::Type::Turbulence:
             return { noise::module::Turbulence() };
         case NoiseModule::Type::Voronoi:
@@ -134,6 +136,10 @@ public:
                 {"lower_bound", (float)noise::module::DEFAULT_SELECT_LOWER_BOUND},
                 {"upper_bound", (float)noise::module::DEFAULT_SELECT_UPPER_BOUND},
                 {"fall_off", (float)noise::module::DEFAULT_SELECT_EDGE_FALLOFF}
+            };
+        case NoiseModule::Type::Spheres:
+            return {
+                {"frequency", (float)noise::module::DEFAULT_SPHERES_FREQUENCY}
             };
         case NoiseModule::Type::Turbulence:
             return {
