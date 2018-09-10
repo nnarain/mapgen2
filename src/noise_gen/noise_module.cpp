@@ -84,6 +84,8 @@ public:
             return { noise::module::ScaleBias() };
         case NoiseModule::Type::Select:
             return { noise::module::Select() };
+        case NoiseModule::Type::Turbulence:
+            return { noise::module::Turbulence() };
         case NoiseModule::Type::Voronoi:
             return { noise::module::Voronoi() };
         default:
@@ -132,6 +134,13 @@ public:
                 {"lower_bound", (float)noise::module::DEFAULT_SELECT_LOWER_BOUND},
                 {"upper_bound", (float)noise::module::DEFAULT_SELECT_UPPER_BOUND},
                 {"fall_off", (float)noise::module::DEFAULT_SELECT_EDGE_FALLOFF}
+            };
+        case NoiseModule::Type::Turbulence:
+            return {
+                {"seed", 1337},
+                {"frequency", (float)noise::module::DEFAULT_TURBULENCE_FREQUENCY},
+                {"power", (float)noise::module::DEFAULT_TURBULENCE_POWER},
+                {"roughness", (float)noise::module::DEFAULT_TURBULENCE_ROUGHNESS}
             };
         case NoiseModule::Type::Voronoi:
             return {

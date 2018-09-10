@@ -25,6 +25,7 @@ public:
         noise::module::RidgedMulti,
         noise::module::ScaleBias,
         noise::module::Select,
+        noise::module::Turbulence,
         noise::module::Voronoi
     >;
     using ParameterVariant = boost::variant<
@@ -45,6 +46,7 @@ public:
         RidgedMulti,
         ScaleBias,
         Select,
+        Turbulence,
         Voronoi
     };
 

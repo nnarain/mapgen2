@@ -32,6 +32,7 @@ public:
         return true;
     }
 
+    bool operator()(noise::module::Turbulence& module) const { return true; }
     bool operator()(noise::module::Voronoi& module) const { return true; }
 
 private:

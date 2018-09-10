@@ -17,6 +17,7 @@ static const char* NODE_TYPE_NAMES[] = {
     "ridgedmulti",
     "scalebias",
     "select",
+    "turbulence",
     "voronoi",
     "output"
 };
@@ -42,6 +43,11 @@ static const char* NODE_DESCRIPTIONS[] = {
     "Retrieves the output value from the source module, multiples it with a scaling factor, adds a bias to it, then outputs the value.",
     // Select
     "Noise module that outputs the value selected from the one of two source modules chosen by the output value from a control module.",
+    // Turbulence
+    "Applies pseudo-random displacement on the input value.\n"
+    "Frequency determines how fast the displacement value changes.\n"
+    "Power determines the scaling factor of the turbulence.\n"
+    "Roughness determines the roughness of the changes in turbulence",
     // Voronoi
     "Voronoi cell is a region containing all the points that are closest to a specific seed point.\n"
     "This module randomly places seed points within each unit cube.\n"
