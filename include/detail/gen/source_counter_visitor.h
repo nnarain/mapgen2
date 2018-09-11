@@ -5,6 +5,7 @@
 #include "noise_gen/parameter.h"
 #include <boost/variant.hpp>
 
+/*
 struct SourceParamCounterVistor : public boost::static_visitor<>
 {
 public:
@@ -14,11 +15,6 @@ public:
     void operator()(RangedInt&){}
     void operator()(RangedFloat&){}
 
-    void operator()(NoiseModule::Ref&)
-    {
-        count_++;
-    }
-
     int getCount() const
     {
         return count_;
@@ -27,5 +23,5 @@ public:
 private:
     int count_;
 };
-
+*/
 #endif

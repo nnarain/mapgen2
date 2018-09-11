@@ -19,31 +19,55 @@ public:
     using Ref = std::weak_ptr<NoiseModule>;
 
     using ModuleVariant = boost::variant<
+        noise::module::Billow,
+        noise::module::Blend,
         noise::module::Perlin,
-        noise::module::Select
+        noise::module::RidgedMulti,
+        noise::module::ScaleBias,
+        noise::module::Select,
+        noise::module::Spheres,
+        noise::module::Turbulence,
+        noise::module::Voronoi
     >;
-    using ParameterVariant = boost::variant<int, float, RangedInt, RangedFloat, NoiseModule::Ref>;
+    using ParameterVariant = boost::variant<
+        int,
+        float,
+        bool,
+        RangedInt,
+        RangedFloat
+    >;
     using ParameterMap = std::map<std::string, ParameterVariant>;
     using ParameterMapPtr = std::shared_ptr<ParameterMap>;
 
     enum class Type
     {
+        Billow,
+        Blend,
         Perlin,
-        Select
+        RidgedMulti,
+        ScaleBias,
+        Select,
+        Spheres,
+        Turbulence,
+        Voronoi
     };
 
     NoiseModule(const std::string& name, Type type);
 
     void update();
 
-    ParameterMapPtr getParams();
     noise::module::Module& getModule();
+
+    ParameterMapPtr getParams();
+
     const std::string& getName() const;
+    void setName(const std::string& name);
+
     Type getType() const;
 
     bool isValid() const;
 
-    void setSourceModule(int index, NoiseModule::Ptr& module);
+    void setSourceModule(int index, NoiseModule::Ptr module);
     NoiseModule::Ref getSourceModule(int index);
     int getSourceModuleCount();
 

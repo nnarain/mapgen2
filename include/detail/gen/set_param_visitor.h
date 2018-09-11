@@ -12,22 +12,74 @@ public:
 
     }
 
+    void operator()(noise::module::Billow& module) const
+    {
+        module.SetSeed(get<int>("seed"));
+        module.SetFrequency(get<float>("frequency"));
+        module.SetOctaveCount(get<RangedInt>("octaves").value);
+        module.SetPersistence(get<RangedFloat>("persistence").value);
+        module.SetLacunarity(get<RangedFloat>("lacunarity").value);
+    }
+
+    void operator()(noise::module::Blend& module) const {}
+
     void operator()(noise::module::Perlin& module) const
     {
-        module.SetSeed(boost::get<int>(params_["seed"]));
-        module.SetFrequency(boost::get<float>(params_["frequency"]));
-        module.SetOctaveCount(boost::get<RangedInt>(params_["octaves"]).value);
-        module.SetPersistence(boost::get<RangedFloat>(params_["persistence"]).value);
-        module.SetLacunarity(boost::get<RangedFloat>(params_["lacunarity"]).value);
+        module.SetSeed(get<int>("seed"));
+        module.SetFrequency(get<float>("frequency"));
+        module.SetOctaveCount(get<RangedInt>("octaves").value);
+        module.SetPersistence(get<RangedFloat>("persistence").value);
+        module.SetLacunarity(get<RangedFloat>("lacunarity").value);
+    }
+
+    void operator()(noise::module::RidgedMulti& module) const
+    {
+        module.SetSeed(get<int>("seed"));
+        module.SetFrequency(get<float>("frequency"));
+        module.SetOctaveCount(get<RangedInt>("octaves").value);
+        module.SetLacunarity(get<RangedFloat>("lacunarity").value);
+    }
+
+    void operator()(noise::module::ScaleBias& module) const
+    {
+        module.SetBias(get<float>("bias"));
+        module.SetScale(get<float>("scale"));
     }
 
     void operator()(noise::module::Select& module) const
     {
-        module.SetBounds(boost::get<float>(params_["lower_bound"]), boost::get<float>(params_["upper_bound"]));
-        module.SetEdgeFalloff(boost::get<float>(params_["fall_off"]));
-        module.SetControlModule(boost::get<NoiseModule::Ref>(params_["control"]).lock()->getModule());
+        module.SetBounds(get<float>("lower_bound"), get<float>("upper_bound"));
+        module.SetEdgeFalloff(get<float>("fall_off"));
     }
+
+    void operator()(noise::module::Spheres& module) const
+    {
+        module.SetFrequency(get<float>("frequency"));
+    }
+
+    void operator()(noise::module::Turbulence& module) const
+    {
+        module.SetSeed(get<int>("seed"));
+        module.SetFrequency(get<float>("frequency"));
+        module.SetPower(get<float>("power"));
+        module.SetRoughness(get<float>("roughness"));
+    }
+
+    void operator()(noise::module::Voronoi& module) const
+    {
+        module.SetSeed(get<int>("seed"));
+        module.SetFrequency(get<float>("frequency"));
+        module.SetDisplacement(get<float>("displacement"));
+        module.EnableDistance(get<bool>("enable_distance"));
+    }
+
 private:
+    template<typename T>
+    T get(const std::string& name) const
+    {
+        return boost::get<T>(params_[name]);
+    }
+
     NoiseModule::ParameterMap& params_;
 };
 

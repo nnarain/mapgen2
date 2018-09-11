@@ -1,24 +1,70 @@
 #include "ui/user_interface.h"
 
 #include <imgui.h>
-#include <addons/imguinodegrapheditor/imguinodegrapheditor.h>
+
+#include <iostream>
+
+static constexpr ImGuiWindowFlags TAB_WINDOW_FLAGS = ImGuiWindowFlags_NoScrollbar |
+                                                     ImGuiWindowFlags_NoCollapse  |
+                                                     ImGuiWindowFlags_NoTitleBar  |
+                                                     ImGuiWindowFlags_NoMove;
 
 UserInterface::UserInterface()
 {
-
+    
 }
 
 UserInterface::~UserInterface()
 {
 }
 
+void UserInterface::initialize()
+{
+    ImGui::TabWindow::SetWindowContentDrawerCallback(&UserInterface::tabContentProvider);
+}
+
 void UserInterface::render()
 {
     renderMenu();
+    renderTabs();
+}
 
-    for (auto& pair : views_)
+void UserInterface::renderTabs()
+{
+    static bool open = true;
+
+    auto& window_size = ImGui::GetIO().DisplaySize;
+
+    auto width = window_size.x;
+    auto height = window_size.y - ImGui::GetCursorPosY();
+
+    ImGui::SetNextWindowSize({ width, height });
+
+    if (ImGui::Begin("##TabWindow", &open, TAB_WINDOW_FLAGS))
     {
-        pair.second->draw();
+        static ImGui::TabWindow tab_window;
+        if (!tab_window.isInited())
+        {
+            for (auto& pair : tabs_)
+            {
+                auto& name = pair.first;
+                auto& tab = pair.second;
+
+                tab_window.addTabLabel(name.c_str(), nullptr, false, false, tab.get());
+            }
+        }
+
+        tab_window.render();
+    }
+    ImGui::End();
+}
+
+void UserInterface::tabContentProvider(ImGui::TabWindow::TabLabel* tab, ImGui::TabWindow& parent, void* user_ptr)
+{
+    if (tab->userPtr != nullptr)
+    {
+        auto ptr = static_cast<TabRenderer*>(tab->userPtr);
+        ptr->renderTab();
     }
 }
 
@@ -39,5 +85,10 @@ void UserInterface::renderMenu()
         }
 
         ImGui::EndMainMenuBar();
+    }
+
+    for (auto& pair : views_)
+    {
+        pair.second->draw();
     }
 }
