@@ -72,10 +72,24 @@ public:
     {
         switch (type)
         {
+        case NoiseModule::Type::Billow:
+            return { noise::module::Billow() };
+        case NoiseModule::Type::Blend:
+            return { noise::module::Blend() };
         case NoiseModule::Type::Perlin:
             return { noise::module::Perlin() };
+        case NoiseModule::Type::RidgedMulti:
+            return { noise::module::RidgedMulti() };
+        case NoiseModule::Type::ScaleBias:
+            return { noise::module::ScaleBias() };
         case NoiseModule::Type::Select:
             return { noise::module::Select() };
+        case NoiseModule::Type::Spheres:
+            return { noise::module::Spheres() };
+        case NoiseModule::Type::Turbulence:
+            return { noise::module::Turbulence() };
+        case NoiseModule::Type::Voronoi:
+            return { noise::module::Voronoi() };
         default:
             throw std::runtime_error("Invalid noise type");
             break;
@@ -86,20 +100,60 @@ public:
     {
         switch (type)
         {
+        case NoiseModule::Type::Billow:
+            return {
+                { "seed", 1337 },
+                { "frequency", (float)noise::module::DEFAULT_BILLOW_FREQUENCY },
+                { "octaves", RangedInt(1, 25, noise::module::DEFAULT_BILLOW_OCTAVE_COUNT) },
+                { "persistence", RangedFloat(0.f, 1.f, noise::module::DEFAULT_BILLOW_PERSISTENCE) },
+                { "lacunarity", RangedFloat(1.f, 4.f, noise::module::DEFAULT_BILLOW_LACUNARITY) },
+            };
+        case NoiseModule::Type::Blend:
+            return {
+            };
         case NoiseModule::Type::Perlin:
             return {
                 {"seed", 1337},
-                {"frequency", 0.1f},
-                {"octaves", RangedInt(1, 25, 1)},
-                {"persistence", RangedFloat(0.f, 1.f, 0.5f)},
-                {"lacunarity", RangedFloat(1.f, 2.f, 2.f)},
+                {"frequency", (float)noise::module::DEFAULT_PERLIN_FREQUENCY},
+                {"octaves", RangedInt(1, 25, noise::module::DEFAULT_PERLIN_OCTAVE_COUNT)},
+                {"persistence", RangedFloat(0.f, 1.f, noise::module::DEFAULT_PERLIN_PERSISTENCE)},
+                {"lacunarity", RangedFloat(1.f, 4.f, noise::module::DEFAULT_PERLIN_LACUNARITY)},
+            };
+        case NoiseModule::Type::RidgedMulti:
+            return {
+                { "seed", 1337 },
+                { "frequency", (float)noise::module::DEFAULT_RIDGED_FREQUENCY },
+                { "octaves", RangedInt(1, 25, noise::module::DEFAULT_RIDGED_OCTAVE_COUNT) },
+                { "lacunarity", RangedFloat(1.f, 4.f, noise::module::DEFAULT_RIDGED_LACUNARITY) },
+            };
+        case NoiseModule::Type::ScaleBias:
+            return {
+                {"bias", 0.0f},
+                {"scale", 1.0f}
             };
         case NoiseModule::Type::Select:
             return {
-                {"lower_bound", 0.0f},
-                {"upper_bound", 0.1f},
-                {"control", NoiseModule::Ref{}},
-                {"fall_off", 0.0f}
+                {"lower_bound", (float)noise::module::DEFAULT_SELECT_LOWER_BOUND},
+                {"upper_bound", (float)noise::module::DEFAULT_SELECT_UPPER_BOUND},
+                {"fall_off", (float)noise::module::DEFAULT_SELECT_EDGE_FALLOFF}
+            };
+        case NoiseModule::Type::Spheres:
+            return {
+                {"frequency", (float)noise::module::DEFAULT_SPHERES_FREQUENCY}
+            };
+        case NoiseModule::Type::Turbulence:
+            return {
+                {"seed", 1337},
+                {"frequency", (float)noise::module::DEFAULT_TURBULENCE_FREQUENCY},
+                {"power", (float)noise::module::DEFAULT_TURBULENCE_POWER},
+                {"roughness", (float)noise::module::DEFAULT_TURBULENCE_ROUGHNESS}
+            };
+        case NoiseModule::Type::Voronoi:
+            return {
+                {"seed", 1337},
+                {"displacement", (float)noise::module::DEFAULT_VORONOI_DISPLACEMENT},
+                {"frequency", (float)noise::module::DEFAULT_VORONOI_FREQUENCY},
+                {"enable_distance", false}
             };
         default:
             throw std::runtime_error("Invalid noise type");
@@ -124,7 +178,7 @@ NoiseModule::NoiseModule(const std::string& name, NoiseModule::Type type)
     , is_valid_{false}
     , actual_source_count_{0}
 {
-    actual_source_count_ = getActualSourceCount();
+    actual_source_count_ = module_.GetSourceModuleCount();
 
     const auto count = module_.GetSourceModuleCount();
 
@@ -164,6 +218,11 @@ const std::string& NoiseModule::getName() const
     return name_;
 }
 
+void NoiseModule::setName(const std::string& name)
+{
+    this->name_ = name;
+}
+
 NoiseModule::Type NoiseModule::getType() const
 {
     return type_;
@@ -187,10 +246,13 @@ bool NoiseModule::isValid() const
     return is_valid_;
 }
 
-void NoiseModule::setSourceModule(int index, NoiseModule::Ptr& ptr)
+void NoiseModule::setSourceModule(int index, NoiseModule::Ptr ptr)
 {
     source_refs_[index] = NoiseModule::Ref{ ptr };
-    module_.SetSourceModule(index, ptr->getModule());
+    if (ptr)
+    {
+        module_.SetSourceModule(index, ptr->getModule());
+    }
 }
 
 int NoiseModule::getSourceModuleCount()
@@ -205,13 +267,5 @@ NoiseModule::Ref NoiseModule::getSourceModule(int index)
 
 int NoiseModule::getActualSourceCount()
 {
-    SourceParamCounterVistor source_param_counter;
-    for (auto& pair : *parameter_map_)
-    {
-        boost::apply_visitor(source_param_counter, pair.second);
-    }
-
-    auto count = module_.GetSourceModuleCount() - source_param_counter.getCount();
-
-    return count;
+    return 0;
 }

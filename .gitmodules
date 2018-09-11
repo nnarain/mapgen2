@@ -4,3 +4,6 @@
 [submodule "src/external/magnum-imgui"]
 	path = src/external/magnum-imgui
 	url = https://github.com/nnarain/magnum-imgui.git
+[submodule "src/external/imgui/imgui"]
+	path = src/external/imgui/imgui
+	url = https://github.com/nnarain/imgui

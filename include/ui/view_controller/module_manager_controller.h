@@ -21,14 +21,18 @@ public:
     void createModule(const std::string& name, NoiseModule::Type type);
     void removeModule(const std::string& name);
 
+    NoiseModule::Ptr& createModuleWithUniqueName(NoiseModule::Type type);
+    
+    void renameModule(const std::string current_name, const std::string new_name);
+
     const std::vector<std::string>& getModuleNames();
-    const std::string& lookupName(const noise::module::Module&);
+
+    const std::size_t size() const noexcept;
 
 private:
     ModuleManager& manager_;
 
     std::vector<std::string> names_;
-    std::map<const noise::module::Module*, std::string> module_to_name_;
     bool is_names_cached_;
 };
 

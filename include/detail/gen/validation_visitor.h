@@ -12,7 +12,11 @@ public:
     {
     }
 
+    bool operator()(noise::module::Billow& module) const { return true; }
+    bool operator()(noise::module::Blend& module) const { return true; }
     bool operator()(noise::module::Perlin& module) const { return true; }
+    bool operator()(noise::module::RidgedMulti& module) const { return true; }
+    bool operator()(noise::module::ScaleBias& module) const { return true; }
 
     bool operator()(noise::module::Select& module) const
     {
@@ -25,24 +29,12 @@ public:
             return false;
         }
 
-        auto control_source = boost::get<NoiseModule::Ref>(params_["control"]);
-
-        if (auto ptr = control_source.lock())
-        {
-            if (&ptr->getModule() == &module)
-            {
-                std::cout << "Invalid parameters, module cannot have itself as a source" << std::endl;
-                return false;
-            }
-        }
-        else
-        {
-            std::cout << "Invalid parameters, control source is null" << std::endl;
-            return false;
-        }
-
         return true;
     }
+
+    bool operator()(noise::module::Spheres& module) const { return true; }
+    bool operator()(noise::module::Turbulence& module) const { return true; }
+    bool operator()(noise::module::Voronoi& module) const { return true; }
 
 private:
     NoiseModule::ParameterMap& params_;
