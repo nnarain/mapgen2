@@ -246,10 +246,13 @@ bool NoiseModule::isValid() const
     return is_valid_;
 }
 
-void NoiseModule::setSourceModule(int index, NoiseModule::Ptr& ptr)
+void NoiseModule::setSourceModule(int index, NoiseModule::Ptr ptr)
 {
     source_refs_[index] = NoiseModule::Ref{ ptr };
-    module_.SetSourceModule(index, ptr->getModule());
+    if (ptr)
+    {
+        module_.SetSourceModule(index, ptr->getModule());
+    }
 }
 
 int NoiseModule::getSourceModuleCount()

@@ -293,7 +293,15 @@ void NodeGraphEditorTab::linkCallback(const ImGui::NodeLink& link, ImGui::NodeGr
     }
     else
     {
-        // deleted...
+        // a link was deleted, remove its reference in the output module
+        if (link.OutputNode->getType() != NodeTypes::OUTPUT)
+        {
+            auto out_node = static_cast<NoiseNode*>(link.OutputNode);
+            if (auto module = out_node->ref.lock())
+            {
+                module->setSourceModule(link.InputSlot, {});
+            }
+        }
     }
 }
 

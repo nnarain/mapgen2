@@ -67,7 +67,7 @@ public:
 
     bool isValid() const;
 
-    void setSourceModule(int index, NoiseModule::Ptr& module);
+    void setSourceModule(int index, NoiseModule::Ptr module);
     NoiseModule::Ref getSourceModule(int index);
     int getSourceModuleCount();
 
