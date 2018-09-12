@@ -2,6 +2,7 @@
 #include "ui/view_controller/imgui_demo_view.h"
 #include "ui/view_controller/imgui_metric_view.h"
 #include "ui/view_controller/node_graph_editor.h"
+#include "ui/view_controller/output_display.h"
 #include "ui/view_controller/test_view.h"
 
 
@@ -17,6 +18,7 @@ using namespace Magnum;
 MapGenApplication::MapGenApplication(const Arguments &arguments) 
     : Platform::Application{ arguments, Configuration{}.setTitle("MapGen").setSize({1280, 960}) }
     , module_manager_{}
+    , module_manager_controller_{module_manager_}
     , ui_{}
     , frame_timer_{16}
 {
@@ -25,11 +27,11 @@ MapGenApplication::MapGenApplication(const Arguments &arguments)
 
     ui_.initialize();
 
-    ui_.addTab<NodeGraphEditorTab>("Editor", module_manager_);
+    ui_.addTab<NodeGraphEditorTab>("Editor", module_manager_controller_);
+    ui_.addTab<OutputDisplayTab>("Display", module_manager_controller_);
 
     ui_.addView<ImGuiDemoView>("Demo", false);
     ui_.addView<ImGuiMetricsView>("Metrics", false);
-    //ui_.addView<TestView>("Test", false, module_manager_);
 }
 
 void MapGenApplication::drawEvent()

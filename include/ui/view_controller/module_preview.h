@@ -15,14 +15,20 @@ public:
 
     virtual void update(NoiseModule& module);
     virtual void render() override;
+    bool renderParameters();
 
-    void setSize(const Magnum::Vector2&);
+    void setSize(const Magnum::Vector2&) noexcept;
     Magnum::Vector2& getSize() noexcept;
 
 private:
-    Magnum::Vector2 size_;
     Magnum::GL::Texture2D texture_;
+    Magnum::Vector2 texture_size_;
+    Magnum::Vector2 render_size_;
+
     TextureGenerator generator_;
+
+    // parameter vars
+    bool use_terrain_gradient_;
 };
 
 #endif

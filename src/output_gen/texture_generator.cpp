@@ -21,11 +21,10 @@ void TextureGenerator::generate(GL::Texture2D& output_texture, int w, int h, Noi
     builder.Build();
 
     // render the noise map into an image
-    utils::RendererImage renderer;
     utils::Image rendered_image;
-    renderer.SetSourceNoiseMap(height_map);
-    renderer.SetDestImage(rendered_image);
-    renderer.Render();
+    renderer_.SetSourceNoiseMap(height_map);
+    renderer_.SetDestImage(rendered_image);
+    renderer_.Render();
 
     // underlying color buffer for image
     auto* data = rendered_image.GetSlabPtr();
@@ -51,10 +50,6 @@ void TextureGenerator::generate(GL::Texture2D& output_texture, int w, int h, Noi
         }
     }
     
-    // wrap image buffer in a corrade container
-    //Corrade::Containers::ArrayView<char> data_view{ buffer, buffer.size() };
-    
-
     // create a magnum RGBA8 uint image with the rendered image data and bind it to the texture
     ImageView2D image{ PixelFormat::RGBA8Unorm, {w, h}, data_view };
     output_texture
@@ -63,5 +58,10 @@ void TextureGenerator::generate(GL::Texture2D& output_texture, int w, int h, Noi
         .setMinificationFilter(GL::SamplerFilter::Linear)
         .setStorage(1, GL::TextureFormat::RGBA8, image.size())
         .setSubImage(0, {}, image);
+}
+
+utils::RendererImage& TextureGenerator::getRenderer() noexcept
+{
+    return renderer_;
 }
 

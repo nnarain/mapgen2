@@ -57,6 +57,7 @@ set(UI_HEADERS
     include/ui/view_controller/imgui_metric_view.h
     include/ui/view_controller/tab_renderer.h
     include/ui/view_controller/node_graph_editor.h
+    include/ui/view_controller/output_display.h
     include/ui/view_controller/test_view.h
 )
 
@@ -66,6 +67,7 @@ set(UI_SOURCES
     src/ui/view_controller/module_manager_controller.cpp
     src/ui/view_controller/module_preview.cpp
     src/ui/view_controller/node_graph_editor.cpp
+    src/ui/view_controller/output_display.cpp
 )
 
 set(DETAIL_HEADERS

@@ -212,7 +212,7 @@ public:
     }
 };
 
-NodeGraphEditorTab::NodeGraphEditorTab(ModuleManager& manager)
+NodeGraphEditorTab::NodeGraphEditorTab(ModuleManagerController& manager)
     : manager_{ manager }
 {
 }
@@ -288,7 +288,10 @@ void NodeGraphEditorTab::linkCallback(const ImGui::NodeLink& link, ImGui::NodeGr
         }
         else
         {
-
+            // The output node is the output noise node of the editor
+            // Set the output module in the manager, to notify observer of the output module change
+            auto& manager = *static_cast<ModuleManagerController*>(nge.user_ptr);
+            manager.setOutputModule(in_node->ref);
         }
     }
     else
@@ -301,6 +304,12 @@ void NodeGraphEditorTab::linkCallback(const ImGui::NodeLink& link, ImGui::NodeGr
             {
                 module->setSourceModule(link.InputSlot, {});
             }
+        }
+        else
+        {
+            // link was removed from the output node
+            auto& manager = *static_cast<ModuleManagerController*>(nge.user_ptr);
+            manager.setOutputModule(NoiseModule::Ref{});
         }
     }
 }
