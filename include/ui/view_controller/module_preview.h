@@ -11,7 +11,7 @@
 class ModulePreview : public View
 {
 public:
-    ModulePreview(const Magnum::Vector2&);
+    ModulePreview(const Magnum::Vector2&, Magnum::Vector2 texture_size = Magnum::Vector2{128, 128});
 
     virtual void update(NoiseModule& module);
     virtual void render() override;
@@ -29,6 +29,7 @@ private:
 
     // parameter vars
     bool use_terrain_gradient_;
+    bool light_enabled_;
 };
 
 #endif

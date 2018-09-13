@@ -7,10 +7,11 @@
 
 using namespace Magnum;
 
-ModulePreview::ModulePreview(const Vector2& size)
-    : texture_size_{128, 128}
+ModulePreview::ModulePreview(const Vector2& size, Magnum::Vector2 texture_size)
+    : texture_size_{texture_size}
     , render_size_{size}
     , use_terrain_gradient_{false}
+    , light_enabled_{false}
 {
 
 }
@@ -46,6 +47,12 @@ bool ModulePreview::renderParameters()
         {
             renderer.BuildGrayscaleGradient();
         }
+    }
+
+    if (ImGui::Checkbox("enable light", &light_enabled_))
+    {
+        updated = true;
+        renderer.EnableLight(light_enabled_);
     }
 
     return updated;

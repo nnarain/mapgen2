@@ -2,9 +2,11 @@
 
 #include <imgui.h>
 
+static constexpr float TEXTURE_SIZE = 256.0f;
+
 OutputDisplayTab::OutputDisplayTab(ModuleManagerController& manager)
     : manager_{manager}
-    , preview_{ {256, 256} }
+    , preview_{ {256, 256}, { TEXTURE_SIZE, TEXTURE_SIZE } }
     , update_required_{false}
 {
     manager_.addOutputChangedObserver(std::bind(&OutputDisplayTab::onOutputChanged, this, std::placeholders::_1));
@@ -42,6 +44,12 @@ void OutputDisplayTab::renderTab()
 
     ImGui::SameLine();
 
+    // set the preview image size
+    auto cursor_pos = ImGui::GetCursorPos();
+    auto preview_width = window_size.x - cursor_pos.x;
+    auto preview_height = window_size.y - cursor_pos.y;
+    
+    preview_.setSize({ preview_width, preview_height - 50 });
     preview_.render();
 }
 
