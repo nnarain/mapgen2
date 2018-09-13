@@ -55,6 +55,27 @@ bool ModulePreview::renderParameters()
         renderer.EnableLight(light_enabled_);
     }
 
+    auto brightness = (float)renderer.GetLightBrightness();
+    if (ImGui::DragFloat("brightness", &brightness, 0.01f, 0, 10))
+    {
+        updated = true;
+        renderer.SetLightBrightness(brightness);
+    }
+
+    auto azimuth = (float)renderer.GetLightAzimuth();
+    if (ImGui::DragFloat("light azimuth", &azimuth, 0.5f, 0, 360))
+    {
+        updated = true;
+        renderer.SetLightAzimuth(azimuth);
+    }
+
+    auto light_elevation = (float)renderer.GetLightElev();
+    if (ImGui::DragFloat("light elev", &light_elevation, 0.5f, 0, 90))
+    {
+        updated = true;
+        renderer.SetLightElev(light_elevation);
+    }
+
     return updated;
 }
 
