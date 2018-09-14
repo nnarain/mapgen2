@@ -8,6 +8,8 @@
 
 #include <Magnum/GL/Texture.h>
 
+#include <map>
+
 class ModulePreview : public View
 {
 public:
@@ -21,6 +23,7 @@ public:
     Magnum::Vector2& getSize() noexcept;
 
 private:
+    
     Magnum::GL::Texture2D texture_;
     Magnum::Vector2 texture_size_;
     Magnum::Vector2 render_size_;

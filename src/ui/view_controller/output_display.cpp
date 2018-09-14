@@ -39,6 +39,14 @@ void OutputDisplayTab::renderTab()
         {
             update_required_ = preview_.renderParameters();
         }
+
+        if (ImGui::CollapsingHeader("Exported Fields", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            if (auto module = output_module_.lock())
+            {
+                renderExportParams(*module);
+            }
+        }
     }
     ImGui::EndChild();
 
@@ -53,8 +61,37 @@ void OutputDisplayTab::renderTab()
     preview_.render();
 }
 
+void OutputDisplayTab::renderExportParams(NoiseModule& module)
+{
+    const auto& module_name = module.getName();
+    auto params = module.getParams();
+
+    // display checkboxs for items to be exported
+    for (const auto& param : *params)
+    {
+        // full parameter name
+        const auto& param_name = param.first;
+        const auto full_name = module_name + "." + param_name;
+
+        // add exported field if not already present
+        if (exported_fields_.find(full_name) == exported_fields_.end())
+        {
+            exported_fields_[full_name] = false;
+        }
+
+        // get exported status from ui
+        auto& exported = exported_fields_[full_name];
+        if (ImGui::Checkbox(full_name.c_str(), &exported))
+        {
+            // nothing
+        }
+    }
+}
+
 void OutputDisplayTab::onOutputChanged(NoiseModule::Ref ref)
 {
     output_module_ = ref;
     update_required_ = true;
+
+    exported_fields_.clear();
 }

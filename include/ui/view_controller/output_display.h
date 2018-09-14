@@ -16,11 +16,16 @@ public:
     void onOutputChanged(NoiseModule::Ref ref);
 
 private:
+    void renderExportParams(NoiseModule& module);
+
     ModuleManagerController& manager_;
     ModulePreview preview_;
 
     NoiseModule::Ref output_module_;
     bool update_required_;
+
+    // exported fields
+    std::map<std::string, bool> exported_fields_;
 };
 
 #endif

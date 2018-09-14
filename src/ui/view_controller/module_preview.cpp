@@ -76,6 +76,13 @@ bool ModulePreview::renderParameters()
         renderer.SetLightElev(light_elevation);
     }
 
+    auto light_intensity = (float)renderer.GetLightIntensity();
+    if (ImGui::DragFloat("light intens", &light_intensity, 0.1f, 0, 10))
+    {
+        updated = true;
+        renderer.SetLightIntensity(light_intensity);
+    }
+
     return updated;
 }
 
