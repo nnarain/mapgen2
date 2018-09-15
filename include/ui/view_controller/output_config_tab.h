@@ -17,7 +17,7 @@ public:
     void onOutputChanged(NoiseModule::Ref ref);
 
 private:
-    void renderExportParams(NoiseModule& module);
+    bool renderModuleParameters(NoiseModule& module);
 
     ModuleManagerController& manager_;
     OutputConfig& config_;

@@ -1,4 +1,5 @@
 #include "ui/view_controller/output_config_tab.h"
+#include "detail/view/parameter_view_visitor.h"
 
 #include <imgui.h>
 
@@ -19,7 +20,7 @@ OutputConfigTab::~OutputConfigTab()
 
 void OutputConfigTab::renderTab()
 {
-    constexpr float width_percent = 0.25f;
+    constexpr float width_percent = 0.33f;
 
     // update output if it changed
     if (update_required_)
@@ -44,7 +45,12 @@ void OutputConfigTab::renderTab()
         if (ImGui::CollapsingHeader("Exported Fields", ImGuiTreeNodeFlags_DefaultOpen))
         {
             manager_.forEach([this](const std::string&, NoiseModule& module) {
-                renderExportParams(module);
+                auto updated = renderModuleParameters(module);
+                if (updated)
+                {
+                    module.update();
+                }
+                update_required_ = update_required_ || updated;
             });
         }
     }
@@ -61,33 +67,27 @@ void OutputConfigTab::renderTab()
     preview_.render();
 }
 
-void OutputConfigTab::renderExportParams(NoiseModule& module)
+bool OutputConfigTab::renderModuleParameters(NoiseModule& module)
 {
     const auto& module_name = module.getName();
     auto params = module.getParams();
 
-    auto& exported_fields = config_.getExportedField();
+    auto update_required = false;
 
     // display checkboxs for items to be exported
-    for (const auto& param : *params)
+    for (auto& param : *params)
     {
         // full parameter name
         const auto& param_name = param.first;
         const auto full_name = module_name + "." + param_name;
 
-        // add exported field if not already present
-        if (exported_fields.find(full_name) == exported_fields.end())
-        {
-            exported_fields[full_name] = false;
-        }
+        detail::view::ParameterViewVistor v{ full_name };
+        auto updated = boost::apply_visitor(v, param.second);
 
-        // get exported status from ui
-        auto& exported = exported_fields[full_name];
-        if (ImGui::Checkbox(full_name.c_str(), &exported))
-        {
-            // nothing
-        }
+        update_required = update_required || updated;
     }
+
+    return update_required;
 }
 
 void OutputConfigTab::onOutputChanged(NoiseModule::Ref ref)
