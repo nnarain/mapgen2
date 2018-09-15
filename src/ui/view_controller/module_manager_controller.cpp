@@ -54,6 +54,22 @@ void ModuleManagerController::renameModule(const std::string current_name, const
     manager_.rename(current_name, new_name);
 }
 
+void ModuleManagerController::setOutputModule(const NoiseModule::Ref output_ref)
+{
+    output_ref_ = output_ref;
+    output_changed_(output_ref_);
+}
+
+void ModuleManagerController::addOutputChangedObserver(std::function<OutputChangedSignature> fn)
+{
+    output_changed_.connect(fn);
+}
+
+void ModuleManagerController::forEach(std::function<void(const std::string&, NoiseModule&)> fn)
+{
+    manager_.forEach(fn);
+}
+
 const std::vector<std::string>& ModuleManagerController::getModuleNames()
 {
     if (is_names_cached_)
