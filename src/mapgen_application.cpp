@@ -5,7 +5,6 @@
 #include "ui/view_controller/output_config_tab.h"
 #include "ui/view_controller/test_view.h"
 
-
 #include <Magnum/GL/Renderer.h>
 #include <Magnum/Math/Color.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
@@ -28,7 +27,7 @@ MapGenApplication::MapGenApplication(const Arguments &arguments)
     ui_.initialize();
 
     ui_.addTab<NodeGraphEditorTab>("Editor", module_manager_controller_);
-    ui_.addTab<OutputConfigTab>("Output Config", module_manager_controller_);
+    ui_.addTab<OutputConfigTab>("Output Config", module_manager_controller_, output_configuration_);
 
     ui_.addView<ImGuiDemoView>("Demo", false);
     ui_.addView<ImGuiMetricsView>("Metrics", false);
