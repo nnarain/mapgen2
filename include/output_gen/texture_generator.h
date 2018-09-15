@@ -13,8 +13,10 @@ public:
 
     void generate(Magnum::GL::Texture2D& out_texture, int w, int h, NoiseModule& noise);
 
+    utils::RendererImage& getRenderer() noexcept;
 private:
-    
+    utils::RendererImage renderer_;
+
 };
 
 #endif
