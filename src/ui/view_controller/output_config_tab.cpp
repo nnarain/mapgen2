@@ -1,22 +1,22 @@
-#include "ui/view_controller/output_display.h"
+#include "ui/view_controller/output_config_tab.h"
 
 #include <imgui.h>
 
 static constexpr float TEXTURE_SIZE = 256.0f;
 
-OutputDisplayTab::OutputDisplayTab(ModuleManagerController& manager)
+OutputConfigTab::OutputConfigTab(ModuleManagerController& manager)
     : manager_{manager}
     , preview_{ {256, 256}, { TEXTURE_SIZE, TEXTURE_SIZE } }
     , update_required_{false}
 {
-    manager_.addOutputChangedObserver(std::bind(&OutputDisplayTab::onOutputChanged, this, std::placeholders::_1));
+    manager_.addOutputChangedObserver(std::bind(&OutputConfigTab::onOutputChanged, this, std::placeholders::_1));
 }
 
-OutputDisplayTab::~OutputDisplayTab()
+OutputConfigTab::~OutputConfigTab()
 {
 }
 
-void OutputDisplayTab::renderTab()
+void OutputConfigTab::renderTab()
 {
     constexpr float width_percent = 0.25f;
 
@@ -60,7 +60,7 @@ void OutputDisplayTab::renderTab()
     preview_.render();
 }
 
-void OutputDisplayTab::renderExportParams(NoiseModule& module)
+void OutputConfigTab::renderExportParams(NoiseModule& module)
 {
     const auto& module_name = module.getName();
     auto params = module.getParams();
@@ -87,7 +87,7 @@ void OutputDisplayTab::renderExportParams(NoiseModule& module)
     }
 }
 
-void OutputDisplayTab::onOutputChanged(NoiseModule::Ref ref)
+void OutputConfigTab::onOutputChanged(NoiseModule::Ref ref)
 {
     output_module_ = ref;
     update_required_ = true;

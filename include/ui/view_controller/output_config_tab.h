@@ -5,11 +5,11 @@
 #include "ui/view_controller/module_preview.h"
 #include "ui/view_controller/module_manager_controller.h"
 
-class OutputDisplayTab : public TabRenderer
+class OutputConfigTab : public TabRenderer
 {
 public:
-    OutputDisplayTab(ModuleManagerController& manager);
-    ~OutputDisplayTab();
+    OutputConfigTab(ModuleManagerController& manager);
+    ~OutputConfigTab();
 
     virtual void renderTab() override;
 
