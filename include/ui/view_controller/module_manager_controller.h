@@ -33,6 +33,8 @@ public:
     void setOutputModule(const NoiseModule::Ref output_ref);
     void addOutputChangedObserver(std::function<OutputChangedSignature>);
 
+    void forEach(std::function<void(const std::string&, NoiseModule&)> fn);
+
     const std::vector<std::string>& getModuleNames();
 
     const std::size_t size() const noexcept;

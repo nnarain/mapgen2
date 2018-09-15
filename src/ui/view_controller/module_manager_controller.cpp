@@ -65,6 +65,11 @@ void ModuleManagerController::addOutputChangedObserver(std::function<OutputChang
     output_changed_.connect(fn);
 }
 
+void ModuleManagerController::forEach(std::function<void(const std::string&, NoiseModule&)> fn)
+{
+    manager_.forEach(fn);
+}
+
 const std::vector<std::string>& ModuleManagerController::getModuleNames()
 {
     if (is_names_cached_)

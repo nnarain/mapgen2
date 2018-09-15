@@ -42,10 +42,9 @@ void OutputDisplayTab::renderTab()
 
         if (ImGui::CollapsingHeader("Exported Fields", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            if (auto module = output_module_.lock())
-            {
-                renderExportParams(*module);
-            }
+            manager_.forEach([this](const std::string&, NoiseModule& module) {
+                renderExportParams(module);
+            });
         }
     }
     ImGui::EndChild();
@@ -92,6 +91,4 @@ void OutputDisplayTab::onOutputChanged(NoiseModule::Ref ref)
 {
     output_module_ = ref;
     update_required_ = true;
-
-    exported_fields_.clear();
 }
