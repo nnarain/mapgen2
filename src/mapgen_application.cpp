@@ -27,7 +27,7 @@ MapGenApplication::MapGenApplication(const Arguments &arguments)
     ui_.initialize();
 
     ui_.addTab<NodeGraphEditorTab>("Editor", module_manager_controller_);
-    ui_.addTab<OutputConfigTab>("Output Config", module_manager_controller_, output_configuration_);
+    ui_.addTab<OutputConfigTab>("Output Config", module_manager_controller_);
 
     ui_.addView<ImGuiDemoView>("Demo", false);
     ui_.addView<ImGuiMetricsView>("Metrics", false);

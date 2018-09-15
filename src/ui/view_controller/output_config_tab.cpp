@@ -5,9 +5,8 @@
 
 static constexpr float TEXTURE_SIZE = 256.0f;
 
-OutputConfigTab::OutputConfigTab(ModuleManagerController& manager, OutputConfig& config)
+OutputConfigTab::OutputConfigTab(ModuleManagerController& manager)
     : manager_{manager}
-    , config_{config}
     , preview_{ {256, 256}, { TEXTURE_SIZE, TEXTURE_SIZE } }
     , update_required_{false}
 {

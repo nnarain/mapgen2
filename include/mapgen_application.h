@@ -1,7 +1,6 @@
 
 #include "ui/user_interface.h"
 #include "ui/view_controller/module_manager_controller.h"
-#include "output_gen/output_config.h"
 #include "frame_timer.h"
 
 #include <Magnum/Platform/Sdl2Application.h>
@@ -26,7 +25,6 @@ private:
 
     ModuleManager module_manager_;
     ModuleManagerController module_manager_controller_;
-    OutputConfig output_configuration_;
     UserInterface ui_;
 
     MagnumImGui imgui_;

@@ -41,12 +41,10 @@ set(NOISE_GEN_SOURCES
 
 set(OUTPUT_GEN_HEADERS
     include/output_gen/texture_generator.h
-    include/output_gen/output_config.h
 )
 
 set(OUTPUT_GEN_SOURCES
     src/output_gen/texture_generator.cpp
-    src/output_gen/output_config.cpp
 )
 
 set(UI_HEADERS

@@ -9,7 +9,7 @@
 class OutputConfigTab : public TabRenderer
 {
 public:
-    OutputConfigTab(ModuleManagerController& manager, OutputConfig& config);
+    OutputConfigTab(ModuleManagerController& manager);
     ~OutputConfigTab();
 
     virtual void renderTab() override;
@@ -20,7 +20,6 @@ private:
     bool renderModuleParameters(NoiseModule& module);
 
     ModuleManagerController& manager_;
-    OutputConfig& config_;
     ModulePreview preview_;
 
     NoiseModule::Ref output_module_;
