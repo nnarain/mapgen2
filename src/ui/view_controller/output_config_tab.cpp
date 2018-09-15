@@ -42,7 +42,7 @@ void OutputConfigTab::renderTab()
             update_required_ = preview_.renderParameters();
         }
 
-        if (ImGui::CollapsingHeader("Exported Fields", ImGuiTreeNodeFlags_DefaultOpen))
+        if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
         {
             manager_.forEach([this](const std::string&, NoiseModule& module) {
                 auto updated = renderModuleParameters(module);
