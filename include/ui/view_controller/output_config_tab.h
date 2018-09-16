@@ -4,7 +4,6 @@
 #include "ui/view_controller/tab_renderer.h"
 #include "ui/view_controller/module_preview.h"
 #include "ui/view_controller/module_manager_controller.h"
-#include "output_gen/output_config.h"
 
 class OutputConfigTab : public TabRenderer
 {
