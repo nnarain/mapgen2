@@ -24,6 +24,11 @@ public:
     void operator()(noise::module::Blend& module) const {}
     void operator()(noise::module::Checkerboard& module) const {}
 
+    void operator()(noise::module::Const& module) const
+    {
+        module.SetConstValue(get<float>("value"));
+    }
+
     void operator()(noise::module::Perlin& module) const
     {
         module.SetSeed(get<int>("seed"));

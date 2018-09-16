@@ -14,6 +14,7 @@ static const char* NODE_TYPE_NAMES[] = {
     "billow",
     "blend",
     "checkerboard",
+    "const",
     "perlin",
     "ridgedmulti",
     "scalebias",
@@ -35,6 +36,8 @@ static const char* NODE_DESCRIPTIONS[] = {
     "towards source 1.",
     // Checkerboard
     "Outputs a checkerboard pattern. -1 to 1",
+    // Const
+    "Outputs a constant value",
     // Perlin
     "Perlin noise is the sum of several coherent noise functions of ever increasing frequencies and decreasing amplitudes.\n"
     "A small change in the input value will produce a small change in the output value, while a large change in the input value with produce a random "

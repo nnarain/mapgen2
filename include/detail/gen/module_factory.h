@@ -15,6 +15,8 @@ public:
         {
         case NoiseModule::Type::Checkerboard:
             return { noise::module::Checkerboard() };
+        case NoiseModule::Type::Const:
+            return { noise::module::Const() };
         case NoiseModule::Type::Billow:
             return { noise::module::Billow() };
         case NoiseModule::Type::Blend:
@@ -56,6 +58,10 @@ public:
             };
         case NoiseModule::Type::Checkerboard:
             return {
+            };
+        case NoiseModule::Type::Const:
+            return {
+                {"value", 0.0f}
             };
         case NoiseModule::Type::Perlin:
             return {
