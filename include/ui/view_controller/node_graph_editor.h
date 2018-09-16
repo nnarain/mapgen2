@@ -12,6 +12,7 @@ public:
     // TODO: scoped
     enum NodeTypes
     {
+        ABS          = NoiseModule::Type::Abs,
         BILLOW       = NoiseModule::Type::Billow,
         BLEND        = NoiseModule::Type::Blend,
         CHECKERBOARD = NoiseModule::Type::Checkerboard,
