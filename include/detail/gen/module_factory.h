@@ -21,6 +21,8 @@ public:
             return { noise::module::Blend() };
         case NoiseModule::Type::Checkerboard:
             return { noise::module::Checkerboard() };
+        case NoiseModule::Type::Clamp:
+            return { noise::module::Clamp() };
         case NoiseModule::Type::Const:
             return { noise::module::Const() };
         case NoiseModule::Type::Cylinders:
@@ -51,7 +53,6 @@ public:
         {
         case NoiseModule::Type::Abs:
             return {
-
             };
         case NoiseModule::Type::Billow:
             return {
@@ -66,6 +67,11 @@ public:
             };
         case NoiseModule::Type::Checkerboard:
             return {
+            };
+        case NoiseModule::Type::Clamp:
+            return {
+                {"lower_bound", 0.0f},
+                {"upper_bound", 0.0f}
             };
         case NoiseModule::Type::Const:
             return {

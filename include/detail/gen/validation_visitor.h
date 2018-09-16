@@ -12,6 +12,20 @@ public:
     {
     }
 
+    bool operator()(noise::module::Clamp& module) const
+    {
+        const auto lower = boost::get<float>(params_["lower_bound"]);
+        const auto upper = boost::get<float>(params_["upper_bound"]);
+
+        if (lower >= upper)
+        {
+            std::cout << "Invalid parameters, lower >= upper" << std::endl;
+            return false;
+        }
+
+        return true;
+    }
+
     bool operator()(noise::module::Select& module) const
     {
         const auto lower = boost::get<float>(params_["lower_bound"]);

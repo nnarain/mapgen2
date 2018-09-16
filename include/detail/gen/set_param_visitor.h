@@ -21,6 +21,11 @@ public:
         module.SetLacunarity(get<RangedFloat>("lacunarity").value);
     }
 
+    void operator()(noise::module::Clamp& module) const
+    {
+        module.SetBounds(get<float>("lower_bound"), get<float>("upper_bound"));
+    }
+
     void operator()(noise::module::Const& module) const
     {
         module.SetConstValue(get<float>("value"));

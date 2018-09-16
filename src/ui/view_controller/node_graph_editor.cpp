@@ -15,6 +15,7 @@ static const char* NODE_TYPE_NAMES[] = {
     "billow",
     "blend",
     "checkerboard",
+    "clamp",
     "const",
     "cylinders",
     "perlin",
@@ -40,6 +41,8 @@ static const char* NODE_DESCRIPTIONS[] = {
     "towards source 1.",
     // Checkerboard
     "Outputs a checkerboard pattern. -1 to 1",
+    // Clamp
+    "Clamps output to specified values",
     // Const
     "Outputs a constant value",
     // Cylinders

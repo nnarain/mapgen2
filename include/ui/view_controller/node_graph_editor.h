@@ -16,6 +16,7 @@ public:
         BILLOW       = NoiseModule::Type::Billow,
         BLEND        = NoiseModule::Type::Blend,
         CHECKERBOARD = NoiseModule::Type::Checkerboard,
+        CLAMP        = NoiseModule::Type::Clamp,
         CONST        = NoiseModule::Type::Const,
         CYLINDERS    = NoiseModule::Type::Cylinders,
         PERLIN       = NoiseModule::Type::Perlin,
