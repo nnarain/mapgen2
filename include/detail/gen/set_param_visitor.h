@@ -29,6 +29,11 @@ public:
         module.SetConstValue(get<float>("value"));
     }
 
+    void operator()(noise::module::Cylinders& module) const
+    {
+        module.SetFrequency(get<float>("frequency"));
+    }
+
     void operator()(noise::module::Perlin& module) const
     {
         module.SetSeed(get<int>("seed"));

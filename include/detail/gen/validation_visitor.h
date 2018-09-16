@@ -16,6 +16,7 @@ public:
     bool operator()(noise::module::Blend& module) const { return true; }
     bool operator()(noise::module::Checkerboard& module) const { return true; }
     bool operator()(noise::module::Const& module) const { return true; }
+    bool operator()(noise::module::Cylinders& module) const { return true; }
     bool operator()(noise::module::Perlin& module) const { return true; }
     bool operator()(noise::module::RidgedMulti& module) const { return true; }
     bool operator()(noise::module::ScaleBias& module) const { return true; }

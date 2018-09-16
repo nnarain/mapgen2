@@ -16,6 +16,7 @@ public:
         BLEND        = NoiseModule::Type::Blend,
         CHECKERBOARD = NoiseModule::Type::Checkerboard,
         CONST        = NoiseModule::Type::Const,
+        CYLINDERS    = NoiseModule::Type::Cylinders,
         PERLIN       = NoiseModule::Type::Perlin,
         SELECT       = NoiseModule::Type::Select,
         SPHERES      = NoiseModule::Type::Spheres,

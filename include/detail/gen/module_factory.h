@@ -13,14 +13,17 @@ public:
     {
         switch (type)
         {
-        case NoiseModule::Type::Checkerboard:
-            return { noise::module::Checkerboard() };
-        case NoiseModule::Type::Const:
-            return { noise::module::Const() };
+
         case NoiseModule::Type::Billow:
             return { noise::module::Billow() };
         case NoiseModule::Type::Blend:
             return { noise::module::Blend() };
+        case NoiseModule::Type::Checkerboard:
+            return { noise::module::Checkerboard() };
+        case NoiseModule::Type::Const:
+            return { noise::module::Const() };
+        case NoiseModule::Type::Cylinders:
+            return { noise::module::Cylinders() };
         case NoiseModule::Type::Perlin:
             return { noise::module::Perlin() };
         case NoiseModule::Type::RidgedMulti:
@@ -61,7 +64,11 @@ public:
             };
         case NoiseModule::Type::Const:
             return {
-                {"value", 0.0f}
+                {"value", (float)noise::module::DEFAULT_CONST_VALUE}
+            };
+        case NoiseModule::Type::Cylinders:
+            return {
+                {"frequency", (float)noise::module::DEFAULT_CYLINDERS_FREQUENCY}
             };
         case NoiseModule::Type::Perlin:
             return {
