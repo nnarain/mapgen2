@@ -77,7 +77,6 @@ public:
 private:
 
     bool validate();
-    int getActualSourceCount();
 
     ModuleVariant module_base_;
     noise::module::Module& module_;
