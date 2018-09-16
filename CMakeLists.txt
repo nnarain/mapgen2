@@ -73,6 +73,9 @@ set(DETAIL_HEADERS
     include/detail/gen/source_counter_visitor.h
     include/detail/gen/validation_visitor.h
     include/detail/gen/set_param_visitor.h
+    include/detail/gen/dummy_noise.h
+    include/detail/gen/module_ref_visitor.h
+    include/detail/gen/module_factory.h
     include/detail/view/parameter_view_visitor.h
 )
 
