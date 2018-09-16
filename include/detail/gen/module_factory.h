@@ -13,6 +13,8 @@ public:
     {
         switch (type)
         {
+        case NoiseModule::Type::Checkerboard:
+            return { noise::module::Checkerboard() };
         case NoiseModule::Type::Billow:
             return { noise::module::Billow() };
         case NoiseModule::Type::Blend:
@@ -50,6 +52,9 @@ public:
                 { "lacunarity", RangedFloat(1.f, 4.f, noise::module::DEFAULT_BILLOW_LACUNARITY) },
             };
         case NoiseModule::Type::Blend:
+            return {
+            };
+        case NoiseModule::Type::Checkerboard:
             return {
             };
         case NoiseModule::Type::Perlin:

@@ -18,9 +18,24 @@ public:
     using Ptr = std::shared_ptr<NoiseModule>;
     using Ref = std::weak_ptr<NoiseModule>;
 
+    enum class Type
+    {
+        Billow,
+        Blend,
+        Checkerboard,
+        Perlin,
+        RidgedMulti,
+        ScaleBias,
+        Select,
+        Spheres,
+        Turbulence,
+        Voronoi
+    };
+
     using ModuleVariant = boost::variant<
         noise::module::Billow,
         noise::module::Blend,
+        noise::module::Checkerboard,
         noise::module::Perlin,
         noise::module::RidgedMulti,
         noise::module::ScaleBias,
@@ -39,18 +54,7 @@ public:
     using ParameterMap = std::map<std::string, ParameterVariant>;
     using ParameterMapPtr = std::shared_ptr<ParameterMap>;
 
-    enum class Type
-    {
-        Billow,
-        Blend,
-        Perlin,
-        RidgedMulti,
-        ScaleBias,
-        Select,
-        Spheres,
-        Turbulence,
-        Voronoi
-    };
+
 
     NoiseModule(const std::string& name, Type type);
 

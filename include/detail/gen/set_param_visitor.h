@@ -22,6 +22,7 @@ public:
     }
 
     void operator()(noise::module::Blend& module) const {}
+    void operator()(noise::module::Checkerboard& module) const {}
 
     void operator()(noise::module::Perlin& module) const
     {
