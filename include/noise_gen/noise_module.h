@@ -56,6 +56,8 @@ public:
 
     void update();
 
+    bool updateParameters(std::function<bool(const std::string& name, ParameterVariant&)>);
+
     noise::module::Module& getModule();
 
     ParameterMapPtr getParams();

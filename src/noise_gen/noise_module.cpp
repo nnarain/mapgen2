@@ -6,7 +6,6 @@
 #include <noise/module/module.h>
 
 #include <algorithm>
-#include <iostream>
 #include <stdexcept>
 
 /**
@@ -199,8 +198,26 @@ void NoiseModule::update()
         return;
     }
     
-    std::cout << name_ << " updating" << std::endl;
     boost::apply_visitor(SetParamsVisitor{ *parameter_map_ }, module_base_);
+}
+
+bool NoiseModule::updateParameters(std::function<bool(const std::string&, ParameterVariant&)> fn)
+{
+    bool update_required = false;
+
+    // pass individual parameters to client function
+    for (auto& param : *parameter_map_)
+    {
+        auto updated = fn(param.first, param.second);
+        update_required = update_required || updated;
+    }
+
+    if (update_required)
+    {
+        update();
+    }
+
+    return update_required;
 }
 
 NoiseModule::ParameterMapPtr NoiseModule::getParams()
@@ -253,6 +270,8 @@ void NoiseModule::setSourceModule(int index, NoiseModule::Ptr ptr)
     {
         module_.SetSourceModule(index, ptr->getModule());
     }
+
+    is_valid_ = validate();
 }
 
 int NoiseModule::getSourceModuleCount()

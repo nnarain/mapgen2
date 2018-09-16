@@ -124,15 +124,9 @@ public:
     {
         if (auto module = ref.lock())
         {
-            auto updated = false;
-
-            auto params = module->getParams();
-            for (auto& param : *params)
-            {
-                detail::view::ParameterViewVistor v{ param.first };
-                auto b = boost::apply_visitor(v, param.second);
-                updated = updated || b;
-            }
+            auto updated = module->updateParameters([](const std::string& name, NoiseModule::ParameterVariant& param) -> bool {
+                return boost::apply_visitor(detail::view::ParameterViewVistor{ name }, param);
+            });
 
             if (updated)
             {
@@ -145,9 +139,6 @@ public:
 
     void setUpdateRequired()
     {
-        if (auto ptr = ref.lock())
-            ptr->update();
-
         this->needs_preview_update = true;
         updateOutputLinks();
     }
