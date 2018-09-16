@@ -12,15 +12,6 @@ public:
     {
     }
 
-    bool operator()(noise::module::Billow& module) const { return true; }
-    bool operator()(noise::module::Blend& module) const { return true; }
-    bool operator()(noise::module::Checkerboard& module) const { return true; }
-    bool operator()(noise::module::Const& module) const { return true; }
-    bool operator()(noise::module::Cylinders& module) const { return true; }
-    bool operator()(noise::module::Perlin& module) const { return true; }
-    bool operator()(noise::module::RidgedMulti& module) const { return true; }
-    bool operator()(noise::module::ScaleBias& module) const { return true; }
-
     bool operator()(noise::module::Select& module) const
     {
         const auto lower = boost::get<float>(params_["lower_bound"]);
@@ -35,9 +26,14 @@ public:
         return true;
     }
 
-    bool operator()(noise::module::Spheres& module) const { return true; }
-    bool operator()(noise::module::Turbulence& module) const { return true; }
-    bool operator()(noise::module::Voronoi& module) const { return true; }
+    /**
+        Default
+    */
+    template<typename T>
+    bool operator()(T&) const
+    {
+        return true;
+    }
 
 private:
     NoiseModule::ParameterMap& params_;

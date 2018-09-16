@@ -21,9 +21,6 @@ public:
         module.SetLacunarity(get<RangedFloat>("lacunarity").value);
     }
 
-    void operator()(noise::module::Blend& module) const {}
-    void operator()(noise::module::Checkerboard& module) const {}
-
     void operator()(noise::module::Const& module) const
     {
         module.SetConstValue(get<float>("value"));
@@ -82,6 +79,14 @@ public:
         module.SetFrequency(get<float>("frequency"));
         module.SetDisplacement(get<float>("displacement"));
         module.EnableDistance(get<bool>("enable_distance"));
+    }
+
+    /**
+        Default
+    */
+    template<typename T>
+    void operator()(T&) const
+    {
     }
 
 private:
