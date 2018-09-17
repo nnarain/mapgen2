@@ -43,6 +43,7 @@ public:
         ScalePoint,
         Select,
         Spheres,
+        TranslatePoint,
         Turbulence,
         Voronoi
     };
@@ -71,6 +72,7 @@ public:
         noise::module::ScalePoint,
         noise::module::Select,
         noise::module::Spheres,
+        noise::module::TranslatePoint,
         noise::module::Turbulence,
         noise::module::Voronoi
     >;

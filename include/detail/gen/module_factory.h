@@ -59,6 +59,8 @@ public:
             return { noise::module::Select() };
         case NoiseModule::Type::Spheres:
             return { noise::module::Spheres() };
+        case NoiseModule::Type::TranslatePoint:
+            return { noise::module::TranslatePoint() };
         case NoiseModule::Type::Turbulence:
             return { noise::module::Turbulence() };
         case NoiseModule::Type::Voronoi:
@@ -172,6 +174,12 @@ public:
         case NoiseModule::Type::Spheres:
             return {
                 {"frequency", (float)noise::module::DEFAULT_SPHERES_FREQUENCY}
+            };
+        case NoiseModule::Type::TranslatePoint:
+            return {
+                { "x", (float)noise::module::DEFAULT_TRANSLATE_POINT_X },
+                { "y", (float)noise::module::DEFAULT_TRANSLATE_POINT_X },
+                { "z", (float)noise::module::DEFAULT_TRANSLATE_POINT_X },
             };
         case NoiseModule::Type::Turbulence:
             return {

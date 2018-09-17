@@ -34,6 +34,7 @@ static const char* NODE_TYPE_NAMES[] = {
     "scale",
     "select",
     "spheres",
+    "translate",
     "turbulence",
     "voronoi",
     "output"
@@ -94,6 +95,8 @@ static const char* NODE_DESCRIPTIONS[] = {
     "Outputs concentric spheres centered on the origin. Increasing the frequency reduces the distances between spheres.",
     // Rotate
     "Rotates the output",
+    // Translate
+    "Translate source module values",
     // Turbulence
     "Applies pseudo-random displacement on the input value.\n"
     "Frequency determines how fast the displacement value changes.\n"

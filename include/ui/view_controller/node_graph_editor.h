@@ -33,6 +33,7 @@ public:
         SPHERES      = NoiseModule::Type::Spheres,
         ROTATE_POINT = NoiseModule::Type::RotatePoint,
         SCALE_POINT  = NoiseModule::Type::ScalePoint,
+        TRANSATE     = NoiseModule::Type::TranslatePoint,
         TURBULENCE   = NoiseModule::Type::Turbulence,
         VORONOI      = NoiseModule::Type::Voronoi,
         OUTPUT,

@@ -89,6 +89,12 @@ public:
         module.SetZScale(get<float>("z"));
     }
 
+    void operator()(noise::module::TranslatePoint& module) const
+    {
+        module.SetXTranslation(get<float>("x"));
+        module.SetYTranslation(get<float>("y"));
+        module.SetZTranslation(get<float>("z"));
+    }
 
     void operator()(noise::module::Turbulence& module) const
     {
