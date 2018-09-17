@@ -15,6 +15,8 @@ public:
         {
         case NoiseModule::Type::Abs:
             return { noise::module::Abs() };
+        case NoiseModule::Type::Add:
+            return { noise::module::Add() };
         case NoiseModule::Type::Billow:
             return { noise::module::Billow() };
         case NoiseModule::Type::Blend:
@@ -56,6 +58,9 @@ public:
         switch (type)
         {
         case NoiseModule::Type::Abs:
+            return {
+            };
+        case NoiseModule::Type::Add:
             return {
             };
         case NoiseModule::Type::Billow:

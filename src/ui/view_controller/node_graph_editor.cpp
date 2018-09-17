@@ -12,6 +12,7 @@
 
 static const char* NODE_TYPE_NAMES[] = {
     "abs",
+    "add",
     "billow",
     "blend",
     "checkerboard",
@@ -33,6 +34,8 @@ static const char* NODE_TYPE_NAMES[] = {
 static const char* NODE_DESCRIPTIONS[] = {
     // Abs
     "Outputs the absolute value of the of source module value",
+    // Add
+    "Adds the two source modules together",
     // Billow
     "This noise generates 'billow' noise suitable for clouds and rocks.\n"
     "It is nearly identical to Perlin noise except each octave is modified with an absolute value function.",

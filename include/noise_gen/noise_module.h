@@ -21,6 +21,7 @@ public:
     enum class Type
     {
         Abs,
+        Add,
         Billow,
         Blend,
         Checkerboard,
@@ -40,6 +41,7 @@ public:
 
     using ModuleVariant = boost::variant<
         noise::module::Abs,
+        noise::module::Add,
         noise::module::Billow,
         noise::module::Blend,
         noise::module::Checkerboard,

@@ -13,6 +13,7 @@ public:
     enum NodeTypes
     {
         ABS          = NoiseModule::Type::Abs,
+        ADD          = NoiseModule::Type::Add,
         BILLOW       = NoiseModule::Type::Billow,
         BLEND        = NoiseModule::Type::Blend,
         CHECKERBOARD = NoiseModule::Type::Checkerboard,
