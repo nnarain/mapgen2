@@ -22,6 +22,7 @@ static const char* NODE_TYPE_NAMES[] = {
     "exponent",
     "invert",
     "max",
+    "min",
     "perlin",
     "ridgedmulti",
     "scalebias",
@@ -59,6 +60,8 @@ static const char* NODE_DESCRIPTIONS[] = {
     "Inverts the source module value",
     // Max
     "Outputs the max of two source modules",
+    // Min
+    "Output the minimun of the two source modules",
     // Perlin
     "Perlin noise is the sum of several coherent noise functions of ever increasing frequencies and decreasing amplitudes.\n"
     "A small change in the input value will produce a small change in the output value, while a large change in the input value with produce a random "

@@ -23,6 +23,7 @@ public:
         EXPONENT     = NoiseModule::Type::Exponent,
         INVERT       = NoiseModule::Type::Invert,
         MAX          = NoiseModule::Type::Max,
+        MIN          = NoiseModule::Type::Min,
         PERLIN       = NoiseModule::Type::Perlin,
         SELECT       = NoiseModule::Type::Select,
         SPHERES      = NoiseModule::Type::Spheres,

@@ -35,6 +35,8 @@ public:
             return { noise::module::Invert() };
         case NoiseModule::Type::Max:
             return { noise::module::Max() };
+        case NoiseModule::Type::Min:
+            return { noise::module::Min() };
         case NoiseModule::Type::Perlin:
             return { noise::module::Perlin() };
         case NoiseModule::Type::RidgedMulti:
@@ -100,6 +102,9 @@ public:
             return {
             };
         case NoiseModule::Type::Max:
+            return {
+            };
+        case NoiseModule::Type::Min:
             return {
             };
         case NoiseModule::Type::Perlin:
