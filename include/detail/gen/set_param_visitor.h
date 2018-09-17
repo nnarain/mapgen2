@@ -21,7 +21,25 @@ public:
         module.SetLacunarity(get<RangedFloat>("lacunarity").value);
     }
 
-    void operator()(noise::module::Blend& module) const {}
+    void operator()(noise::module::Clamp& module) const
+    {
+        module.SetBounds(get<float>("lower_bound"), get<float>("upper_bound"));
+    }
+
+    void operator()(noise::module::Const& module) const
+    {
+        module.SetConstValue(get<float>("value"));
+    }
+
+    void operator()(noise::module::Cylinders& module) const
+    {
+        module.SetFrequency(get<float>("frequency"));
+    }
+
+    void operator()(noise::module::Exponent& module) const
+    {
+        module.SetExponent(get<float>("exp"));
+    }
 
     void operator()(noise::module::Perlin& module) const
     {
@@ -57,6 +75,27 @@ public:
         module.SetFrequency(get<float>("frequency"));
     }
 
+    void operator()(noise::module::RotatePoint& module) const
+    {
+        module.SetXAngle(get<float>("x"));
+        module.SetYAngle(get<float>("y"));
+        module.SetZAngle(get<float>("z"));
+    }
+
+    void operator()(noise::module::ScalePoint& module) const
+    {
+        module.SetXScale(get<float>("x"));
+        module.SetYScale(get<float>("y"));
+        module.SetZScale(get<float>("z"));
+    }
+
+    void operator()(noise::module::TranslatePoint& module) const
+    {
+        module.SetXTranslation(get<float>("x"));
+        module.SetYTranslation(get<float>("y"));
+        module.SetZTranslation(get<float>("z"));
+    }
+
     void operator()(noise::module::Turbulence& module) const
     {
         module.SetSeed(get<int>("seed"));
@@ -71,6 +110,14 @@ public:
         module.SetFrequency(get<float>("frequency"));
         module.SetDisplacement(get<float>("displacement"));
         module.EnableDistance(get<bool>("enable_distance"));
+    }
+
+    /**
+        Default
+    */
+    template<typename T>
+    void operator()(T&) const
+    {
     }
 
 private:

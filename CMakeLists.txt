@@ -7,7 +7,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
 project(mapgen2)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLIBNOISE_HAS_MODERN_CPP_CTORS")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLIBNOISE_HAS_MODERN_CPP_CTORS -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS -DBOOST_MPL_LIMIT_LIST_SIZE=30")
 
 # Set output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
@@ -51,7 +51,6 @@ set(UI_HEADERS
     include/ui/user_interface.h
     include/ui/view_controller/view.h
     include/ui/view_controller/module_manager_controller.h
-    include/ui/view_controller/parameter_view.h
     include/ui/view_controller/module_preview.h
     include/ui/view_controller/imgui_demo_view.h
     include/ui/view_controller/imgui_metric_view.h
@@ -74,6 +73,9 @@ set(DETAIL_HEADERS
     include/detail/gen/source_counter_visitor.h
     include/detail/gen/validation_visitor.h
     include/detail/gen/set_param_visitor.h
+    include/detail/gen/dummy_noise.h
+    include/detail/gen/module_ref_visitor.h
+    include/detail/gen/module_factory.h
     include/detail/view/parameter_view_visitor.h
 )
 
@@ -105,6 +107,8 @@ add_executable(${PROJECT_NAME}
     ${MAPGEN_HEADERS}
     ${MAPGEN_SOURCES}
 )
+
+#target_compile_options(${PROJECT_NAME} PUBLIC "-DBOOST_MPL_LIMIT_LIST_SIZE=30")
 
 if (MSVC)
     target_compile_options(${PROJECT_NAME} PUBLIC /WX /wd4100 /wd4458)

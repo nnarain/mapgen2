@@ -69,24 +69,13 @@ void OutputConfigTab::renderTab()
 bool OutputConfigTab::renderModuleParameters(NoiseModule& module)
 {
     const auto& module_name = module.getName();
-    auto params = module.getParams();
 
-    auto update_required = false;
+    auto updated = module.updateParameters([&module_name](const std::string& name, NoiseModule::ParameterVariant& param) -> bool {
+        auto full_name = module_name + "." + name;
+        return boost::apply_visitor(detail::view::ParameterViewVistor{ full_name }, param);
+    });
 
-    // display checkboxs for items to be exported
-    for (auto& param : *params)
-    {
-        // full parameter name
-        const auto& param_name = param.first;
-        const auto full_name = module_name + "." + param_name;
-
-        detail::view::ParameterViewVistor v{ full_name };
-        auto updated = boost::apply_visitor(v, param.second);
-
-        update_required = update_required || updated;
-    }
-
-    return update_required;
+    return updated;
 }
 
 void OutputConfigTab::onOutputChanged(NoiseModule::Ref ref)

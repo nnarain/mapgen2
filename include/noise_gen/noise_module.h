@@ -18,14 +18,61 @@ public:
     using Ptr = std::shared_ptr<NoiseModule>;
     using Ref = std::weak_ptr<NoiseModule>;
 
-    using ModuleVariant = boost::variant<
+    enum class Type
+    {
+        Abs,
+        Add,
+        Billow,
+        Blend,
+        Cache,
+        Checkerboard,
+        Clamp,
+        Const,
+        Cylinders,
+        Displace,
+        Exponent,
+        Invert,
+        Max,
+        Min,
+        Multiply,
+        Perlin,
+        Power,
+        RidgedMulti,
+        RotatePoint,
+        ScaleBias,
+        ScalePoint,
+        Select,
+        Spheres,
+        TranslatePoint,
+        Turbulence,
+        Voronoi
+    };
+
+    using ModuleVariant = boost::variant <
+        noise::module::Abs,
+        noise::module::Add,
         noise::module::Billow,
         noise::module::Blend,
+        noise::module::Cache,
+        noise::module::Checkerboard,
+        noise::module::Clamp,
+        noise::module::Const,
+        noise::module::Cylinders,
+        noise::module::Displace,
+        noise::module::Exponent,
+        noise::module::Invert,
+        noise::module::Max,
+        noise::module::Min,
+        noise::module::Multiply,
         noise::module::Perlin,
+        noise::module::Power,
         noise::module::RidgedMulti,
+        noise::module::RotatePoint,
         noise::module::ScaleBias,
+        noise::module::ScalePoint,
         noise::module::Select,
         noise::module::Spheres,
+        noise::module::TranslatePoint,
         noise::module::Turbulence,
         noise::module::Voronoi
     >;
@@ -39,22 +86,13 @@ public:
     using ParameterMap = std::map<std::string, ParameterVariant>;
     using ParameterMapPtr = std::shared_ptr<ParameterMap>;
 
-    enum class Type
-    {
-        Billow,
-        Blend,
-        Perlin,
-        RidgedMulti,
-        ScaleBias,
-        Select,
-        Spheres,
-        Turbulence,
-        Voronoi
-    };
+
 
     NoiseModule(const std::string& name, Type type);
 
     void update();
+
+    bool updateParameters(std::function<bool(const std::string& name, ParameterVariant&)>);
 
     noise::module::Module& getModule();
 
@@ -75,7 +113,6 @@ public:
 private:
 
     bool validate();
-    int getActualSourceCount();
 
     ModuleVariant module_base_;
     noise::module::Module& module_;
