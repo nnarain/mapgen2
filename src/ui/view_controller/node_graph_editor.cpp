@@ -25,6 +25,7 @@ static const char* NODE_TYPE_NAMES[] = {
     "min",
     "multiply",
     "perlin",
+    "power",
     "ridgedmulti",
     "scalebias",
     "select",
@@ -69,6 +70,8 @@ static const char* NODE_DESCRIPTIONS[] = {
     "Perlin noise is the sum of several coherent noise functions of ever increasing frequencies and decreasing amplitudes.\n"
     "A small change in the input value will produce a small change in the output value, while a large change in the input value with produce a random "
     "change in the output value.",
+    // Power
+    "Raised the first source module to the power of the second source module",
     // Ridged Multi
     "This noise module, heavily based on the Perlin module, generates ridged-multifractal noise. Ridged-multifractal noise is generated in much of the same "
     "way as Perlin noise, except the output of each octave is modified by an absoluate-value function.\n"

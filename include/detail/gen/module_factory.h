@@ -41,6 +41,8 @@ public:
             return { noise::module::Multiply() };
         case NoiseModule::Type::Perlin:
             return { noise::module::Perlin() };
+        case NoiseModule::Type::Power:
+            return { noise::module::Power() };
         case NoiseModule::Type::RidgedMulti:
             return { noise::module::RidgedMulti() };
         case NoiseModule::Type::ScaleBias:
@@ -119,6 +121,9 @@ public:
                 {"octaves", RangedInt(1, 25, noise::module::DEFAULT_PERLIN_OCTAVE_COUNT)},
                 {"persistence", RangedFloat(0.f, 1.f, noise::module::DEFAULT_PERLIN_PERSISTENCE)},
                 {"lacunarity", RangedFloat(1.f, 4.f, noise::module::DEFAULT_PERLIN_LACUNARITY)},
+            };
+        case NoiseModule::Type::Power:
+            return {
             };
         case NoiseModule::Type::RidgedMulti:
             return {

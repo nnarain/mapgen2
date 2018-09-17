@@ -26,6 +26,7 @@ public:
         MIN          = NoiseModule::Type::Min,
         MULTIPLY     = NoiseModule::Type::Multiply,
         PERLIN       = NoiseModule::Type::Perlin,
+        POWER        = NoiseModule::Type::Power,
         SELECT       = NoiseModule::Type::Select,
         SPHERES      = NoiseModule::Type::Spheres,
         TURBULENCE   = NoiseModule::Type::Turbulence,
