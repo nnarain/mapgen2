@@ -31,6 +31,7 @@ public:
         POWER        = NoiseModule::Type::Power,
         SELECT       = NoiseModule::Type::Select,
         SPHERES      = NoiseModule::Type::Spheres,
+        ROTATE_POINT = NoiseModule::Type::RotatePoint,
         TURBULENCE   = NoiseModule::Type::Turbulence,
         VORONOI      = NoiseModule::Type::Voronoi,
         OUTPUT,

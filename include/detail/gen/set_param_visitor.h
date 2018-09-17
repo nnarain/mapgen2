@@ -75,6 +75,13 @@ public:
         module.SetFrequency(get<float>("frequency"));
     }
 
+    void operator()(noise::module::RotatePoint& module) const
+    {
+        module.SetXAngle(get<float>("x"));
+        module.SetYAngle(get<float>("y"));
+        module.SetZAngle(get<float>("z"));
+    }
+
     void operator()(noise::module::Turbulence& module) const
     {
         module.SetSeed(get<int>("seed"));

@@ -49,6 +49,8 @@ public:
             return { noise::module::Power() };
         case NoiseModule::Type::RidgedMulti:
             return { noise::module::RidgedMulti() };
+        case NoiseModule::Type::RotatePoint:
+            return { noise::module::RotatePoint() };
         case NoiseModule::Type::ScaleBias:
             return { noise::module::ScaleBias() };
         case NoiseModule::Type::Select:
@@ -141,6 +143,12 @@ public:
                 { "frequency", (float)noise::module::DEFAULT_RIDGED_FREQUENCY },
                 { "octaves", RangedInt(1, 25, noise::module::DEFAULT_RIDGED_OCTAVE_COUNT) },
                 { "lacunarity", RangedFloat(1.f, 4.f, noise::module::DEFAULT_RIDGED_LACUNARITY) },
+            };
+        case NoiseModule::Type::RotatePoint:
+            return {
+                { "x", (float)noise::module::DEFAULT_ROTATE_X },
+                { "y", (float)noise::module::DEFAULT_ROTATE_Y },
+                { "z", (float)noise::module::DEFAULT_ROTATE_Z },
             };
         case NoiseModule::Type::ScaleBias:
             return {

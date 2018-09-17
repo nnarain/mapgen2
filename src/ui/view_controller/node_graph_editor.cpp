@@ -29,6 +29,7 @@ static const char* NODE_TYPE_NAMES[] = {
     "perlin",
     "power",
     "ridgedmulti",
+    "rotate",
     "scalebias",
     "select",
     "spheres",
@@ -88,6 +89,8 @@ static const char* NODE_DESCRIPTIONS[] = {
     "Noise module that outputs the value selected from the one of two source modules chosen by the output value from a control module.",
     // Spheres
     "Outputs concentric spheres centered on the origin. Increasing the frequency reduces the distances between spheres.",
+    // Rotate
+    "Rotates the output",
     // Turbulence
     "Applies pseudo-random displacement on the input value.\n"
     "Frequency determines how fast the displacement value changes.\n"
