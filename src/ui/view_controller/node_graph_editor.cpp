@@ -31,6 +31,7 @@ static const char* NODE_TYPE_NAMES[] = {
     "ridgedmulti",
     "rotate",
     "scalebias",
+    "scale",
     "select",
     "spheres",
     "turbulence",
@@ -85,6 +86,8 @@ static const char* NODE_DESCRIPTIONS[] = {
     "Ridged-multifractal",
     // Scale Bias
     "Retrieves the output value from the source module, multiples it with a scaling factor, adds a bias to it, then outputs the value.",
+    // Scale Point
+    "Multiple x,y,z from source with x,y,z scaling factors",
     // Select
     "Noise module that outputs the value selected from the one of two source modules chosen by the output value from a control module.",
     // Spheres

@@ -32,6 +32,7 @@ public:
         SELECT       = NoiseModule::Type::Select,
         SPHERES      = NoiseModule::Type::Spheres,
         ROTATE_POINT = NoiseModule::Type::RotatePoint,
+        SCALE_POINT  = NoiseModule::Type::ScalePoint,
         TURBULENCE   = NoiseModule::Type::Turbulence,
         VORONOI      = NoiseModule::Type::Voronoi,
         OUTPUT,

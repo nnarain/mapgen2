@@ -82,6 +82,14 @@ public:
         module.SetZAngle(get<float>("z"));
     }
 
+    void operator()(noise::module::ScalePoint& module) const
+    {
+        module.SetXScale(get<float>("x"));
+        module.SetYScale(get<float>("y"));
+        module.SetZScale(get<float>("z"));
+    }
+
+
     void operator()(noise::module::Turbulence& module) const
     {
         module.SetSeed(get<int>("seed"));

@@ -53,6 +53,8 @@ public:
             return { noise::module::RotatePoint() };
         case NoiseModule::Type::ScaleBias:
             return { noise::module::ScaleBias() };
+        case NoiseModule::Type::ScalePoint:
+            return { noise::module::ScalePoint() };
         case NoiseModule::Type::Select:
             return { noise::module::Select() };
         case NoiseModule::Type::Spheres:
@@ -154,6 +156,12 @@ public:
             return {
                 {"bias", 0.0f},
                 {"scale", 1.0f}
+            };
+        case NoiseModule::Type::ScalePoint:
+            return {
+                { "x", (float)noise::module::DEFAULT_SCALE_POINT_X },
+                { "y", (float)noise::module::DEFAULT_SCALE_POINT_Y },
+                { "z", (float)noise::module::DEFAULT_SCALE_POINT_Z },
             };
         case NoiseModule::Type::Select:
             return {
