@@ -24,6 +24,7 @@ public:
         INVERT       = NoiseModule::Type::Invert,
         MAX          = NoiseModule::Type::Max,
         MIN          = NoiseModule::Type::Min,
+        MULTIPLY     = NoiseModule::Type::Multiply,
         PERLIN       = NoiseModule::Type::Perlin,
         SELECT       = NoiseModule::Type::Select,
         SPHERES      = NoiseModule::Type::Spheres,
