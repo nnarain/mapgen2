@@ -15,6 +15,7 @@ static const char* NODE_TYPE_NAMES[] = {
     "add",
     "billow",
     "blend",
+    "cache",
     "checkerboard",
     "clamp",
     "const",
@@ -48,6 +49,8 @@ static const char* NODE_DESCRIPTIONS[] = {
     "* Source module 1: Ouputs one of the values to blend\n"
     "* Source module 2: Control module. Determines the weight of the blending operation. Negative values weight towards Source 0, Positives values weight"
     "towards source 1.",
+    // Cache
+    "Caches the output",
     // Checkerboard
     "Outputs a checkerboard pattern. -1 to 1",
     // Clamp

@@ -21,6 +21,8 @@ public:
             return { noise::module::Billow() };
         case NoiseModule::Type::Blend:
             return { noise::module::Blend() };
+        case NoiseModule::Type::Cache:
+            return { noise::module::Cache() };
         case NoiseModule::Type::Checkerboard:
             return { noise::module::Checkerboard() };
         case NoiseModule::Type::Clamp:
@@ -80,6 +82,9 @@ public:
                 { "lacunarity", RangedFloat(1.f, 4.f, noise::module::DEFAULT_BILLOW_LACUNARITY) },
             };
         case NoiseModule::Type::Blend:
+            return {
+            };
+        case NoiseModule::Type::Cache:
             return {
             };
         case NoiseModule::Type::Checkerboard:

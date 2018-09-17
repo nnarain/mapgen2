@@ -16,6 +16,7 @@ public:
         ADD          = NoiseModule::Type::Add,
         BILLOW       = NoiseModule::Type::Billow,
         BLEND        = NoiseModule::Type::Blend,
+        CACHE        = NoiseModule::Type::Cache,
         CHECKERBOARD = NoiseModule::Type::Checkerboard,
         CLAMP        = NoiseModule::Type::Clamp,
         CONST        = NoiseModule::Type::Const,
