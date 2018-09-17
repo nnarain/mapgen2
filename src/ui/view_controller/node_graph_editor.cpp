@@ -11,19 +11,40 @@
 #include <sstream>
 
 static const char* NODE_TYPE_NAMES[] = {
+    "abs",
+    "add",
     "billow",
     "blend",
+    "cache",
+    "checkerboard",
+    "clamp",
+    "const",
+    "cylinders",
+    "displace",
+    "exponent",
+    "invert",
+    "max",
+    "min",
+    "multiply",
     "perlin",
+    "power",
     "ridgedmulti",
+    "rotate",
     "scalebias",
+    "scale",
     "select",
     "spheres",
+    "translate",
     "turbulence",
     "voronoi",
     "output"
 };
 
 static const char* NODE_DESCRIPTIONS[] = {
+    // Abs
+    "Outputs the absolute value of the of source module value",
+    // Add
+    "Adds the two source modules together",
     // Billow
     "This noise generates 'billow' noise suitable for clouds and rocks.\n"
     "It is nearly identical to Perlin noise except each octave is modified with an absolute value function.",
@@ -32,20 +53,50 @@ static const char* NODE_DESCRIPTIONS[] = {
     "* Source module 1: Ouputs one of the values to blend\n"
     "* Source module 2: Control module. Determines the weight of the blending operation. Negative values weight towards Source 0, Positives values weight"
     "towards source 1.",
+    // Cache
+    "Caches the output",
+    // Checkerboard
+    "Outputs a checkerboard pattern. -1 to 1",
+    // Clamp
+    "Clamps output to specified values",
+    // Const
+    "Outputs a constant value",
+    // Cylinders
+    "Outputs concentric cylinders contered on the origin",
+    // Displace
+    "Uses 3 source modules to displace an input module. Source 0 in the input, 1-3 are displace noise functions",
+    // Exponent
+    "Maps value to an exponential curve",
+    // Invert
+    "Inverts the source module value",
+    // Max
+    "Outputs the max of two source modules",
+    // Min
+    "Output the minimun of the two source modules",
+    // Multiply
+    "Multiplies the two source modules",
     // Perlin
     "Perlin noise is the sum of several coherent noise functions of ever increasing frequencies and decreasing amplitudes.\n"
     "A small change in the input value will produce a small change in the output value, while a large change in the input value with produce a random "
     "change in the output value.",
+    // Power
+    "Raised the first source module to the power of the second source module",
     // Ridged Multi
     "This noise module, heavily based on the Perlin module, generates ridged-multifractal noise. Ridged-multifractal noise is generated in much of the same "
     "way as Perlin noise, except the output of each octave is modified by an absoluate-value function.\n"
     "Ridged-multifractal",
     // Scale Bias
     "Retrieves the output value from the source module, multiples it with a scaling factor, adds a bias to it, then outputs the value.",
+    // Scale Point
+    "Multiple x,y,z from source with x,y,z scaling factors",
     // Select
     "Noise module that outputs the value selected from the one of two source modules chosen by the output value from a control module.",
     // Spheres
     "Outputs concentric spheres centered on the origin. Increasing the frequency reduces the distances between spheres.",
+    // Rotate
+    "Rotates the output",
+    // Translate
+    "Translate source module values",
     // Turbulence
     "Applies pseudo-random displacement on the input value.\n"
     "Frequency determines how fast the displacement value changes.\n"

@@ -13,20 +13,54 @@ public:
     {
         switch (type)
         {
+        case NoiseModule::Type::Abs:
+            return { noise::module::Abs() };
+        case NoiseModule::Type::Add:
+            return { noise::module::Add() };
         case NoiseModule::Type::Billow:
             return { noise::module::Billow() };
         case NoiseModule::Type::Blend:
             return { noise::module::Blend() };
+        case NoiseModule::Type::Cache:
+            return { noise::module::Cache() };
+        case NoiseModule::Type::Checkerboard:
+            return { noise::module::Checkerboard() };
+        case NoiseModule::Type::Clamp:
+            return { noise::module::Clamp() };
+        case NoiseModule::Type::Const:
+            return { noise::module::Const() };
+        case NoiseModule::Type::Cylinders:
+            return { noise::module::Cylinders() };
+        case NoiseModule::Type::Displace:
+            return { noise::module::Displace() };
+        case NoiseModule::Type::Exponent:
+            return { noise::module::Exponent() };
+        case NoiseModule::Type::Invert:
+            return { noise::module::Invert() };
+        case NoiseModule::Type::Max:
+            return { noise::module::Max() };
+        case NoiseModule::Type::Min:
+            return { noise::module::Min() };
+        case NoiseModule::Type::Multiply:
+            return { noise::module::Multiply() };
         case NoiseModule::Type::Perlin:
             return { noise::module::Perlin() };
+        case NoiseModule::Type::Power:
+            return { noise::module::Power() };
         case NoiseModule::Type::RidgedMulti:
             return { noise::module::RidgedMulti() };
+        case NoiseModule::Type::RotatePoint:
+            return { noise::module::RotatePoint() };
         case NoiseModule::Type::ScaleBias:
             return { noise::module::ScaleBias() };
+        case NoiseModule::Type::ScalePoint:
+            return { noise::module::ScalePoint() };
         case NoiseModule::Type::Select:
             return { noise::module::Select() };
         case NoiseModule::Type::Spheres:
             return { noise::module::Spheres() };
+        case NoiseModule::Type::TranslatePoint:
+            return { noise::module::TranslatePoint() };
         case NoiseModule::Type::Turbulence:
             return { noise::module::Turbulence() };
         case NoiseModule::Type::Voronoi:
@@ -41,6 +75,12 @@ public:
     {
         switch (type)
         {
+        case NoiseModule::Type::Abs:
+            return {
+            };
+        case NoiseModule::Type::Add:
+            return {
+            };
         case NoiseModule::Type::Billow:
             return {
                 { "seed", 1337 },
@@ -52,6 +92,44 @@ public:
         case NoiseModule::Type::Blend:
             return {
             };
+        case NoiseModule::Type::Cache:
+            return {
+            };
+        case NoiseModule::Type::Checkerboard:
+            return {
+            };
+        case NoiseModule::Type::Clamp:
+            return {
+                {"lower_bound", 0.0f},
+                {"upper_bound", 0.0f}
+            };
+        case NoiseModule::Type::Const:
+            return {
+                {"value", (float)noise::module::DEFAULT_CONST_VALUE}
+            };
+        case NoiseModule::Type::Cylinders:
+            return {
+                {"frequency", (float)noise::module::DEFAULT_CYLINDERS_FREQUENCY}
+            };
+        case NoiseModule::Type::Displace:
+            return {
+            };
+        case NoiseModule::Type::Exponent:
+            return {
+                {"exp", (float)noise::module::DEFAULT_EXPONENT}
+            };
+        case NoiseModule::Type::Invert:
+            return {
+            };
+        case NoiseModule::Type::Max:
+            return {
+            };
+        case NoiseModule::Type::Min:
+            return {
+            };
+        case NoiseModule::Type::Multiply:
+            return {
+            };
         case NoiseModule::Type::Perlin:
             return {
                 {"seed", 1337},
@@ -60,6 +138,9 @@ public:
                 {"persistence", RangedFloat(0.f, 1.f, noise::module::DEFAULT_PERLIN_PERSISTENCE)},
                 {"lacunarity", RangedFloat(1.f, 4.f, noise::module::DEFAULT_PERLIN_LACUNARITY)},
             };
+        case NoiseModule::Type::Power:
+            return {
+            };
         case NoiseModule::Type::RidgedMulti:
             return {
                 { "seed", 1337 },
@@ -67,10 +148,22 @@ public:
                 { "octaves", RangedInt(1, 25, noise::module::DEFAULT_RIDGED_OCTAVE_COUNT) },
                 { "lacunarity", RangedFloat(1.f, 4.f, noise::module::DEFAULT_RIDGED_LACUNARITY) },
             };
+        case NoiseModule::Type::RotatePoint:
+            return {
+                { "x", (float)noise::module::DEFAULT_ROTATE_X },
+                { "y", (float)noise::module::DEFAULT_ROTATE_Y },
+                { "z", (float)noise::module::DEFAULT_ROTATE_Z },
+            };
         case NoiseModule::Type::ScaleBias:
             return {
                 {"bias", 0.0f},
                 {"scale", 1.0f}
+            };
+        case NoiseModule::Type::ScalePoint:
+            return {
+                { "x", (float)noise::module::DEFAULT_SCALE_POINT_X },
+                { "y", (float)noise::module::DEFAULT_SCALE_POINT_Y },
+                { "z", (float)noise::module::DEFAULT_SCALE_POINT_Z },
             };
         case NoiseModule::Type::Select:
             return {
@@ -81,6 +174,12 @@ public:
         case NoiseModule::Type::Spheres:
             return {
                 {"frequency", (float)noise::module::DEFAULT_SPHERES_FREQUENCY}
+            };
+        case NoiseModule::Type::TranslatePoint:
+            return {
+                { "x", (float)noise::module::DEFAULT_TRANSLATE_POINT_X },
+                { "y", (float)noise::module::DEFAULT_TRANSLATE_POINT_X },
+                { "z", (float)noise::module::DEFAULT_TRANSLATE_POINT_X },
             };
         case NoiseModule::Type::Turbulence:
             return {
