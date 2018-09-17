@@ -22,6 +22,7 @@ public:
         CYLINDERS    = NoiseModule::Type::Cylinders,
         EXPONENT     = NoiseModule::Type::Exponent,
         INVERT       = NoiseModule::Type::Invert,
+        MAX          = NoiseModule::Type::Max,
         PERLIN       = NoiseModule::Type::Perlin,
         SELECT       = NoiseModule::Type::Select,
         SPHERES      = NoiseModule::Type::Spheres,

@@ -33,6 +33,8 @@ public:
             return { noise::module::Exponent() };
         case NoiseModule::Type::Invert:
             return { noise::module::Invert() };
+        case NoiseModule::Type::Max:
+            return { noise::module::Max() };
         case NoiseModule::Type::Perlin:
             return { noise::module::Perlin() };
         case NoiseModule::Type::RidgedMulti:
@@ -95,6 +97,9 @@ public:
                 {"exp", (float)noise::module::DEFAULT_EXPONENT}
             };
         case NoiseModule::Type::Invert:
+            return {
+            };
+        case NoiseModule::Type::Max:
             return {
             };
         case NoiseModule::Type::Perlin:
