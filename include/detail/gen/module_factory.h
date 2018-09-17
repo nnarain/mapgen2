@@ -31,6 +31,8 @@ public:
             return { noise::module::Const() };
         case NoiseModule::Type::Cylinders:
             return { noise::module::Cylinders() };
+        case NoiseModule::Type::Displace:
+            return { noise::module::Displace() };
         case NoiseModule::Type::Exponent:
             return { noise::module::Exponent() };
         case NoiseModule::Type::Invert:
@@ -102,6 +104,9 @@ public:
         case NoiseModule::Type::Cylinders:
             return {
                 {"frequency", (float)noise::module::DEFAULT_CYLINDERS_FREQUENCY}
+            };
+        case NoiseModule::Type::Displace:
+            return {
             };
         case NoiseModule::Type::Exponent:
             return {

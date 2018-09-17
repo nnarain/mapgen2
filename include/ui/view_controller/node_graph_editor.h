@@ -21,6 +21,7 @@ public:
         CLAMP        = NoiseModule::Type::Clamp,
         CONST        = NoiseModule::Type::Const,
         CYLINDERS    = NoiseModule::Type::Cylinders,
+        DISPLACE     = NoiseModule::Type::Displace,
         EXPONENT     = NoiseModule::Type::Exponent,
         INVERT       = NoiseModule::Type::Invert,
         MAX          = NoiseModule::Type::Max,

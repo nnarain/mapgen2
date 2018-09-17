@@ -29,6 +29,7 @@ public:
         Clamp,
         Const,
         Cylinders,
+        Displace,
         Exponent,
         Invert,
         Max,
@@ -44,7 +45,7 @@ public:
         Voronoi
     };
 
-    using ModuleVariant = boost::variant<
+    using ModuleVariant = boost::variant <
         noise::module::Abs,
         noise::module::Add,
         noise::module::Billow,
@@ -54,6 +55,7 @@ public:
         noise::module::Clamp,
         noise::module::Const,
         noise::module::Cylinders,
+        noise::module::Displace,
         noise::module::Exponent,
         noise::module::Invert,
         noise::module::Max,

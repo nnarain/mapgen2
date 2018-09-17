@@ -20,6 +20,7 @@ static const char* NODE_TYPE_NAMES[] = {
     "clamp",
     "const",
     "cylinders",
+    "displace",
     "exponent",
     "invert",
     "max",
@@ -59,6 +60,8 @@ static const char* NODE_DESCRIPTIONS[] = {
     "Outputs a constant value",
     // Cylinders
     "Outputs concentric cylinders contered on the origin",
+    // Displace
+    "Uses 3 source modules to displace an input module. Source 0 in the input, 1-3 are displace noise functions",
     // Exponent
     "Maps value to an exponential curve",
     // Invert
