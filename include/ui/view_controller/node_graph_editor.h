@@ -20,6 +20,7 @@ public:
         CONST        = NoiseModule::Type::Const,
         CYLINDERS    = NoiseModule::Type::Cylinders,
         EXPONENT     = NoiseModule::Type::Exponent,
+        INVERT       = NoiseModule::Type::Invert,
         PERLIN       = NoiseModule::Type::Perlin,
         SELECT       = NoiseModule::Type::Select,
         SPHERES      = NoiseModule::Type::Spheres,
