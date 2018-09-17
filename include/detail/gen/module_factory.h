@@ -27,6 +27,8 @@ public:
             return { noise::module::Const() };
         case NoiseModule::Type::Cylinders:
             return { noise::module::Cylinders() };
+        case NoiseModule::Type::Exponent:
+            return { noise::module::Exponent() };
         case NoiseModule::Type::Perlin:
             return { noise::module::Perlin() };
         case NoiseModule::Type::RidgedMulti:
@@ -80,6 +82,10 @@ public:
         case NoiseModule::Type::Cylinders:
             return {
                 {"frequency", (float)noise::module::DEFAULT_CYLINDERS_FREQUENCY}
+            };
+        case NoiseModule::Type::Exponent:
+            return {
+                {"exp", (float)noise::module::DEFAULT_EXPONENT}
             };
         case NoiseModule::Type::Perlin:
             return {

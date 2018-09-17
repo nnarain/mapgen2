@@ -18,6 +18,7 @@ static const char* NODE_TYPE_NAMES[] = {
     "clamp",
     "const",
     "cylinders",
+    "exponent",
     "perlin",
     "ridgedmulti",
     "scalebias",
@@ -47,6 +48,8 @@ static const char* NODE_DESCRIPTIONS[] = {
     "Outputs a constant value",
     // Cylinders
     "Outputs concentric cylinders contered on the origin",
+    // Exponent
+    "Maps value to an exponential curve",
     // Perlin
     "Perlin noise is the sum of several coherent noise functions of ever increasing frequencies and decreasing amplitudes.\n"
     "A small change in the input value will produce a small change in the output value, while a large change in the input value with produce a random "

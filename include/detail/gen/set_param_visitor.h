@@ -36,6 +36,11 @@ public:
         module.SetFrequency(get<float>("frequency"));
     }
 
+    void operator()(noise::module::Exponent& module) const
+    {
+        module.SetExponent(get<float>("exp"));
+    }
+
     void operator()(noise::module::Perlin& module) const
     {
         module.SetSeed(get<int>("seed"));

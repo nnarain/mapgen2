@@ -19,6 +19,7 @@ public:
         CLAMP        = NoiseModule::Type::Clamp,
         CONST        = NoiseModule::Type::Const,
         CYLINDERS    = NoiseModule::Type::Cylinders,
+        EXPONENT     = NoiseModule::Type::Exponent,
         PERLIN       = NoiseModule::Type::Perlin,
         SELECT       = NoiseModule::Type::Select,
         SPHERES      = NoiseModule::Type::Spheres,
