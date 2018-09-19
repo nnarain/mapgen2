@@ -14,7 +14,7 @@ public:
 
 private:
     void drawEvent() override;
-    void viewportEvent(const Magnum::Vector2i& size) override;
+    void viewportEvent(ViewportEvent& event) override;
     void keyPressEvent(KeyEvent& event) override;
     void keyReleaseEvent(KeyEvent& event) override;
     void mousePressEvent(MouseEvent& event) override;

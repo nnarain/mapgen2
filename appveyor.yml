@@ -1,0 +1,26 @@
+#
+# Appveyor build for Map generator
+#
+# @author Natesh Narain
+#
+
+os: Visual Studio 2015
+
+environment:
+  BOOST_ROOT: C:\Libraries\boost_1_67_0
+
+install:
+  - cd c:\tools\vcpkg
+  - vcpkg install corrade --head
+  - vcpkg install magnum --head
+  - vcpkg integrate install
+
+before_build:
+  - cd c:\projects\mapgen2
+  - git submodule init && git submodule update --recursive
+  - mkdir build && cd build
+  - cmake .. -DCMAKE_TOOLCHAIN_FILE=c:\tools\vcpkg\scripts\buildsystems\vcpkg.cmake -DBoost_USE_STATIC_LIBS=ON -DBoost_USE_MULTITHREADED=ON
+
+build:
+  project: c:\projects\mapgen2\build\mapgen2.sln
+  verbosity: minimal
