@@ -53,9 +53,9 @@ void MapGenApplication::drawEvent()
     frame_timer_.end();
 }
 
-void MapGenApplication::viewportEvent(const Vector2i &size)
+void MapGenApplication::viewportEvent(ViewportEvent& event)
 {
-    GL::defaultFramebuffer.setViewport({ {}, size });
+    GL::defaultFramebuffer.setViewport({ {}, event.windowSize() });
 }
 
 void MapGenApplication::keyPressEvent(KeyEvent &event)
