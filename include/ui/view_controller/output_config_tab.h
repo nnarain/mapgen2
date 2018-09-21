@@ -23,6 +23,8 @@ private:
 
     NoiseModule::Ref output_module_;
     bool update_required_;
+
+    int seed_;
 };
 
 #endif

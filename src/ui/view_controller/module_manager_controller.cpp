@@ -65,6 +65,11 @@ void ModuleManagerController::addOutputChangedObserver(std::function<OutputChang
     output_changed_.connect(fn);
 }
 
+void ModuleManagerController::setSeed(int seed)
+{
+    manager_.setSeed(seed);
+}
+
 void ModuleManagerController::forEach(std::function<void(const std::string&, NoiseModule&)> fn)
 {
     manager_.forEach(fn);

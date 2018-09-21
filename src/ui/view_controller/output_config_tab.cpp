@@ -9,6 +9,7 @@ OutputConfigTab::OutputConfigTab(ModuleManagerController& manager)
     : manager_{manager}
     , preview_{ {256, 256}, { TEXTURE_SIZE, TEXTURE_SIZE } }
     , update_required_{false}
+    , seed_{0}
 {
     manager_.addOutputChangedObserver(std::bind(&OutputConfigTab::onOutputChanged, this, std::placeholders::_1));
 }
@@ -43,6 +44,12 @@ void OutputConfigTab::renderTab()
 
         if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
         {
+            if (ImGui::DragInt("seed", &seed_))
+            {
+                manager_.setSeed(seed_);
+                update_required_ = true;
+            }
+
             manager_.forEach([this](const std::string&, NoiseModule& module) {
                 auto updated = renderModuleParameters(module);
                 if (updated)
@@ -71,6 +78,10 @@ bool OutputConfigTab::renderModuleParameters(NoiseModule& module)
     const auto& module_name = module.getName();
 
     auto updated = module.updateParameters([&module_name](const std::string& name, NoiseModule::ParameterVariant& param) -> bool {
+        if (name == "seed")
+        {
+            return false;
+        }
         auto full_name = module_name + "." + name;
         return boost::apply_visitor(detail::view::ParameterViewVistor{ full_name }, param);
     });
