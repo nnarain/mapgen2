@@ -76,6 +76,7 @@ set(DETAIL_HEADERS
     include/detail/gen/dummy_noise.h
     include/detail/gen/module_ref_visitor.h
     include/detail/gen/module_factory.h
+    include/detail/gen/seed_setter_visitor.h
     include/detail/view/parameter_view_visitor.h
 )
 

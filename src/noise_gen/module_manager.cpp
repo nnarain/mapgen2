@@ -58,6 +58,15 @@ void ModuleManager::forEach(std::function<void(const std::string&, NoiseModule&)
     }
 }
 
+void ModuleManager::setSeed(int seed)
+{
+    for (auto& pair : modules_)
+    {
+        auto& module = pair.second;
+        module->setSeed(seed++);
+    }
+}
+
 std::size_t ModuleManager::size() const noexcept
 {
     return modules_.size();

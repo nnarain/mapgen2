@@ -94,12 +94,15 @@ public:
 
     bool updateParameters(std::function<bool(const std::string& name, ParameterVariant&)>);
 
+    void setSeed(int);
+
     noise::module::Module& getModule();
 
     ParameterMapPtr getParams();
 
     const std::string& getName() const;
     void setName(const std::string& name);
+    
 
     Type getType() const;
 

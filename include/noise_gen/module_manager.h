@@ -21,6 +21,8 @@ public:
 
     void forEach(std::function<void(const std::string&, NoiseModule&)> fn);
     
+    void setSeed(int);
+    
     std::size_t size() const noexcept;
 
 private:
