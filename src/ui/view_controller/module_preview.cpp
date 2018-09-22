@@ -33,7 +33,7 @@ void ModulePreview::render()
     ImGui::Image(texture_, { render_size_.x(), render_size_.y() });
 }
 
-bool ModulePreview::renderParameters()
+void ModulePreview::renderParameters()
 {
     auto& renderer = generator_.getRenderer();
 
@@ -110,7 +110,10 @@ bool ModulePreview::renderParameters()
         renderer.SetLightIntensity(light_intensity);
     }
 
-    return updated;
+    if (updated)
+    {
+        generator_.renderImage(texture_, texture_size_.x(), texture_size_.y());
+    }
 }
 
 bool ModulePreview::customGradient(noise::utils::RendererImage& renderer)

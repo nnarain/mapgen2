@@ -17,7 +17,7 @@ public:
 
     virtual void update(NoiseModule& module);
     virtual void render() override;
-    bool renderParameters();
+    void renderParameters();
 
     void setSize(const Magnum::Vector2&) noexcept;
     Magnum::Vector2& getSize() noexcept;
