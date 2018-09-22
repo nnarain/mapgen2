@@ -31,6 +31,7 @@ MapGenApplication::MapGenApplication(const Arguments &arguments)
 
     ui_.addView<ImGuiDemoView>("Demo", false);
     ui_.addView<ImGuiMetricsView>("Metrics", false);
+    ui_.addView<TestView>("Testing", false);
 }
 
 void MapGenApplication::drawEvent()

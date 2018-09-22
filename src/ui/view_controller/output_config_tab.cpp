@@ -39,7 +39,7 @@ void OutputConfigTab::renderTab()
     {
         if (ImGui::CollapsingHeader("Renderer Configuration", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            update_required_ = preview_.renderParameters();
+            preview_.renderParameters();
         }
 
         if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
