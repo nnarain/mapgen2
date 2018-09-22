@@ -140,7 +140,14 @@ bool ModulePreview::customGradient(noise::utils::RendererImage& renderer)
                 auto g = (uint8_t)(mark->color[1] * 255.f);
                 auto b = (uint8_t)(mark->color[2] * 255.f);
 
-                renderer.AddGradientPoint(mark->position, noise::utils::Color{r, g, b, 255});
+                try
+                {
+                    renderer.AddGradientPoint(mark->position, noise::utils::Color{ r, g, b, 255 });
+                }
+                catch (noise::ExceptionInvalidParam&)
+                {
+                    // TODO: This try-catch really should not be here. Instead the gradient positions should never be invalid
+                }
             }
         }
     }
