@@ -57,6 +57,7 @@ set(UI_HEADERS
     include/ui/view_controller/tab_renderer.h
     include/ui/view_controller/node_graph_editor.h
     include/ui/view_controller/output_config_tab.h
+    include/ui/view_controller/gradient_editor.h
     include/ui/view_controller/test_view.h
 )
 
@@ -67,6 +68,7 @@ set(UI_SOURCES
     src/ui/view_controller/module_preview.cpp
     src/ui/view_controller/node_graph_editor.cpp
     src/ui/view_controller/output_config_tab.cpp
+    src/ui/view_controller/gradient_editor.cpp
 )
 
 set(DETAIL_HEADERS
