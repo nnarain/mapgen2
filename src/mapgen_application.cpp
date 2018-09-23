@@ -3,6 +3,7 @@
 #include "ui/view_controller/imgui_metric_view.h"
 #include "ui/view_controller/node_graph_editor.h"
 #include "ui/view_controller/output_config_tab.h"
+#include "ui/view_controller/map_select_tab.h"
 #include "ui/view_controller/test_view.h"
 
 #include <Magnum/GL/Renderer.h>
@@ -26,6 +27,7 @@ MapGenApplication::MapGenApplication(const Arguments &arguments)
 
     ui_.initialize();
 
+    ui_.addTab<MapSelectTab>("Select");
     ui_.addTab<NodeGraphEditorTab>("Editor", module_manager_controller_);
     ui_.addTab<OutputConfigTab>("Output Config", module_manager_controller_);
 

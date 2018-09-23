@@ -1,7 +1,7 @@
 #ifndef UI_VIEW_CONTROLLER_MODULE_MANAGER_VIEW_CONTROLLER_H
 #define UI_VIEW_CONTROLLER_MODULE_MANAGER_VIEW_CONTROLLER_H
 
-#include "noise_gen/module_manager.h"
+#include "noise_gen/noise_map.h"
 
 #include <boost/signals2.hpp>
 
@@ -18,7 +18,7 @@ class ModuleManagerController
     using OutputChangedSignature = void(NoiseModule::Ref);
 
 public:
-    ModuleManagerController(ModuleManager& manager);
+    ModuleManagerController(NoiseMap& manager);
 
     NoiseModule::Ptr& get(const std::string& name);
     bool has(const std::string& name);
@@ -42,7 +42,7 @@ public:
     const std::size_t size() const noexcept;
 
 private:
-    ModuleManager& manager_;
+    NoiseMap& manager_;
 
     std::vector<std::string> names_;
     bool is_names_cached_;

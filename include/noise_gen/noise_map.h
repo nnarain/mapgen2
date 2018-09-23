@@ -1,5 +1,5 @@
-#ifndef NOISE_GEN_MODULE_MANAGER_H
-#define NOISE_GEN_MODULE_MANAGER_H
+#ifndef NOISE_GEN_NOISE_MAP_H
+#define NOISE_GEN_NOISE_MAP_H
 
 #include "noise_gen/noise_module.h"
 
@@ -8,12 +8,12 @@
 #include <string>
 #include <functional>
 
-class ModuleManager
+class NoiseMap
 {
 public:
-    ModuleManager();
+    NoiseMap();
 
-    void create(const std::string&, NoiseModule::Type);
+    void add(const std::string&, NoiseModule::Type);
     void remove(const std::string&);
     void rename(const std::string& current_name, const std::string& new_name);
     NoiseModule::Ptr& get(const std::string& name);
@@ -21,7 +21,7 @@ public:
 
     void forEach(std::function<void(const std::string&, NoiseModule&)> fn);
     
-    void setSeed(int);
+    void setSeed(int) noexcept;
     
     std::size_t size() const noexcept;
 
@@ -29,4 +29,4 @@ private:
     std::map<std::string, NoiseModule::Ptr> modules_;
 };
 
-#endif // NOISE_GEN_MODULE_MANAGER_H
+#endif // NOISE_GEN_NOISE_MAP_H

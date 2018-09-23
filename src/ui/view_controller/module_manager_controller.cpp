@@ -2,7 +2,7 @@
 
 static const std::string empty("");
 
-ModuleManagerController::ModuleManagerController(ModuleManager& manager)
+ModuleManagerController::ModuleManagerController(NoiseMap& manager)
     : manager_{manager}
     , names_{}
     , is_names_cached_{false}
@@ -22,7 +22,7 @@ bool ModuleManagerController::has(const std::string& name)
 
 void ModuleManagerController::createModule(const std::string& name, NoiseModule::Type type)
 {
-    manager_.create(name, type);
+    manager_.add(name, type);
     is_names_cached_ = false;
 }
 

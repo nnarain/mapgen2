@@ -1,18 +1,18 @@
-#include "noise_gen/module_manager.h"
+#include "noise_gen/noise_map.h"
 
 #include <stdexcept>
 
-ModuleManager::ModuleManager() :
+NoiseMap::NoiseMap() :
     modules_{}
 {
 }
 
-void ModuleManager::create(const std::string& name, NoiseModule::Type type)
+void NoiseMap::add(const std::string& name, NoiseModule::Type type)
 {
     modules_[name] = NoiseModule::Ptr{ new NoiseModule(name, type) };
 }
 
-void ModuleManager::remove(const std::string& name)
+void NoiseMap::remove(const std::string& name)
 {
     if (!has(name)) return;
 
@@ -24,7 +24,7 @@ void ModuleManager::remove(const std::string& name)
     }
 }
 
-void ModuleManager::rename(const std::string& current_name, const std::string& new_name)
+void NoiseMap::rename(const std::string& current_name, const std::string& new_name)
 {
     auto module = modules_[current_name];
     module->setName(new_name);
@@ -33,7 +33,7 @@ void ModuleManager::rename(const std::string& current_name, const std::string& n
     modules_.insert({ new_name, module });
 }
 
-NoiseModule::Ptr& ModuleManager::get(const std::string& name)
+NoiseModule::Ptr& NoiseMap::get(const std::string& name)
 {
     if (modules_.find(name) != modules_.end())
     {
@@ -45,12 +45,12 @@ NoiseModule::Ptr& ModuleManager::get(const std::string& name)
     }
 }
 
-bool ModuleManager::has(const std::string& name) const
+bool NoiseMap::has(const std::string& name) const
 {
     return modules_.find(name) != modules_.end();
 }
 
-void ModuleManager::forEach(std::function<void(const std::string&, NoiseModule&)> fn)
+void NoiseMap::forEach(std::function<void(const std::string&, NoiseModule&)> fn)
 {
     for (auto& it : modules_)
     {
@@ -58,7 +58,7 @@ void ModuleManager::forEach(std::function<void(const std::string&, NoiseModule&)
     }
 }
 
-void ModuleManager::setSeed(int seed)
+void NoiseMap::setSeed(int seed) noexcept
 {
     for (auto& pair : modules_)
     {
@@ -67,7 +67,7 @@ void ModuleManager::setSeed(int seed)
     }
 }
 
-std::size_t ModuleManager::size() const noexcept
+std::size_t NoiseMap::size() const noexcept
 {
     return modules_.size();
 }

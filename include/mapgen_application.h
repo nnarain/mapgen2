@@ -23,7 +23,7 @@ private:
     void mouseScrollEvent(MouseScrollEvent& event) override;
     void textInputEvent(TextInputEvent& event) override;
 
-    ModuleManager module_manager_;
+    NoiseMap module_manager_;
     ModuleManagerController module_manager_controller_;
     UserInterface ui_;
 
