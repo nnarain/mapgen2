@@ -4,9 +4,10 @@
 
 #include <iostream>
 
-static constexpr ImGuiWindowFlags TAB_WINDOW_FLAGS = ImGuiWindowFlags_NoScrollbar |
-                                                    ImGuiWindowFlags_NoCollapse |
-                                                    ImGuiWindowFlags_NoTitleBar;
+static constexpr ImGuiWindowFlags TAB_WINDOW_FLAGS = 
+    ImGuiWindowFlags_NoScrollbar |
+    ImGuiWindowFlags_NoCollapse |
+    ImGuiWindowFlags_NoTitleBar;
 
 UserInterface::UserInterface()
 {
