@@ -1,5 +1,5 @@
-#ifndef UI_VIEW_CONTROLLER_MODULE_MANAGER_VIEW_CONTROLLER_H
-#define UI_VIEW_CONTROLLER_MODULE_MANAGER_VIEW_CONTROLLER_H
+#ifndef UI_VIEW_CONTROLLER_NOISE_MAP_VIEW_CONTROLLER_H
+#define UI_VIEW_CONTROLLER_NOISE_MAP_VIEW_CONTROLLER_H
 
 #include "noise_gen/noise_map.h"
 
@@ -13,12 +13,12 @@
 /**
     Interface to ModuleManager
 */
-class ModuleManagerController
+class NoiseMapController
 {
     using OutputChangedSignature = void(NoiseModule::Ref);
 
 public:
-    ModuleManagerController(NoiseMap& manager);
+    NoiseMapController(NoiseMap& manager);
 
     NoiseModule::Ptr& get(const std::string& name);
     bool has(const std::string& name);
@@ -52,4 +52,4 @@ private:
     boost::signals2::signal<OutputChangedSignature> output_changed_;
 };
 
-#endif // UI_VIEW_CONTROLLER_MODULE_MANAGER_VIEW_CONTROLLER_H
+#endif // UI_VIEW_CONTROLLER_NOISE_MAP_VIEW_CONTROLLER_H

@@ -1,6 +1,6 @@
 
 #include "ui/user_interface.h"
-#include "ui/view_controller/module_manager_controller.h"
+#include "ui/view_controller/noise_map_controller.h"
 #include "frame_timer.h"
 
 #include <Magnum/Platform/Sdl2Application.h>
@@ -24,7 +24,7 @@ private:
     void textInputEvent(TextInputEvent& event) override;
 
     NoiseMap module_manager_;
-    ModuleManagerController module_manager_controller_;
+    NoiseMapController module_manager_controller_;
     UserInterface ui_;
 
     MagnumImGui imgui_;

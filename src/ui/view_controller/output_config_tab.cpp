@@ -5,7 +5,7 @@
 
 static constexpr float TEXTURE_SIZE = 256.0f;
 
-OutputConfigTab::OutputConfigTab(ModuleManagerController& manager)
+OutputConfigTab::OutputConfigTab(NoiseMapController& manager)
     : manager_{manager}
     , preview_{ {256, 256}, { TEXTURE_SIZE, TEXTURE_SIZE } }
     , update_required_{false}

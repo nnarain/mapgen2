@@ -3,12 +3,12 @@
 
 #include "ui/view_controller/tab_renderer.h"
 #include "ui/view_controller/module_preview.h"
-#include "ui/view_controller/module_manager_controller.h"
+#include "ui/view_controller/noise_map_controller.h"
 
 class OutputConfigTab : public TabRenderer
 {
 public:
-    OutputConfigTab(ModuleManagerController& manager);
+    OutputConfigTab(NoiseMapController& manager);
     ~OutputConfigTab();
 
     virtual void renderTab() override;
@@ -18,7 +18,7 @@ public:
 private:
     bool renderModuleParameters(NoiseModule& module);
 
-    ModuleManagerController& manager_;
+    NoiseMapController& manager_;
     ModulePreview preview_;
 
     NoiseModule::Ref output_module_;

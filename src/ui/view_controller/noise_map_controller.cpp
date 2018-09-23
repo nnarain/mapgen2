@@ -1,8 +1,8 @@
-#include "ui/view_controller/module_manager_controller.h"
+#include "ui/view_controller/noise_map_controller.h"
 
 static const std::string empty("");
 
-ModuleManagerController::ModuleManagerController(NoiseMap& manager)
+NoiseMapController::NoiseMapController(NoiseMap& manager)
     : manager_{manager}
     , names_{}
     , is_names_cached_{false}
@@ -10,29 +10,29 @@ ModuleManagerController::ModuleManagerController(NoiseMap& manager)
 
 }
 
-NoiseModule::Ptr& ModuleManagerController::get(const std::string& name)
+NoiseModule::Ptr& NoiseMapController::get(const std::string& name)
 {
     return manager_.get(name);
 }
 
-bool ModuleManagerController::has(const std::string& name)
+bool NoiseMapController::has(const std::string& name)
 {
     return manager_.has(name);
 }
 
-void ModuleManagerController::createModule(const std::string& name, NoiseModule::Type type)
+void NoiseMapController::createModule(const std::string& name, NoiseModule::Type type)
 {
     manager_.add(name, type);
     is_names_cached_ = false;
 }
 
-void ModuleManagerController::removeModule(const std::string& name)
+void NoiseMapController::removeModule(const std::string& name)
 {
     manager_.remove(name);
     is_names_cached_ = false;
 }
 
-NoiseModule::Ptr& ModuleManagerController::createModuleWithUniqueName(NoiseModule::Type type)
+NoiseModule::Ptr& NoiseMapController::createModuleWithUniqueName(NoiseModule::Type type)
 {
     std::size_t i = 0;
     std::string name;
@@ -49,33 +49,33 @@ NoiseModule::Ptr& ModuleManagerController::createModuleWithUniqueName(NoiseModul
     return get(name);
 }
 
-void ModuleManagerController::renameModule(const std::string current_name, const std::string new_name)
+void NoiseMapController::renameModule(const std::string current_name, const std::string new_name)
 {
     manager_.rename(current_name, new_name);
 }
 
-void ModuleManagerController::setOutputModule(const NoiseModule::Ref output_ref)
+void NoiseMapController::setOutputModule(const NoiseModule::Ref output_ref)
 {
     output_ref_ = output_ref;
     output_changed_(output_ref_);
 }
 
-void ModuleManagerController::addOutputChangedObserver(std::function<OutputChangedSignature> fn)
+void NoiseMapController::addOutputChangedObserver(std::function<OutputChangedSignature> fn)
 {
     output_changed_.connect(fn);
 }
 
-void ModuleManagerController::setSeed(int seed)
+void NoiseMapController::setSeed(int seed)
 {
     manager_.setSeed(seed);
 }
 
-void ModuleManagerController::forEach(std::function<void(const std::string&, NoiseModule&)> fn)
+void NoiseMapController::forEach(std::function<void(const std::string&, NoiseModule&)> fn)
 {
     manager_.forEach(fn);
 }
 
-const std::vector<std::string>& ModuleManagerController::getModuleNames()
+const std::vector<std::string>& NoiseMapController::getModuleNames()
 {
     if (is_names_cached_)
     {
@@ -97,7 +97,7 @@ const std::vector<std::string>& ModuleManagerController::getModuleNames()
     }
 }
 
-const std::size_t ModuleManagerController::size() const noexcept
+const std::size_t NoiseMapController::size() const noexcept
 {
     return manager_.size();
 }

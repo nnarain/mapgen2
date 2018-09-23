@@ -254,7 +254,7 @@ public:
     }
 };
 
-NodeGraphEditorTab::NodeGraphEditorTab(ModuleManagerController& manager)
+NodeGraphEditorTab::NodeGraphEditorTab(NoiseMapController& manager)
     : manager_{ manager }
 {
 }
@@ -291,7 +291,7 @@ ImGui::Node* NodeGraphEditorTab::nodeFactory(int nt, const ImVec2& pos, const Im
 {
     if (nt != NodeTypes::OUTPUT)
     {
-        auto& manager = *static_cast<ModuleManagerController*>(nge.user_ptr);
+        auto& manager = *static_cast<NoiseMapController*>(nge.user_ptr);
         auto& module = manager.createModuleWithUniqueName(static_cast<NoiseModule::Type>(nt));
         module->update();
 
@@ -332,7 +332,7 @@ void NodeGraphEditorTab::linkCallback(const ImGui::NodeLink& link, ImGui::NodeGr
         {
             // The output node is the output noise node of the editor
             // Set the output module in the manager, to notify observer of the output module change
-            auto& manager = *static_cast<ModuleManagerController*>(nge.user_ptr);
+            auto& manager = *static_cast<NoiseMapController*>(nge.user_ptr);
             manager.setOutputModule(in_node->ref);
         }
     }
@@ -350,7 +350,7 @@ void NodeGraphEditorTab::linkCallback(const ImGui::NodeLink& link, ImGui::NodeGr
         else
         {
             // link was removed from the output node
-            auto& manager = *static_cast<ModuleManagerController*>(nge.user_ptr);
+            auto& manager = *static_cast<NoiseMapController*>(nge.user_ptr);
             manager.setOutputModule(NoiseModule::Ref{});
         }
     }
@@ -358,7 +358,7 @@ void NodeGraphEditorTab::linkCallback(const ImGui::NodeLink& link, ImGui::NodeGr
 
 void NodeGraphEditorTab::nodeCallback(ImGui::Node*& node, ImGui::NodeGraphEditor::NodeState state, ImGui::NodeGraphEditor& nge)
 {
-    auto& manager = *static_cast<ModuleManagerController*>(nge.user_ptr);
+    auto& manager = *static_cast<NoiseMapController*>(nge.user_ptr);
 
     if (state == ImGui::NodeGraphEditor::NodeState::NS_DELETED)
     {

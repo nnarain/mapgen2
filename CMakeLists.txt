@@ -50,7 +50,7 @@ set(OUTPUT_GEN_SOURCES
 set(UI_HEADERS
     include/ui/user_interface.h
     include/ui/view_controller/view.h
-    include/ui/view_controller/module_manager_controller.h
+    include/ui/view_controller/noise_map_controller.h
     include/ui/view_controller/module_preview.h
     include/ui/view_controller/imgui_demo_view.h
     include/ui/view_controller/imgui_metric_view.h
@@ -65,7 +65,7 @@ set(UI_HEADERS
 set(UI_SOURCES
     src/ui/user_interface.cpp
     src/ui/view_controller/view.cpp
-    src/ui/view_controller/module_manager_controller.cpp
+    src/ui/view_controller/noise_map_controller.cpp
     src/ui/view_controller/module_preview.cpp
     src/ui/view_controller/node_graph_editor.cpp
     src/ui/view_controller/output_config_tab.cpp
