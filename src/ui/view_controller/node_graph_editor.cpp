@@ -9,6 +9,7 @@
 
 #include <string>
 #include <sstream>
+#include <iostream>
 
 static const char* NODE_TYPE_NAMES[] = {
     "abs",
@@ -254,7 +255,7 @@ public:
     }
 };
 
-NodeGraphEditorTab::NodeGraphEditorTab(NoiseMapController& manager)
+NodeGraphEditorTab::NodeGraphEditorTab(NoiseMapManager& manager)
     : manager_{ manager }
 {
 }
@@ -265,34 +266,73 @@ NodeGraphEditorTab::~NodeGraphEditorTab()
 
 void NodeGraphEditorTab::renderTab()
 {
-    if (!nge.isInited())
+    if (auto ptr = current_editor_.lock())
     {
-        nge.registerNodeTypes(NODE_TYPE_NAMES, NodeTypes::NODE_TYPE_COUNT, &NodeGraphEditorTab::nodeFactory);
-        nge.user_ptr = &manager_;
-
-        nge.setLinkCallback(&NodeGraphEditorTab::linkCallback);
-        nge.setNodeCallback(&NodeGraphEditorTab::nodeCallback);
-
-        nge.registerNodeTypeMaxAllowedInstances(NodeTypes::OUTPUT, 1);
-
-        auto w = ImGui::GetWindowWidth();
-        auto h = ImGui::GetWindowHeight();
-        nge.addNode(NodeTypes::OUTPUT, {w/2, h/2});
-
-        // style
-        nge.show_style_editor = false;
-        nge.show_top_pane = false;
+        ptr->render();
     }
+}
 
-    nge.render();
+void NodeGraphEditorTab::createNodeGraphEditor(const std::string& name, NoiseMap& noisemap)
+{
+    std::shared_ptr<ImGui::NodeGraphEditor> nge = std::make_shared<ImGui::NodeGraphEditor>();
+
+    nge->registerNodeTypes(NODE_TYPE_NAMES, NodeTypes::NODE_TYPE_COUNT, &NodeGraphEditorTab::nodeFactory);
+    nge->user_ptr = &noisemap;
+
+    nge->setLinkCallback(&NodeGraphEditorTab::linkCallback);
+    nge->setNodeCallback(&NodeGraphEditorTab::nodeCallback);
+
+    nge->registerNodeTypeMaxAllowedInstances(NodeTypes::OUTPUT, 1);
+
+    auto w = ImGui::GetWindowWidth();
+    auto h = ImGui::GetWindowHeight();
+    nge->addNode(NodeTypes::OUTPUT, { w / 2, h / 2 });
+
+    // style
+    nge->show_style_editor = false;
+    nge->show_top_pane = false;
+
+    editors_[name] = nge;
+}
+
+void NodeGraphEditorTab::removeNodeGraphEditor(const std::string& name)
+{
+    editors_.erase(name);
+}
+
+void NodeGraphEditorTab::selectNodeGraphEditor(const std::string& name)
+{
+    if (editors_.find(name) != editors_.end())
+    {
+        current_editor_ = editors_[name];
+    }
+}
+
+void NodeGraphEditorTab::initializeNodeGraphEditor(ImGui::NodeGraphEditor& nge, NoiseMap& noisemap)
+{
+    nge.registerNodeTypes(NODE_TYPE_NAMES, NodeTypes::NODE_TYPE_COUNT, &NodeGraphEditorTab::nodeFactory);
+    nge.user_ptr = &noisemap;
+
+    nge.setLinkCallback(&NodeGraphEditorTab::linkCallback);
+    nge.setNodeCallback(&NodeGraphEditorTab::nodeCallback);
+
+    nge.registerNodeTypeMaxAllowedInstances(NodeTypes::OUTPUT, 1);
+
+    auto w = ImGui::GetWindowWidth();
+    auto h = ImGui::GetWindowHeight();
+    nge.addNode(NodeTypes::OUTPUT, { w / 2, h / 2 });
+
+    // style
+    nge.show_style_editor = false;
+    nge.show_top_pane = false;
 }
 
 ImGui::Node* NodeGraphEditorTab::nodeFactory(int nt, const ImVec2& pos, const ImGui::NodeGraphEditor& nge)
 {
     if (nt != NodeTypes::OUTPUT)
     {
-        auto& manager = *static_cast<NoiseMapController*>(nge.user_ptr);
-        auto& module = manager.createModuleWithUniqueName(static_cast<NoiseModule::Type>(nt));
+        auto& map = *static_cast<NoiseMap*>(nge.user_ptr);
+        auto& module = map.createModuleWithUniqueName(static_cast<NoiseModule::Type>(nt));
         module->update();
 
         return NoiseNode::Create(module, pos);
@@ -331,9 +371,9 @@ void NodeGraphEditorTab::linkCallback(const ImGui::NodeLink& link, ImGui::NodeGr
         else
         {
             // The output node is the output noise node of the editor
-            // Set the output module in the manager, to notify observer of the output module change
-            auto& manager = *static_cast<NoiseMapController*>(nge.user_ptr);
-            manager.setOutputModule(in_node->ref);
+            // Set the output module in the map, to notify observer of the output module change
+            auto& map = *static_cast<NoiseMap*>(nge.user_ptr);
+            map.setOutputModule(in_node->ref);
         }
     }
     else
@@ -350,15 +390,15 @@ void NodeGraphEditorTab::linkCallback(const ImGui::NodeLink& link, ImGui::NodeGr
         else
         {
             // link was removed from the output node
-            auto& manager = *static_cast<NoiseMapController*>(nge.user_ptr);
-            manager.setOutputModule(NoiseModule::Ref{});
+            auto& map = *static_cast<NoiseMap*>(nge.user_ptr);
+            map.setOutputModule(NoiseModule::Ref{});
         }
     }
 }
 
 void NodeGraphEditorTab::nodeCallback(ImGui::Node*& node, ImGui::NodeGraphEditor::NodeState state, ImGui::NodeGraphEditor& nge)
 {
-    auto& manager = *static_cast<NoiseMapController*>(nge.user_ptr);
+    auto& map = *static_cast<NoiseMap*>(nge.user_ptr);
 
     if (state == ImGui::NodeGraphEditor::NodeState::NS_DELETED)
     {
@@ -368,8 +408,8 @@ void NodeGraphEditorTab::nodeCallback(ImGui::Node*& node, ImGui::NodeGraphEditor
             auto* noise_node = static_cast<NoiseNode*>(node);
             if (auto module = noise_node->ref.lock())
             {
-                // delete the module in manager
-                manager.removeModule(module->getName());
+                // delete the module in map
+                map.remove(module->getName());
             }
         }
     }
@@ -389,9 +429,25 @@ void NodeGraphEditorTab::nodeCallback(ImGui::Node*& node, ImGui::NodeGraphEditor
                 if (editor_name != noise_name)
                 {
                     // The name has changed. Rename the node.
-                    manager.renameModule(noise_name, editor_name);
+                    map.rename(noise_name, editor_name);
                 }
             }
         }
+    }
+}
+
+void NodeGraphEditorTab::onMapEvent(MapEvent event, std::string map_name)
+{
+    switch (event)
+    {
+    case MapEvent::Created:
+        createNodeGraphEditor(map_name, manager_.getNoiseMap(map_name));
+        break;
+    case MapEvent::Removed:
+        removeNodeGraphEditor(map_name);
+        break;
+    case MapEvent::Changed:
+        selectNodeGraphEditor(map_name);
+        break;
     }
 }

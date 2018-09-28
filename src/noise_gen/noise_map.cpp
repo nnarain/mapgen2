@@ -33,6 +33,28 @@ void NoiseMap::rename(const std::string& current_name, const std::string& new_na
     modules_.insert({ new_name, module });
 }
 
+void NoiseMap::setOutputModule(NoiseModule::Ref ref)
+{
+    output_ = ref;
+}
+
+NoiseModule::Ptr& NoiseMap::createModuleWithUniqueName(NoiseModule::Type type)
+{
+    std::size_t i = 0;
+    std::string name;
+
+    do
+    {
+        name = std::string("noise") + std::to_string(i);
+        i++;
+    }
+    while (has(name));
+
+    add(name, type);
+
+    return get(name);
+}
+
 NoiseModule::Ptr& NoiseMap::get(const std::string& name)
 {
     if (modules_.find(name) != modules_.end())

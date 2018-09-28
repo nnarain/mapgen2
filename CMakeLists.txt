@@ -32,11 +32,13 @@ set(NOISE_GEN_HEADERS
     include/noise_gen/noise_module.h
     include/noise_gen/parameter.h
     include/noise_gen/noise_map.h
+    include/noise_gen/noise_map_manager.h
 )
 
 set(NOISE_GEN_SOURCES
     src/noise_gen/noise_module.cpp
     src/noise_gen/noise_map.cpp
+    src/noise_gen/noise_map_manager.cpp
 )
 
 set(OUTPUT_GEN_HEADERS
@@ -59,6 +61,7 @@ set(UI_HEADERS
     include/ui/view_controller/output_config_tab.h
     include/ui/view_controller/map_select_tab.h
     include/ui/view_controller/gradient_editor.h
+    include/ui/events/map_event.h
     include/ui/view_controller/test_view.h
 )
 

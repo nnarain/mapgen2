@@ -16,6 +16,11 @@ public:
     void add(const std::string&, NoiseModule::Type);
     void remove(const std::string&);
     void rename(const std::string& current_name, const std::string& new_name);
+
+    void setOutputModule(NoiseModule::Ref ref);
+
+    NoiseModule::Ptr& NoiseMap::createModuleWithUniqueName(NoiseModule::Type type);
+
     NoiseModule::Ptr& get(const std::string& name);
     bool has(const std::string& name) const;
 
@@ -27,6 +32,7 @@ public:
 
 private:
     std::map<std::string, NoiseModule::Ptr> modules_;
+    NoiseModule::Ref output_;
 };
 
 #endif // NOISE_GEN_NOISE_MAP_H

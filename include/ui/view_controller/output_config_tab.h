@@ -8,6 +8,8 @@
 class OutputConfigTab : public TabRenderer
 {
 public:
+    using Ptr = std::unique_ptr<OutputConfigTab>;
+
     OutputConfigTab(NoiseMapController& manager);
     ~OutputConfigTab();
 
