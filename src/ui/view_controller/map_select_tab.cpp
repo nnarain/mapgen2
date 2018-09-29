@@ -10,7 +10,22 @@ MapSelectTab::MapSelectTab(NoiseMapManager& manager)
 
 void MapSelectTab::renderTab()
 {
-    ImGui::BeginChild("left pane", ImVec2(150, 0), true);
+    static constexpr const char* id = "map_select";
+
+    // remove the selected noise map
+    if (ImGui::Button("remove"))
+    {
+        if (!selected_.empty())
+        {
+            on_map_event_(MapEvent::Removed, selected_);
+
+            manager_.removeNoiseMap(selected_);
+            selected_.clear();
+        }
+    }
+
+    // draw all noise maps that can be selected
+    ImGui::BeginChild(id, ImVec2(150, 0), true);
     {
         // map selection
         manager_.forEach([this](const std::string& name, NoiseMap&) {
@@ -20,26 +35,26 @@ void MapSelectTab::renderTab()
                 on_map_event_(MapEvent::Changed, name);
             }
         });
-        if (ImGui::Button("Create"))
-        {
-            static int count = 0;
-            std::string name = "map" + std::to_string(count++);
-
-            manager_.createNoiseMap(name);
-
-            on_map_event_(MapEvent::Created, name);
-        }
-        /*
-
-
-        if (ImGui::Button("Remove"))
-        {
-            //on_map_event_(MapEvent::Removed, "default");
-
-        }
-        */
     }
     ImGui::EndChild();
+
+    if (ImGui::BeginPopupContextItem(id))
+    {
+        static char buf[32] = "map";
+
+        ImGui::InputText("name", buf, IM_ARRAYSIZE(buf));
+        ImGui::SameLine();
+        if (ImGui::Button("add"))
+        {
+            const std::string name{ buf };
+            manager_.createNoiseMap(name);
+            on_map_event_(MapEvent::Created, name);
+
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
 }
 
 void MapSelectTab::connect(std::function<void(MapEvent, std::string)> fn)
