@@ -6,6 +6,8 @@
 #include "noise_gen/noise_map_manager.h"
 #include "ui/events/map_event.h"
 
+#include <map>
+
 class OutputConfigTab : public TabRenderer
 {
 public:
@@ -24,11 +26,11 @@ private:
 
     NoiseMapManager& manager_;
 
-
     NoiseMap::Ref current_noise_map_;
     NoiseModule::Ref output_module_;
     
-    ModulePreview preview_;
+    std::map<std::string, ModulePreview::Ptr> previews_;
+    ModulePreview::Ref current_preview_;
     bool update_required_;
 
     int seed_;

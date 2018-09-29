@@ -7,7 +7,6 @@ static constexpr float TEXTURE_SIZE = 256.0f;
 
 OutputConfigTab::OutputConfigTab(NoiseMapManager& manager)
     : manager_{manager}
-    , preview_{ {256, 256}, { TEXTURE_SIZE, TEXTURE_SIZE } }
     , update_required_{false}
     , seed_{0}
 {
@@ -22,58 +21,61 @@ void OutputConfigTab::renderTab()
 {
     constexpr float width_percent = 0.33f;
 
-    // update output if it changed
-    if (update_required_)
+    if (auto preview = current_preview_.lock())
     {
-        update_required_ = false;
-        
-        if (auto module = output_module_.lock())
+        // update output if it changed
+        if (update_required_)
         {
-            preview_.update(*module);
-        }
-    }
+            update_required_ = false;
 
-    auto window_size = ImGui::GetWindowSize();
-
-    ImGui::BeginChild("parameter panel", { window_size.x * width_percent, window_size.y }, true);
-    {
-        if (ImGui::CollapsingHeader("Renderer Configuration", ImGuiTreeNodeFlags_DefaultOpen))
-        {
-            preview_.renderParameters();
-        }
-
-        if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
-        {
-            if (auto manager = current_noise_map_.lock())
+            if (auto module = output_module_.lock())
             {
-                if (ImGui::DragInt("seed", &seed_))
-                {
-                    manager->setSeed(seed_);
-                    update_required_ = true;
-                }
-
-                manager->forEach([this](const std::string&, NoiseModule& module) {
-                    auto updated = renderModuleParameters(module);
-                    if (updated)
-                    {
-                        module.update();
-                    }
-                    update_required_ = update_required_ || updated;
-                });
+                preview->update(*module);
             }
         }
+
+        auto window_size = ImGui::GetWindowSize();
+
+        ImGui::BeginChild("parameter panel", { window_size.x * width_percent, window_size.y }, true);
+        {
+            if (ImGui::CollapsingHeader("Renderer Configuration", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                preview->renderParameters();
+            }
+
+            if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                if (auto manager = current_noise_map_.lock())
+                {
+                    if (ImGui::DragInt("seed", &seed_))
+                    {
+                        manager->setSeed(seed_);
+                        update_required_ = true;
+                    }
+
+                    manager->forEach([this](const std::string&, NoiseModule& module) {
+                        auto updated = renderModuleParameters(module);
+                        if (updated)
+                        {
+                            module.update();
+                        }
+                        update_required_ = update_required_ || updated;
+                    });
+                }
+            }
+        }
+        ImGui::EndChild();
+
+        ImGui::SameLine();
+
+        // set the preview image size
+        auto cursor_pos = ImGui::GetCursorPos();
+        auto preview_width = window_size.x - cursor_pos.x;
+        auto preview_height = window_size.y - cursor_pos.y;
+
+        preview->setSize({ preview_width, preview_height - 50 });
+        preview->render();
     }
-    ImGui::EndChild();
-
-    ImGui::SameLine();
-
-    // set the preview image size
-    auto cursor_pos = ImGui::GetCursorPos();
-    auto preview_width = window_size.x - cursor_pos.x;
-    auto preview_height = window_size.y - cursor_pos.y;
-    
-    preview_.setSize({ preview_width, preview_height - 50 });
-    preview_.render();
 }
 
 bool OutputConfigTab::renderModuleParameters(NoiseModule& module)
@@ -100,8 +102,23 @@ void OutputConfigTab::onOutputChanged(NoiseModule::Ref ref)
 
 void OutputConfigTab::onMapEvent(MapEvent event, std::string name)
 {
-    auto& map = manager_.getNoiseMap(name);
-    map->connectOutputChanged(std::bind(&OutputConfigTab::onOutputChanged, this, std::placeholders::_1));
+    if (event == MapEvent::Created)
+    {
+        auto& map = manager_.getNoiseMap(name);
+        map->connectOutputChanged(std::bind(&OutputConfigTab::onOutputChanged, this, std::placeholders::_1));
 
-    current_noise_map_ = map;
+        // create a module preview for each noise map
+        previews_[name] = ModulePreview::Ptr{ new ModulePreview({ 256, 256 },{ TEXTURE_SIZE, TEXTURE_SIZE }) };
+    }
+    else if (event == MapEvent::Removed)
+    {
+        previews_.erase(name);
+    }
+    else
+    {
+        auto& map = manager_.getNoiseMap(name);
+        current_noise_map_ = map;
+        current_preview_ = previews_[name];
+    }
+
 }

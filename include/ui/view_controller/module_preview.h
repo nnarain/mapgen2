@@ -9,10 +9,14 @@
 #include <Magnum/GL/Texture.h>
 
 #include <map>
+#include <memory>
 
 class ModulePreview : public View
 {
 public:
+    using Ptr = std::shared_ptr<ModulePreview>;
+    using Ref = std::weak_ptr<ModulePreview>;
+
     ModulePreview(const Magnum::Vector2&, Magnum::Vector2 texture_size = Magnum::Vector2{128, 128});
 
     virtual void update(NoiseModule& module);
