@@ -56,7 +56,6 @@ public:
 
 private:
     void createNodeGraphEditor(const std::string& name, NoiseMap& noisemap);
-    void initializeNodeGraphEditor(ImGui::NodeGraphEditor& nge, NoiseMap& noisemap);
     void removeNodeGraphEditor(const std::string& name);
     void selectNodeGraphEditor(const std::string& name);
 

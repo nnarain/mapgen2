@@ -284,8 +284,11 @@ void NodeGraphEditorTab::createNodeGraphEditor(const std::string& name, NoiseMap
 
     nge->registerNodeTypeMaxAllowedInstances(NodeTypes::OUTPUT, 1);
 
-    auto w = ImGui::GetWindowWidth();
-    auto h = ImGui::GetWindowHeight();
+    auto& io = ImGui::GetIO();
+
+    const auto w = io.DisplaySize.x;
+    const auto h = io.DisplaySize.y;
+    
     nge->addNode(NodeTypes::OUTPUT, { w / 2, h / 2 });
 
     // style
@@ -306,25 +309,6 @@ void NodeGraphEditorTab::selectNodeGraphEditor(const std::string& name)
     {
         current_editor_ = editors_[name];
     }
-}
-
-void NodeGraphEditorTab::initializeNodeGraphEditor(ImGui::NodeGraphEditor& nge, NoiseMap& noisemap)
-{
-    nge.registerNodeTypes(NODE_TYPE_NAMES, NodeTypes::NODE_TYPE_COUNT, &NodeGraphEditorTab::nodeFactory);
-    nge.user_ptr = &noisemap;
-
-    nge.setLinkCallback(&NodeGraphEditorTab::linkCallback);
-    nge.setNodeCallback(&NodeGraphEditorTab::nodeCallback);
-
-    nge.registerNodeTypeMaxAllowedInstances(NodeTypes::OUTPUT, 1);
-
-    auto w = ImGui::GetWindowWidth();
-    auto h = ImGui::GetWindowHeight();
-    nge.addNode(NodeTypes::OUTPUT, { w / 2, h / 2 });
-
-    // style
-    nge.show_style_editor = false;
-    nge.show_top_pane = false;
 }
 
 ImGui::Node* NodeGraphEditorTab::nodeFactory(int nt, const ImVec2& pos, const ImGui::NodeGraphEditor& nge)
