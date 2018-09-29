@@ -31,12 +31,14 @@ add_subdirectory(src/external)
 set(NOISE_GEN_HEADERS
     include/noise_gen/noise_module.h
     include/noise_gen/parameter.h
-    include/noise_gen/module_manager.h
+    include/noise_gen/noise_map.h
+    include/noise_gen/noise_map_manager.h
 )
 
 set(NOISE_GEN_SOURCES
     src/noise_gen/noise_module.cpp
-    src/noise_gen/module_manager.cpp
+    src/noise_gen/noise_map.cpp
+    src/noise_gen/noise_map_manager.cpp
 )
 
 set(OUTPUT_GEN_HEADERS
@@ -50,24 +52,27 @@ set(OUTPUT_GEN_SOURCES
 set(UI_HEADERS
     include/ui/user_interface.h
     include/ui/view_controller/view.h
-    include/ui/view_controller/module_manager_controller.h
+    include/ui/view_controller/noise_map_controller.h
     include/ui/view_controller/module_preview.h
     include/ui/view_controller/imgui_demo_view.h
     include/ui/view_controller/imgui_metric_view.h
     include/ui/view_controller/tab_renderer.h
     include/ui/view_controller/node_graph_editor.h
     include/ui/view_controller/output_config_tab.h
+    include/ui/view_controller/map_select_tab.h
     include/ui/view_controller/gradient_editor.h
+    include/ui/events/map_event.h
     include/ui/view_controller/test_view.h
 )
 
 set(UI_SOURCES
     src/ui/user_interface.cpp
     src/ui/view_controller/view.cpp
-    src/ui/view_controller/module_manager_controller.cpp
+    src/ui/view_controller/noise_map_controller.cpp
     src/ui/view_controller/module_preview.cpp
     src/ui/view_controller/node_graph_editor.cpp
     src/ui/view_controller/output_config_tab.cpp
+    src/ui/view_controller/map_select_tab.cpp
     src/ui/view_controller/gradient_editor.cpp
 )
 

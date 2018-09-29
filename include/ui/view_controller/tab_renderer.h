@@ -8,6 +8,8 @@ class TabRenderer
 public:
     using Ptr = std::unique_ptr<TabRenderer>;
 
+    virtual ~TabRenderer() = default;
+
     virtual void renderTab() = 0;
 };
 
