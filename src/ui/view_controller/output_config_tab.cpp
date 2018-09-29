@@ -5,13 +5,13 @@
 
 static constexpr float TEXTURE_SIZE = 256.0f;
 
-OutputConfigTab::OutputConfigTab(NoiseMapController& manager)
+OutputConfigTab::OutputConfigTab(NoiseMapManager& manager)
     : manager_{manager}
     , preview_{ {256, 256}, { TEXTURE_SIZE, TEXTURE_SIZE } }
     , update_required_{false}
     , seed_{0}
 {
-    manager_.addOutputChangedObserver(std::bind(&OutputConfigTab::onOutputChanged, this, std::placeholders::_1));
+    
 }
 
 OutputConfigTab::~OutputConfigTab()
@@ -44,20 +44,23 @@ void OutputConfigTab::renderTab()
 
         if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            if (ImGui::DragInt("seed", &seed_))
+            if (auto manager = current_noise_map_.lock())
             {
-                manager_.setSeed(seed_);
-                update_required_ = true;
-            }
-
-            manager_.forEach([this](const std::string&, NoiseModule& module) {
-                auto updated = renderModuleParameters(module);
-                if (updated)
+                if (ImGui::DragInt("seed", &seed_))
                 {
-                    module.update();
+                    manager->setSeed(seed_);
+                    update_required_ = true;
                 }
-                update_required_ = update_required_ || updated;
-            });
+
+                manager->forEach([this](const std::string&, NoiseModule& module) {
+                    auto updated = renderModuleParameters(module);
+                    if (updated)
+                    {
+                        module.update();
+                    }
+                    update_required_ = update_required_ || updated;
+                });
+            }
         }
     }
     ImGui::EndChild();
@@ -93,4 +96,12 @@ void OutputConfigTab::onOutputChanged(NoiseModule::Ref ref)
 {
     output_module_ = ref;
     update_required_ = true;
+}
+
+void OutputConfigTab::onMapEvent(MapEvent event, std::string name)
+{
+    auto& map = manager_.getNoiseMap(name);
+    map->connectOutputChanged(std::bind(&OutputConfigTab::onOutputChanged, this, std::placeholders::_1));
+
+    current_noise_map_ = map;
 }

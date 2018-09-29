@@ -36,6 +36,7 @@ void NoiseMap::rename(const std::string& current_name, const std::string& new_na
 void NoiseMap::setOutputModule(NoiseModule::Ref ref)
 {
     output_ = ref;
+    on_output_changed_(output_);
 }
 
 NoiseModule::Ptr& NoiseMap::createModuleWithUniqueName(NoiseModule::Type type)
@@ -87,6 +88,11 @@ void NoiseMap::setSeed(int seed) noexcept
         auto& module = pair.second;
         module->setSeed(seed++);
     }
+}
+
+void NoiseMap::connectOutputChanged(std::function<void(NoiseModule::Ref)> fn)
+{
+    on_output_changed_.connect(fn);
 }
 
 std::size_t NoiseMap::size() const noexcept

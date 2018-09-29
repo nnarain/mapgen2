@@ -8,7 +8,7 @@ void NoiseMapManager::createNoiseMap(const std::string& name)
 {
     if (noise_maps_.find(name) == noise_maps_.end())
     {
-        noise_maps_[name] = NoiseMap{};
+        noise_maps_[name] = std::make_shared<NoiseMap>();
     }
 }
 
@@ -24,11 +24,11 @@ void NoiseMapManager::forEach(std::function<void(const std::string&, NoiseMap&)>
 {
     for (auto& pair : noise_maps_)
     {
-        fn(pair.first, pair.second);
+        fn(pair.first, *pair.second);
     }
 }
 
-NoiseMap& NoiseMapManager::getNoiseMap(const std::string& name)
+NoiseMap::Ptr& NoiseMapManager::getNoiseMap(const std::string& name)
 {
     return noise_maps_[name];
 }

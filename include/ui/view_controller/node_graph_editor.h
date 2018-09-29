@@ -8,8 +8,11 @@
 
 #include "addons/imguinodegrapheditor/imguinodegrapheditor.h"
 
+#include <boost/signals2.hpp>
+
 #include <string>
 #include <memory>
+#include <functional>
 
 class NodeGraphEditorTab : public TabRenderer
 {
@@ -54,8 +57,10 @@ public:
 
     void onMapEvent(MapEvent event, std::string map_name);
 
+    void connect(std::function<void(NoiseModule::Ref)>);
+
 private:
-    void createNodeGraphEditor(const std::string& name, NoiseMap& noisemap);
+    void createNodeGraphEditor(const std::string& name, NoiseMap::Ptr& noisemap);
     void removeNodeGraphEditor(const std::string& name);
     void selectNodeGraphEditor(const std::string& name);
 
@@ -67,6 +72,8 @@ private:
 
     std::map<std::string, std::shared_ptr<ImGui::NodeGraphEditor>> editors_;
     std::weak_ptr<ImGui::NodeGraphEditor> current_editor_;
+    
+    boost::signals2::signal<void(NoiseModule::Ref)> on_output_changed_;
 };
 
 #endif // UI_VIEW_CONTROLLER_NODE_GRAPH_EDITOR_H

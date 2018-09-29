@@ -272,12 +272,12 @@ void NodeGraphEditorTab::renderTab()
     }
 }
 
-void NodeGraphEditorTab::createNodeGraphEditor(const std::string& name, NoiseMap& noisemap)
+void NodeGraphEditorTab::createNodeGraphEditor(const std::string& name, NoiseMap::Ptr& noisemap)
 {
     std::shared_ptr<ImGui::NodeGraphEditor> nge = std::make_shared<ImGui::NodeGraphEditor>();
 
     nge->registerNodeTypes(NODE_TYPE_NAMES, NodeTypes::NODE_TYPE_COUNT, &NodeGraphEditorTab::nodeFactory);
-    nge->user_ptr = &noisemap;
+    nge->user_ptr = &(*noisemap);
 
     nge->setLinkCallback(&NodeGraphEditorTab::linkCallback);
     nge->setNodeCallback(&NodeGraphEditorTab::nodeCallback);
@@ -434,4 +434,9 @@ void NodeGraphEditorTab::onMapEvent(MapEvent event, std::string map_name)
         selectNodeGraphEditor(map_name);
         break;
     }
+}
+
+void NodeGraphEditorTab::connect(std::function<void(NoiseModule::Ref)> fn)
+{
+    on_output_changed_.connect(fn);
 }
