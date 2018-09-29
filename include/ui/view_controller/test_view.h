@@ -2,7 +2,6 @@
 #define UI_VIEW_CONTROLLER_TEST_VIEW_H
 
 #include "ui/view_controller/view.h"
-#include "ui/view_controller/noise_map_controller.h"
 
 #include <addons/imguinodegrapheditor/imguinodegrapheditor.h>
 #include <addons/imguitabwindow/imguitabwindow.h>

@@ -2,7 +2,6 @@
 #define UI_VIEW_CONTROLLER_NODE_GRAPH_EDITOR_H
 
 #include "ui/view_controller/tab_renderer.h"
-#include "ui/view_controller/noise_map_controller.h"
 #include "noise_gen/noise_map_manager.h"
 #include "ui/events/map_event.h"
 
@@ -56,8 +55,6 @@ public:
     virtual void renderTab() override;
 
     void onMapEvent(MapEvent event, std::string map_name);
-
-    void connect(std::function<void(NoiseModule::Ref)>);
 
 private:
     void createNodeGraphEditor(const std::string& name, NoiseMap::Ptr& noisemap);

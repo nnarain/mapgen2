@@ -435,8 +435,3 @@ void NodeGraphEditorTab::onMapEvent(MapEvent event, std::string map_name)
         break;
     }
 }
-
-void NodeGraphEditorTab::connect(std::function<void(NoiseModule::Ref)> fn)
-{
-    on_output_changed_.connect(fn);
-}

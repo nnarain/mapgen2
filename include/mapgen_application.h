@@ -1,6 +1,5 @@
 
 #include "ui/user_interface.h"
-#include "ui/view_controller/noise_map_controller.h"
 #include "noise_gen/noise_map_manager.h"
 #include "frame_timer.h"
 
