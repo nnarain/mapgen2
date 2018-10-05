@@ -9,11 +9,13 @@
 #include <imgui.h>
 #include <MagnumImGui.h>
 
+#include <iostream>
 
-UserDisplayTab::UserDisplayTab()
-    : target_{}
+
+UserDisplayTab::UserDisplayTab(NoiseMapManager& manager)
+    : manager_{manager}
+    , target_{}
     , target_size_{{256, 256}}
-    , surface_{target_size_.x(), target_size_.y()}
 {
     target_
         .setWrapping(Magnum::GL::SamplerWrapping::ClampToEdge)
@@ -40,10 +42,17 @@ void UserDisplayTab::renderTab()
                     // update the generator
                     if (auto generator = generator_.lock())
                     {
-                        // update parameters
-                        generator->update(user_params_);
-                        // generate output texture
-                        generator->generate(target_, target_size_);
+                        try
+                        {
+                            // update parameters
+                            generator->update(user_params_, manager_);
+                            // generate output texture
+                            generator->generate(target_, target_size_);
+                        }
+                        catch (std::runtime_error& e)
+                        {
+                            std::cout << "Exception thrown generating user map\n" << e.what();
+                        }
                     }
                 }
             }
@@ -73,19 +82,14 @@ void UserDisplayTab::setUserGenerator(std::weak_ptr<PluginBase> generator)
     }
 }
 
-void UserDisplayTab::copySurfaceToTexture(const Surface& surface, Magnum::GL::Texture2D& target)
+void UserDisplayTab::onMapEvent(MapEvent event, std::string name)
 {
-    // get the surface's color buffer
-    const auto& buffer = surface.getBuffer();
-    // create an array view for this data
-    Corrade::Containers::ArrayView<char> data_view{ (char*)&buffer[0], buffer.size() };
-    // create an image2d view to bind to the texture
-    Magnum::ImageView2D image{ Magnum::PixelFormat::RGB8Unorm, target_size_, data_view };
-    // bind image to texture
-    target
-        .setWrapping(Magnum::GL::SamplerWrapping::ClampToEdge)
-        .setMagnificationFilter(Magnum::GL::SamplerFilter::Linear)
-        .setMinificationFilter(Magnum::GL::SamplerFilter::Linear)
-        .setStorage(1, Magnum::GL::TextureFormat::RGB8, image.size())
-        .setSubImage(0, {}, image);
+    if (event == MapEvent::Created)
+    {
+        
+    }
+    else if (event == MapEvent::Removed)
+    {
+
+    }
 }

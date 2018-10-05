@@ -32,3 +32,8 @@ NoiseMap::Ptr& NoiseMapManager::getNoiseMap(const std::string& name)
 {
     return noise_maps_[name];
 }
+
+NoiseMap::Ptr& NoiseMapManager::operator[](const std::string name)
+{
+    return getNoiseMap(name);
+}

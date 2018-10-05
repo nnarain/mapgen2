@@ -23,6 +23,7 @@ public:
     void rename(const std::string& current_name, const std::string& new_name);
 
     void setOutputModule(NoiseModule::Ref ref);
+    NoiseModule::Ref getOutputModule() const;
 
     NoiseModule::Ptr& NoiseMap::createModuleWithUniqueName(NoiseModule::Type type);
 
@@ -32,6 +33,8 @@ public:
     void forEach(std::function<void(const std::string&, NoiseModule&)> fn);
 
     void setSeed(int) noexcept;
+
+    void setParameter(const std::string& module_name, const std::string& param_name, float value);
 
     void connectOutputChanged(std::function<void(NoiseModule::Ref)>);
     

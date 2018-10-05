@@ -1,24 +1,20 @@
 #include "generators/simple_terrain.h"
+#include "plugin/surface.h"
 
 SimpleTerrainGenerator::SimpleTerrainGenerator()
-    : r{0}, g{0}, b{0}
 {
 }
 
 std::map<std::string, PluginBase::Parameter> SimpleTerrainGenerator::initializeParameters()
 {
     return {
-        {"r", 0},
-        {"g", 0},
-        {"b", 0}
+
     };
 }
 
-void SimpleTerrainGenerator::update(const ParameterMap& params)
+void SimpleTerrainGenerator::update(const ParameterMap& params, NoiseMapManager& maps)
 {
-    r = boost::get<int>(params.at("r"));
-    g = boost::get<int>(params.at("g"));
-    b = boost::get<int>(params.at("b"));
+    height_module_ = maps["terrain"]->getOutputModule();
 }
 
 void SimpleTerrainGenerator::generate(Magnum::GL::Texture2D& target, Magnum::Vector2i& size)
@@ -29,7 +25,7 @@ void SimpleTerrainGenerator::generate(Magnum::GL::Texture2D& target, Magnum::Vec
     {
         for (auto y = 0; y < size.y(); ++y)
         {
-            surface.setColor(x, y, r, g, b);
+            surface.setColor(x, y, 0, 255, 0);
         }
     }
 

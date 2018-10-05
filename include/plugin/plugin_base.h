@@ -1,7 +1,7 @@
 #ifndef PLUGIN_PLUGIN_BASE_H
 #define PLUGIN_PLUGIN_BASE_H
 
-#include "plugin/surface.h"
+#include "noise_gen/noise_map_manager.h"
 
 #include <Magnum/GL/Texture.h>
 #include <Magnum/Math/Vector2.h>
@@ -31,7 +31,7 @@ public:
     /**
         Update plugin parameters
     */
-    virtual void update(const ParameterMap& params) = 0;
+    virtual void update(const ParameterMap& params, NoiseMapManager& maps) = 0;
 
     /**
         Generate the map into the provided texture
