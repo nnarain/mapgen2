@@ -18,6 +18,7 @@ class PluginBase
 {
 public:
     using Parameter = boost::variant<int, float, bool>;
+    using ParameterMap = std::map<std::string, Parameter>;
 
     PluginBase() = default;
     ~PluginBase() = default;
@@ -26,6 +27,12 @@ public:
         return parameters used by plugin
     */
     virtual std::map<std::string, Parameter> initializeParameters() = 0;
+
+    /**
+        Update plugin parameters
+    */
+    virtual void update(const ParameterMap& params) = 0;
+
     /**
         Generate the map into the provided texture
     */

@@ -40,6 +40,9 @@ void UserDisplayTab::renderTab()
                     // update the generator
                     if (auto generator = generator_.lock())
                     {
+                        // update parameters
+                        generator->update(user_params_);
+                        // generate output texture
                         generator->generate(target_, target_size_);
                     }
                 }
