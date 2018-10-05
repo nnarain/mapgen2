@@ -3,6 +3,9 @@
 
 #include "plugin/surface.h"
 
+#include <Magnum/GL/Texture.h>
+#include <Magnum/Math/Vector2.h>
+
 #include <boost/variant.hpp>
 
 #include <map>
@@ -19,8 +22,14 @@ public:
     PluginBase() = default;
     ~PluginBase() = default;
 
+    /**
+        return parameters used by plugin
+    */
     virtual std::map<std::string, Parameter> initializeParameters() = 0;
-    virtual void generate(Surface& target) = 0;
+    /**
+        Generate the map into the provided texture
+    */
+    virtual void generate(Magnum::GL::Texture2D& target, Magnum::Vector2i& size) = 0;
 
 private:
 };

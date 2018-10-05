@@ -2,6 +2,8 @@
 #define PLUGIN_SURFACE_H
 
 #include <noiseutils/noiseutils.h>
+#include <Magnum/GL/Texture.h>
+#include <Magnum/Math/Vector2.h>
 
 #include <vector>
 
@@ -13,6 +15,7 @@ class Surface
 public:
     using Color = noise::utils::Color;
 
+    Surface(const Magnum::Vector2i& size);
     Surface(std::size_t w, std::size_t h);
     ~Surface() = default;
 
@@ -24,6 +27,11 @@ public:
         Set the color at the (x,y) pixel
     */
     void setColor(std::size_t x, std::size_t y, uint8_t r, uint8_t g, uint8_t b);
+
+    /**
+        Copy the surface to the specified texture
+    */
+    void commit(Magnum::GL::Texture2D& texuture);
 
     /**
         Get the underlying color buffer

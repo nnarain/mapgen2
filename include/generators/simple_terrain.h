@@ -10,7 +10,7 @@ public:
     virtual ~SimpleTerrainGenerator() = default;
 
     virtual std::map<std::string, Parameter> initializeParameters() override;
-    virtual void generate(Surface& target) override;
+    virtual void generate(Magnum::GL::Texture2D& target, Magnum::Vector2i& size) override;
 
 private:
 };

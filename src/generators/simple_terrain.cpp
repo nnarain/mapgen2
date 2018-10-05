@@ -11,16 +11,17 @@ std::map<std::string, PluginBase::Parameter> SimpleTerrainGenerator::initializeP
     };
 }
 
-void SimpleTerrainGenerator::generate(Surface& surface)
+void SimpleTerrainGenerator::generate(Magnum::GL::Texture2D& target, Magnum::Vector2i& size)
 {
-    const auto width = surface.getWidth();
-    const auto height = surface.getHeight();
+    Surface surface(size);
 
-    for (auto x = 0u; x < width; ++x)
+    for (auto x = 0; x < size.x(); ++x)
     {
-        for (auto y = 0u; y < height; ++y)
+        for (auto y = 0; y < size.y(); ++y)
         {
-            surface.setColor(x, y, 255, 255, 0);
+            surface.setColor(x, y, 255, 0, 0);
         }
     }
+
+    surface.commit(target);
 }

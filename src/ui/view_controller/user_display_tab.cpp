@@ -15,7 +15,10 @@ UserDisplayTab::UserDisplayTab()
     , target_size_{{256, 256}}
     , surface_{target_size_.x(), target_size_.y()}
 {
-
+    target_
+        .setWrapping(Magnum::GL::SamplerWrapping::ClampToEdge)
+        .setMagnificationFilter(Magnum::GL::SamplerFilter::Linear)
+        .setMinificationFilter(Magnum::GL::SamplerFilter::Linear);
 }
 
 void UserDisplayTab::renderTab()
@@ -37,8 +40,7 @@ void UserDisplayTab::renderTab()
                     // update the generator
                     if (auto generator = generator_.lock())
                     {
-                        generator->generate(surface_);
-                        copySurfaceToTexture(surface_, target_);
+                        generator->generate(target_, target_size_);
                     }
                 }
             }
