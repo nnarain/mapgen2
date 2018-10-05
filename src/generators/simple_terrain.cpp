@@ -19,7 +19,7 @@ void SimpleTerrainGenerator::generate(Magnum::GL::Texture2D& target, Magnum::Vec
     {
         for (auto y = 0; y < size.y(); ++y)
         {
-            surface.setColor(x, y, 255, 0, 0);
+            surface.setColor(x, y, x, y, x + y);
         }
     }
 

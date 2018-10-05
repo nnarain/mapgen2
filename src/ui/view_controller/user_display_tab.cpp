@@ -23,7 +23,7 @@ UserDisplayTab::UserDisplayTab()
 
 void UserDisplayTab::renderTab()
 {
-    constexpr float width_percent = 0.33f;
+    constexpr float width_percent = 0.25f;
 
     auto window_size = ImGui::GetWindowSize();
 
