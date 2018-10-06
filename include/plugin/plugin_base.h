@@ -3,6 +3,8 @@
 
 #include "noise_gen/noise_map_manager.h"
 
+#include <noiseutils/noiseutils.h>
+
 #include <Magnum/GL/Texture.h>
 #include <Magnum/Math/Vector2.h>
 
@@ -17,7 +19,7 @@
 class PluginBase
 {
 public:
-    using Parameter = boost::variant<int, float, bool>;
+    using Parameter = boost::variant<int, float, bool, noise::utils::Color>;
     using ParameterMap = std::map<std::string, Parameter>;
 
     PluginBase() = default;

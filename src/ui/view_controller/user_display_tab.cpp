@@ -31,32 +31,39 @@ void UserDisplayTab::renderTab()
 
     ImGui::BeginChild("parameter panel", { window_size.x * width_percent, window_size.y }, true);
     {
+        auto updated = false;
+
         if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
         {
+            // render user parameters
             for (auto& param : user_params_)
             {
-                auto updated = boost::apply_visitor(detail::view::ParameterViewVistor{ param.first }, param.second);
+                updated = boost::apply_visitor(detail::view::ParameterViewVistor{ param.first }, param.second) || updated;
+            }
+        }
 
-                if (updated)
+        // explicitly generate
+        updated = ImGui::Button("generate") || updated;
+
+        if (updated)
+        {
+            // update the generator
+            if (auto generator = generator_.lock())
+            {
+                try
                 {
-                    // update the generator
-                    if (auto generator = generator_.lock())
-                    {
-                        try
-                        {
-                            // update parameters
-                            generator->update(user_params_, manager_);
-                            // generate output texture
-                            generator->generate(target_, target_size_);
-                        }
-                        catch (std::runtime_error& e)
-                        {
-                            std::cout << "Exception thrown generating user map\n" << e.what();
-                        }
-                    }
+                    // update parameters
+                    generator->update(user_params_, manager_);
+                    // generate output texture
+                    generator->generate(target_, target_size_);
+                }
+                catch (std::runtime_error& e)
+                {
+                    std::cout << "Exception thrown generating user map\n" << e.what();
                 }
             }
         }
+
     }
     ImGui::EndChild();
 

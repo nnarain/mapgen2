@@ -79,6 +79,7 @@ set(UI_SOURCES
 set(PLUGIN_HEADERS
     include/plugin/plugin_base.h
     include/plugin/surface.h
+    include/plugin/utils.h
 )
 
 set(PLUGIN_SOURCES

@@ -15,6 +15,8 @@ public:
 
 private:
     NoiseModule::Ref height_module_;
+    
+    noise::utils::Color color_;
 };
 
 #endif
