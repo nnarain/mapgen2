@@ -2,6 +2,7 @@
 #define PLUGIN_PLUGIN_BASE_H
 
 #include "noise_gen/noise_map_manager.h"
+#include "noise_gen/parameter.h"
 
 #include <noiseutils/noiseutils.h>
 
@@ -19,7 +20,15 @@
 class PluginBase
 {
 public:
-    using Parameter = boost::variant<int, float, bool, noise::utils::Color>;
+    using Parameter = boost::variant<
+        int,
+        float,
+        RangedInt,
+        RangedFloat,
+        bool, 
+        noise::utils::Color
+    >;
+
     using ParameterMap = std::map<std::string, Parameter>;
 
     PluginBase() = default;

@@ -26,7 +26,7 @@ void SimpleTerrainGenerator::update(const ParameterMap& params, NoiseMapManager&
 void SimpleTerrainGenerator::generate(Magnum::GL::Texture2D& target, Magnum::Vector2i& size)
 {
     // build height map
-    auto height_map = mapgen::utils::moduleToHeightMap(height_module_, size.x(), size.y());
+    auto height_map = mapgen::utils::moduleToNoiseMap(height_module_, size.x(), size.y());
 
     Surface surface(size);
 

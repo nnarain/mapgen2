@@ -52,7 +52,7 @@ namespace mapgen
             return c2;
         }
 
-        noise::utils::NoiseMap moduleToHeightMap(NoiseModule::Ref ref, std::size_t w, std::size_t h)
+        noise::utils::NoiseMap moduleToNoiseMap(NoiseModule::Ref ref, std::size_t w, std::size_t h)
         {
             noise::utils::NoiseMap map;
 
