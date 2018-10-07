@@ -4,6 +4,7 @@
 #include "ui/view_controller/node_graph_editor.h"
 #include "ui/view_controller/output_config_tab.h"
 #include "ui/view_controller/map_select_tab.h"
+#include "ui/view_controller/user_display_tab.h"
 #include "ui/view_controller/test_view.h"
 
 #include <Magnum/GL/Renderer.h>
@@ -30,14 +31,20 @@ MapGenApplication::MapGenApplication(const Arguments &arguments)
     MapSelectTab::Ptr map_select_tab = std::make_unique<MapSelectTab>(noise_map_manager_);
     NodeGraphEditorTab::Ptr node_graph_editor = std::make_unique<NodeGraphEditorTab>(noise_map_manager_);
     OutputConfigTab::Ptr output_config_tab = std::make_unique<OutputConfigTab>(noise_map_manager_);
+    UserDisplayTab::Ptr user_display_tab = std::make_unique<UserDisplayTab>(noise_map_manager_);
 
     // Connect signals
     map_select_tab->connect(std::bind(&NodeGraphEditorTab::onMapEvent, node_graph_editor.get(), std::placeholders::_1, std::placeholders::_2));
     map_select_tab->connect(std::bind(&OutputConfigTab::onMapEvent, output_config_tab.get(), std::placeholders::_1, std::placeholders::_2));
+    map_select_tab->connect(std::bind(&UserDisplayTab::onMapEvent, user_display_tab.get(), std::placeholders::_1, std::placeholders::_2));
+
+    generator_ = std::make_shared<SimpleTerrainGenerator>();
+    user_display_tab->setUserGenerator(generator_);
 
     ui_.addTab("Select", std::move(map_select_tab));
     ui_.addTab("Editor", std::move(node_graph_editor));
     ui_.addTab("Config", std::move(output_config_tab));
+    ui_.addTab("Display", std::move(user_display_tab));
 
     ui_.addView<ImGuiDemoView>("Demo", false);
     ui_.addView<ImGuiMetricsView>("Metrics", false);

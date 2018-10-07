@@ -59,6 +59,7 @@ set(UI_HEADERS
     include/ui/view_controller/node_graph_editor.h
     include/ui/view_controller/output_config_tab.h
     include/ui/view_controller/map_select_tab.h
+    include/ui/view_controller/user_display_tab.h
     include/ui/view_controller/gradient_editor.h
     include/ui/events/map_event.h
     include/ui/view_controller/test_view.h
@@ -71,7 +72,26 @@ set(UI_SOURCES
     src/ui/view_controller/node_graph_editor.cpp
     src/ui/view_controller/output_config_tab.cpp
     src/ui/view_controller/map_select_tab.cpp
+    src/ui/view_controller/user_display_tab.cpp
     src/ui/view_controller/gradient_editor.cpp
+)
+
+set(PLUGIN_HEADERS
+    include/plugin/plugin_base.h
+    include/plugin/surface.h
+    include/plugin/utils.h
+)
+
+set(PLUGIN_SOURCES
+    src/plugin/surface.cpp
+)
+
+set(GENERATORS_HEADERS
+    include/generators/simple_terrain.h
+)
+
+set(GENERATORS_SOURCES
+    src/generators/simple_terrain.cpp
 )
 
 set(DETAIL_HEADERS
@@ -96,6 +116,8 @@ set(MAPGEN_HEADERS
     ${NOISE_GEN_HEADERS}
     ${OUTPUT_GEN_HEADERS}
     ${UI_HEADERS}
+    ${PLUGIN_HEADERS}
+    ${GENERATORS_HEADERS}
     ${DETAIL_HEADERS}
 )
 
@@ -106,6 +128,8 @@ set(MAPGEN_SOURCES
     ${NOISE_GEN_SOURCES}
     ${OUTPUT_GEN_SOURCES}
     ${UI_SOURCES}
+    ${PLUGIN_SOURCES}
+    ${GENERATORS_SOURCES}
     ${DETAIL_SOURCES}
 )
 
@@ -114,7 +138,6 @@ add_executable(${PROJECT_NAME}
     ${MAPGEN_SOURCES}
 )
 
-#target_compile_options(${PROJECT_NAME} PUBLIC "-DBOOST_MPL_LIMIT_LIST_SIZE=30")
 
 if (MSVC)
     target_compile_options(${PROJECT_NAME} PUBLIC /WX /wd4100 /wd4458)
@@ -153,5 +176,9 @@ source_group("Header Files/Output Gen" FILES ${OUTPUT_GEN_HEADERS})
 source_group("Source Files/Output Gen" FILES ${OUTPUT_GEN_SOURCES})
 source_group("Header Files/UI"         FILES ${UI_HEADERS})
 source_group("Source Files/UI"         FILES ${UI_SOURCES})
+source_group("Header Files/Plugin"     FILES ${PLUGIN_HEADERS})
+source_group("Source Files/Plugin"     FILES ${PLUGIN_SOURCES})
+source_group("Header Files/Generators" FILES ${GENERATORS_HEADERS})
+source_group("Source Files/Generators" FILES ${GENERATORS_SOURCES})
 source_group("Header Files/Detail"     FILES ${DETAIL_HEADERS})
 source_group("Source Files/Detail"     FILES ${DETAIL_SOURCES})

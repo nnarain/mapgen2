@@ -86,6 +86,8 @@ static const char* NODE_DESCRIPTIONS[] = {
     "This noise module, heavily based on the Perlin module, generates ridged-multifractal noise. Ridged-multifractal noise is generated in much of the same "
     "way as Perlin noise, except the output of each octave is modified by an absoluate-value function.\n"
     "Ridged-multifractal",
+    // Rotate
+    "Rotates the output",
     // Scale Bias
     "Retrieves the output value from the source module, multiples it with a scaling factor, adds a bias to it, then outputs the value.",
     // Scale Point
@@ -94,8 +96,6 @@ static const char* NODE_DESCRIPTIONS[] = {
     "Noise module that outputs the value selected from the one of two source modules chosen by the output value from a control module.",
     // Spheres
     "Outputs concentric spheres centered on the origin. Increasing the frequency reduces the distances between spheres.",
-    // Rotate
-    "Rotates the output",
     // Translate
     "Translate source module values",
     // Turbulence

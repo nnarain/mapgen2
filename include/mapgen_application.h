@@ -3,6 +3,8 @@
 #include "noise_gen/noise_map_manager.h"
 #include "frame_timer.h"
 
+#include "generators/simple_terrain.h"
+
 #include <Magnum/Platform/Sdl2Application.h>
 
 #include <MagnumImGui.h>
@@ -25,6 +27,9 @@ private:
 
     NoiseMapManager noise_map_manager_;
     UserInterface ui_;
+
+    // tmp
+    std::shared_ptr<PluginBase> generator_;
 
     MagnumImGui imgui_;
 

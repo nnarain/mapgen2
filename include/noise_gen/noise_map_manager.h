@@ -18,6 +18,9 @@ public:
     void forEach(std::function<void(const std::string&, NoiseMap&)> fn);
 
     NoiseMap::Ptr& getNoiseMap(const std::string& name);
+
+    NoiseMap::Ptr& operator[](const std::string name);
+
 private:
     std::map<std::string, NoiseMap::Ptr> noise_maps_;
 };

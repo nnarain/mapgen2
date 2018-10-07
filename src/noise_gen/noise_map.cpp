@@ -33,10 +33,23 @@ void NoiseMap::rename(const std::string& current_name, const std::string& new_na
     modules_.insert({ new_name, module });
 }
 
+void NoiseMap::setParameter(const std::string& module_name, const std::string& param_name, float value)
+{
+    // this assumes a float type is used
+    // bad things will probably happen is the float is assigned to a non-float parameter...
+    auto& params = *modules_[module_name]->getParams();
+    params[param_name] = value;
+}
+
 void NoiseMap::setOutputModule(NoiseModule::Ref ref)
 {
     output_ = ref;
     on_output_changed_(output_);
+}
+
+NoiseModule::Ref NoiseMap::getOutputModule() const
+{
+    return output_;
 }
 
 NoiseModule::Ptr& NoiseMap::createModuleWithUniqueName(NoiseModule::Type type)
