@@ -1,7 +1,9 @@
 
 #include "ui/user_interface.h"
-#include "ui/view_controller/module_manager_controller.h"
+#include "noise_gen/noise_map_manager.h"
 #include "frame_timer.h"
+
+#include "generators/simple_terrain.h"
 
 #include <Magnum/Platform/Sdl2Application.h>
 
@@ -14,7 +16,7 @@ public:
 
 private:
     void drawEvent() override;
-    void viewportEvent(const Magnum::Vector2i& size) override;
+    void viewportEvent(ViewportEvent& event) override;
     void keyPressEvent(KeyEvent& event) override;
     void keyReleaseEvent(KeyEvent& event) override;
     void mousePressEvent(MouseEvent& event) override;
@@ -23,9 +25,11 @@ private:
     void mouseScrollEvent(MouseScrollEvent& event) override;
     void textInputEvent(TextInputEvent& event) override;
 
-    ModuleManager module_manager_;
-    ModuleManagerController module_manager_controller_;
+    NoiseMapManager noise_map_manager_;
     UserInterface ui_;
+
+    // tmp
+    std::shared_ptr<PluginBase> generator_;
 
     MagnumImGui imgui_;
 

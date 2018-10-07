@@ -12,17 +12,21 @@ void TextureGenerator::generate(GL::Texture2D& output_texture, int w, int h, Noi
     auto& module = noise.getModule();
 
     // generate the noise map
-    utils::NoiseMap height_map;
     utils::NoiseMapBuilderPlane builder;
     builder.SetSourceModule(module);
-    builder.SetDestNoiseMap(height_map);
+    builder.SetDestNoiseMap(height_map_);
     builder.SetDestSize(w, h);
     builder.SetBounds(2.0, 6.0, 1.0, 5.0);
     builder.Build();
 
+    renderImage(output_texture, w, h);
+}
+
+void TextureGenerator::renderImage(Magnum::GL::Texture2D& out_texture, int w, int h)
+{
     // render the noise map into an image
     utils::Image rendered_image;
-    renderer_.SetSourceNoiseMap(height_map);
+    renderer_.SetSourceNoiseMap(height_map_);
     renderer_.SetDestImage(rendered_image);
     renderer_.Render();
 
@@ -31,13 +35,12 @@ void TextureGenerator::generate(GL::Texture2D& output_texture, int w, int h, Noi
     auto data_size = static_cast<std::size_t>(w * h) * 4;
     Corrade::Containers::ArrayView<char> data_view{ (char*)data, data_size };
 
-    
     for (int x = 0; x < w; ++x)
     {
         for (int y = 0; y < h; ++y)
         {
             auto idx = ((y * w) + x) * 4;
-            
+
             auto r = data_view[idx + 3];
             auto g = data_view[idx + 2];
             auto b = data_view[idx + 1];
@@ -49,10 +52,10 @@ void TextureGenerator::generate(GL::Texture2D& output_texture, int w, int h, Noi
             data_view[idx + 3] = a;
         }
     }
-    
+
     // create a magnum RGBA8 uint image with the rendered image data and bind it to the texture
-    ImageView2D image{ PixelFormat::RGBA8Unorm, {w, h}, data_view };
-    output_texture
+    ImageView2D image{ PixelFormat::RGBA8Unorm,{ w, h }, data_view };
+    out_texture
         .setWrapping(GL::SamplerWrapping::ClampToEdge)
         .setMagnificationFilter(GL::SamplerFilter::Linear)
         .setMinificationFilter(GL::SamplerFilter::Linear)

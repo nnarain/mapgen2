@@ -3,26 +3,37 @@
 
 #include "ui/view_controller/tab_renderer.h"
 #include "ui/view_controller/module_preview.h"
-#include "ui/view_controller/module_manager_controller.h"
+#include "noise_gen/noise_map_manager.h"
+#include "ui/events/map_event.h"
+
+#include <map>
 
 class OutputConfigTab : public TabRenderer
 {
 public:
-    OutputConfigTab(ModuleManagerController& manager);
+    using Ptr = std::unique_ptr<OutputConfigTab>;
+
+    OutputConfigTab(NoiseMapManager& manager);
     ~OutputConfigTab();
 
     virtual void renderTab() override;
 
+    void onMapEvent(MapEvent event, std::string name);
     void onOutputChanged(NoiseModule::Ref ref);
 
 private:
     bool renderModuleParameters(NoiseModule& module);
 
-    ModuleManagerController& manager_;
-    ModulePreview preview_;
+    NoiseMapManager& manager_;
 
+    NoiseMap::Ref current_noise_map_;
     NoiseModule::Ref output_module_;
+    
+    std::map<std::string, ModulePreview::Ptr> previews_;
+    ModulePreview::Ref current_preview_;
     bool update_required_;
+
+    int seed_;
 };
 
 #endif

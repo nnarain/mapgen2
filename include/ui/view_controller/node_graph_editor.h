@@ -2,13 +2,22 @@
 #define UI_VIEW_CONTROLLER_NODE_GRAPH_EDITOR_H
 
 #include "ui/view_controller/tab_renderer.h"
-#include "ui/view_controller/module_manager_controller.h"
+#include "noise_gen/noise_map_manager.h"
+#include "ui/events/map_event.h"
 
 #include "addons/imguinodegrapheditor/imguinodegrapheditor.h"
+
+#include <boost/signals2.hpp>
+
+#include <string>
+#include <memory>
+#include <functional>
 
 class NodeGraphEditorTab : public TabRenderer
 {
 public:
+    using Ptr = std::unique_ptr<NodeGraphEditorTab>;
+
     // TODO: scoped
     enum NodeTypes
     {
@@ -40,19 +49,28 @@ public:
         NODE_TYPE_COUNT
     };
 
-    NodeGraphEditorTab(ModuleManagerController& manager);
+    NodeGraphEditorTab(NoiseMapManager& manager);
     virtual ~NodeGraphEditorTab();
 
     virtual void renderTab() override;
 
+    void onMapEvent(MapEvent event, std::string map_name);
+
 private:
+    void createNodeGraphEditor(const std::string& name, NoiseMap::Ptr& noisemap);
+    void removeNodeGraphEditor(const std::string& name);
+    void selectNodeGraphEditor(const std::string& name);
 
     static ImGui::Node* nodeFactory(int nt, const ImVec2& pos, const ImGui::NodeGraphEditor& nge);
     static void linkCallback(const ImGui::NodeLink& link, ImGui::NodeGraphEditor::LinkState state, ImGui::NodeGraphEditor& nge);
     static void nodeCallback(ImGui::Node*& node, ImGui::NodeGraphEditor::NodeState state, ImGui::NodeGraphEditor& nge);
 
-    ModuleManagerController& manager_;
-    ImGui::NodeGraphEditor nge;
+    NoiseMapManager& manager_;
+
+    std::map<std::string, std::shared_ptr<ImGui::NodeGraphEditor>> editors_;
+    std::weak_ptr<ImGui::NodeGraphEditor> current_editor_;
+    
+    boost::signals2::signal<void(NoiseModule::Ref)> on_output_changed_;
 };
 
 #endif // UI_VIEW_CONTROLLER_NODE_GRAPH_EDITOR_H

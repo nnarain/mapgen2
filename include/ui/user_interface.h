@@ -32,6 +32,11 @@ public:
     {
         TabRenderer::Ptr tab{ new T(args...) };
         
+        addTab(name, std::move(tab));
+    }
+
+    void addTab(const std::string& name, TabRenderer::Ptr tab)
+    {
         tabs_.push_back({ name, std::move(tab) });
     }
 

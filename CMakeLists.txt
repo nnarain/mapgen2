@@ -31,12 +31,14 @@ add_subdirectory(src/external)
 set(NOISE_GEN_HEADERS
     include/noise_gen/noise_module.h
     include/noise_gen/parameter.h
-    include/noise_gen/module_manager.h
+    include/noise_gen/noise_map.h
+    include/noise_gen/noise_map_manager.h
 )
 
 set(NOISE_GEN_SOURCES
     src/noise_gen/noise_module.cpp
-    src/noise_gen/module_manager.cpp
+    src/noise_gen/noise_map.cpp
+    src/noise_gen/noise_map_manager.cpp
 )
 
 set(OUTPUT_GEN_HEADERS
@@ -50,23 +52,46 @@ set(OUTPUT_GEN_SOURCES
 set(UI_HEADERS
     include/ui/user_interface.h
     include/ui/view_controller/view.h
-    include/ui/view_controller/module_manager_controller.h
     include/ui/view_controller/module_preview.h
     include/ui/view_controller/imgui_demo_view.h
     include/ui/view_controller/imgui_metric_view.h
     include/ui/view_controller/tab_renderer.h
     include/ui/view_controller/node_graph_editor.h
     include/ui/view_controller/output_config_tab.h
+    include/ui/view_controller/map_select_tab.h
+    include/ui/view_controller/user_display_tab.h
+    include/ui/view_controller/gradient_editor.h
+    include/ui/events/map_event.h
     include/ui/view_controller/test_view.h
 )
 
 set(UI_SOURCES
     src/ui/user_interface.cpp
     src/ui/view_controller/view.cpp
-    src/ui/view_controller/module_manager_controller.cpp
     src/ui/view_controller/module_preview.cpp
     src/ui/view_controller/node_graph_editor.cpp
     src/ui/view_controller/output_config_tab.cpp
+    src/ui/view_controller/map_select_tab.cpp
+    src/ui/view_controller/user_display_tab.cpp
+    src/ui/view_controller/gradient_editor.cpp
+)
+
+set(PLUGIN_HEADERS
+    include/plugin/plugin_base.h
+    include/plugin/surface.h
+    include/plugin/utils.h
+)
+
+set(PLUGIN_SOURCES
+    src/plugin/surface.cpp
+)
+
+set(GENERATORS_HEADERS
+    include/generators/simple_terrain.h
+)
+
+set(GENERATORS_SOURCES
+    src/generators/simple_terrain.cpp
 )
 
 set(DETAIL_HEADERS
@@ -76,6 +101,7 @@ set(DETAIL_HEADERS
     include/detail/gen/dummy_noise.h
     include/detail/gen/module_ref_visitor.h
     include/detail/gen/module_factory.h
+    include/detail/gen/seed_setter_visitor.h
     include/detail/view/parameter_view_visitor.h
 )
 
@@ -90,6 +116,8 @@ set(MAPGEN_HEADERS
     ${NOISE_GEN_HEADERS}
     ${OUTPUT_GEN_HEADERS}
     ${UI_HEADERS}
+    ${PLUGIN_HEADERS}
+    ${GENERATORS_HEADERS}
     ${DETAIL_HEADERS}
 )
 
@@ -100,6 +128,8 @@ set(MAPGEN_SOURCES
     ${NOISE_GEN_SOURCES}
     ${OUTPUT_GEN_SOURCES}
     ${UI_SOURCES}
+    ${PLUGIN_SOURCES}
+    ${GENERATORS_SOURCES}
     ${DETAIL_SOURCES}
 )
 
@@ -108,7 +138,6 @@ add_executable(${PROJECT_NAME}
     ${MAPGEN_SOURCES}
 )
 
-#target_compile_options(${PROJECT_NAME} PUBLIC "-DBOOST_MPL_LIMIT_LIST_SIZE=30")
 
 if (MSVC)
     target_compile_options(${PROJECT_NAME} PUBLIC /WX /wd4100 /wd4458)
@@ -147,5 +176,9 @@ source_group("Header Files/Output Gen" FILES ${OUTPUT_GEN_HEADERS})
 source_group("Source Files/Output Gen" FILES ${OUTPUT_GEN_SOURCES})
 source_group("Header Files/UI"         FILES ${UI_HEADERS})
 source_group("Source Files/UI"         FILES ${UI_SOURCES})
+source_group("Header Files/Plugin"     FILES ${PLUGIN_HEADERS})
+source_group("Source Files/Plugin"     FILES ${PLUGIN_SOURCES})
+source_group("Header Files/Generators" FILES ${GENERATORS_HEADERS})
+source_group("Source Files/Generators" FILES ${GENERATORS_SOURCES})
 source_group("Header Files/Detail"     FILES ${DETAIL_HEADERS})
 source_group("Source Files/Detail"     FILES ${DETAIL_SOURCES})

@@ -30,6 +30,7 @@ set(IMGUI_ADDONS_INCLUDES
 set(IMGUI_ADDONS_SOURCES
     imgui/addons/imguinodegrapheditor/imguinodegrapheditor.cpp
     imgui/addons/imguitabwindow/imguitabwindow.cpp
+    gradient_editor/imgui_color_gradient.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC
@@ -45,7 +46,9 @@ add_library(imgui::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/imgui>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/gradient_editor>
         $<INSTALL_INTERFACE:imgui>
+        $<INSTALL_INTERFACE:gradient_editor> 
 )
 
 install(TARGETS ${PROJECT_NAME}

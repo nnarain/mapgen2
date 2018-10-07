@@ -4,9 +4,10 @@
 
 #include <iostream>
 
-static constexpr ImGuiWindowFlags TAB_WINDOW_FLAGS = ImGuiWindowFlags_NoScrollbar |
-                                                    ImGuiWindowFlags_NoCollapse |
-                                                    ImGuiWindowFlags_NoTitleBar;
+static constexpr ImGuiWindowFlags TAB_WINDOW_FLAGS = 
+    ImGuiWindowFlags_NoScrollbar |
+    ImGuiWindowFlags_NoCollapse |
+    ImGuiWindowFlags_NoTitleBar;
 
 UserInterface::UserInterface()
 {
@@ -33,10 +34,12 @@ void UserInterface::renderTabs()
     static bool open = true;
 
     auto& window_size = ImGui::GetIO().DisplaySize;
-
+    auto cursor_pos = ImGui::GetCursorPos();
+    
     auto width = window_size.x;
-    auto height = window_size.y - ImGui::GetCursorPosY();
+    auto height = window_size.y - cursor_pos.y;
 
+    ImGui::SetNextWindowPos({ 0, cursor_pos.y - ImGui::GetStyle().WindowPadding.y });
     ImGui::SetNextWindowSize({ width, height });
 
     if (ImGui::Begin("##TabWindow", &open, TAB_WINDOW_FLAGS))
