@@ -5,11 +5,15 @@
 #include <MagnumImGui.h>
 #include <imgui.h>
 
+#include <iostream>
+
 using namespace Magnum;
 
 ModulePreview::ModulePreview(const Vector2& size, Magnum::Vector2 texture_size)
     : texture_size_{texture_size}
     , render_size_{size}
+    , gradient_select_{0}
+    , show_gradient_editor_{false}
     , use_terrain_gradient_{false}
     , light_enabled_{false}
 {
@@ -29,25 +33,48 @@ void ModulePreview::render()
     ImGui::Image(texture_, { render_size_.x(), render_size_.y() });
 }
 
-bool ModulePreview::renderParameters()
+void ModulePreview::renderParameters()
 {
     auto& renderer = generator_.getRenderer();
 
     bool updated = false;
 
-    if (ImGui::Checkbox("terrain gradient", &use_terrain_gradient_))
+    ImGui::Text("Gradient:");
+    bool gradient_updated = false;
+    gradient_updated = ImGui::RadioButton("grayscale", &gradient_select_, 0) || gradient_updated;
+    ImGui::SameLine();
+    gradient_updated = ImGui::RadioButton("terrain", &gradient_select_, 1) || gradient_updated;
+    ImGui::SameLine();
+    gradient_updated = ImGui::RadioButton("custom", &gradient_select_, 2) || gradient_updated;
+
+    if (gradient_updated)
     {
         updated = true;
 
-        if (use_terrain_gradient_)
+        switch (gradient_select_)
         {
-            renderer.BuildTerrainGradient();
-        }
-        else
-        {
+        case 0:
             renderer.BuildGrayscaleGradient();
+            break;
+        case 1:
+            renderer.BuildTerrainGradient();
+            break;
+        case 2:
+            renderer.ClearGradient();
+            renderer.AddGradientPoint(0.0, noise::utils::Color(0, 0, 0, 0));
+            renderer.AddGradientPoint(1.0, noise::utils::Color(1, 1, 1, 1));
+            break;
+        default:
+            break;
         }
     }
+
+    if (gradient_select_ == 2)
+    {
+        updated = customGradient(renderer);
+    }
+
+    ImGui::Text("Lighting:");
 
     if (ImGui::Checkbox("enable light", &light_enabled_))
     {
@@ -81,6 +108,48 @@ bool ModulePreview::renderParameters()
     {
         updated = true;
         renderer.SetLightIntensity(light_intensity);
+    }
+
+    if (updated)
+    {
+        generator_.renderImage(texture_, texture_size_.x(), texture_size_.y());
+    }
+}
+
+bool ModulePreview::customGradient(noise::utils::RendererImage& renderer)
+{
+    if (ImGui::Button("edit"))
+    {
+        show_gradient_editor_ = !show_gradient_editor_;
+    }
+
+    bool updated = false;
+
+    if (show_gradient_editor_)
+    {
+        if (gradient_editor_.render())
+        {
+            updated = true;
+
+            renderer.ClearGradient();
+
+            auto marks = gradient_editor_.getColorMarks();
+            for (auto& mark : marks)
+            {
+                auto r = (uint8_t)(mark->color[0] * 255.f);
+                auto g = (uint8_t)(mark->color[1] * 255.f);
+                auto b = (uint8_t)(mark->color[2] * 255.f);
+
+                try
+                {
+                    renderer.AddGradientPoint(mark->position, noise::utils::Color{ r, g, b, 255 });
+                }
+                catch (noise::ExceptionInvalidParam&)
+                {
+                    // TODO: This try-catch really should not be here. Instead the gradient positions should never be invalid
+                }
+            }
+        }
     }
 
     return updated;
