@@ -34,4 +34,11 @@ $ cmake --build . --target mapgen2
 Ommit `CMAKE_TOOLCHAIN_FILE` if not using `vcpkg`. Set necessary `Boost` options (e.g. `-DBoost_USE_STATIC_LIBS=OFF`).
 
 
+Usage
+-----
 
+Add and connect nodes in the editor to create a noise output.
+
+![Image not found](docs/nodes.gif)
+
+![Image not found](docs/tweaking.gif)
